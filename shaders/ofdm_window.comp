@@ -1,0 +1,17 @@
+#version 450
+layout(local_size_x=64) in;
+layout(set=0,binding=0,std430) readonly buffer Input {vec2 samples[];};
+layout(set=0,binding=1,std430) readonly buffer Anchors {vec2 anchors[];};
+layout(set=0,binding=2,std430) writeonly buffer Output {vec2 data[];};
+layout(push_constant) uniform Parameters {uint count;uint capacity;uint pilots;uint unused;} pc;
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+void main() {
+    uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
+    if(i>=pc.capacity*8192)return;
+    uint w=i/8192,j=i%8192;
+    if(w>=pc.count){data[i]=vec2(0);return;}
+    vec2 header=anchors[w*129];
+    float angle=header.y*float(j%64);
+    vec2 phase=multiply(anchors[w*129+1+j/64],vec2(cos(angle),sin(angle)));
+    data[i]=multiply(samples[floatBitsToUint(header.x)+j],phase);
+}

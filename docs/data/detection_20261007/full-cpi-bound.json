@@ -1,0 +1,40 @@
+{
+  "source": "build/sensitivity-20261006/excerpt-050.sar",
+  "rows": 2758,
+  "time_start_s": 57.84429475,
+  "time_end_s": 60.84391075,
+  "results": [
+    {
+      "delay_samples": 800.125,
+      "doppler_hz": 100.00989328022877,
+      "noise": "white",
+      "channel": "recorded",
+      "efficiency": 0.8814480048079416,
+      "loss_including_cp_clock_dc_db": 0.8723986019474352
+    },
+    {
+      "delay_samples": 16.125,
+      "doppler_hz": -100.00989328022877,
+      "noise": "white",
+      "channel": "flat",
+      "efficiency": 0.8826960014889393,
+      "loss_including_cp_clock_dc_db": 0.8662539996874129
+    },
+    {
+      "delay_samples": 800.125,
+      "doppler_hz": 200.0,
+      "noise": "recorded",
+      "channel": "recorded",
+      "efficiency": 0.912039818655347,
+      "loss_including_cp_clock_dc_db": 0.7242275969489187
+    },
+    {
+      "delay_samples": 384.125,
+      "doppler_hz": 1.17,
+      "noise": "white",
+      "channel": "recorded",
+      "efficiency": 0.9048765413354207,
+      "loss_including_cp_clock_dc_db": 0.758472298572894
+    }
+  ]
+}

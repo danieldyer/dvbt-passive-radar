@@ -1,0 +1,23 @@
+#version 450
+layout(local_size_x=64) in;
+layout(set=0,binding=0,std430) readonly buffer Input {vec2 samples[];};
+layout(set=0,binding=1,std430) readonly buffer Positions {uint offsets[];};
+layout(set=0,binding=7,std430) writeonly buffer Output {vec4 scores[];};
+layout(push_constant) uniform Parameters {uint count;uint prefix_length;uint unused0;uint unused1;} pc;
+shared vec4 reduction[64];
+void main() {
+    uint row=gl_WorkGroupID.x,lane=gl_LocalInvocationID.x,start=offsets[row];
+    vec4 sum=vec4(0);
+    for(uint i=lane;i<pc.prefix_length;i+=64) {
+        vec2 a=samples[start+i],b=samples[start+8192+i];
+        sum.xy+=vec2(a.x*b.x+a.y*b.y,a.x*b.y-a.y*b.x);
+        sum.z+=dot(a,a)+dot(b,b);
+    }
+    reduction[lane]=sum;barrier();
+    for(uint step=32;step>0;step/=2) {
+        if(lane<step)reduction[lane]+=reduction[lane+step];barrier();
+    }
+    if(lane==0) {
+        vec4 v=reduction[0];v.w=2*length(v.xy)/max(v.z,1e-30);scores[row]=v;
+    }
+}

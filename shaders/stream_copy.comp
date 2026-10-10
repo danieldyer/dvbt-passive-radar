@@ -1,0 +1,13 @@
+#version 450
+layout(local_size_x=64) in;
+layout(set=0,binding=0,std430) readonly buffer Input {vec2 incoming[];};
+layout(set=0,binding=1,std430) readonly buffer History {vec2 previous[];};
+layout(set=0,binding=2,std430) writeonly buffer Output {vec2 combined[];};
+layout(set=0,binding=3,std430) readonly buffer Regions {uvec4 regions[];};
+layout(push_constant) uniform Parameters {uint stride;uint count;uint channels;uint unused;} pc;
+void main() {
+    uint c=gl_WorkGroupID.y,i=gl_GlobalInvocationID.x;
+    uvec4 v=regions[c]; // new offset, new count, previous offset, previous count
+    if(i<v.w)combined[c*pc.stride+i]=previous[v.z+i];
+    else if(i<v.w+v.y)combined[c*pc.stride+i]=incoming[v.x+i-v.w];
+}

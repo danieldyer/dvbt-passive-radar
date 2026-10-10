@@ -1,0 +1,95 @@
+#version 450
+layout(local_size_x=128) in;
+layout(constant_id=0) const uint fft_size=3584;
+layout(constant_id=1) const float d1=.79893657;
+layout(constant_id=2) const float d2=-.19395204;
+layout(constant_id=3) const float d3=.03025722;
+layout(constant_id=4) const uint block_count=800;
+layout(set=0,binding=1,std430) readonly buffer Transform {vec2 work[];};
+layout(set=0,binding=2,std430) readonly buffer Response {float response[];};
+layout(set=0,binding=4,std430) writeonly buffer Output {vec2 result[];};
+layout(set=0,binding=5,std430) readonly buffer Blocks {vec4 blocks[];};
+layout(set=0,binding=6,std430) readonly buffer Coefficients {float coefficients[];};
+layout(push_constant) uniform Parameters {uint fft_size;uint hop;uint decimation;uint count;uint channels;uint stride;uint input_count;uint guard;} p;
+shared vec2 tile[1024];
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+vec2 twiddle(uint k){return vec2(response[32769+2*k],response[32769+2*k+1]);}
+uint reverse_digits(uint k) {
+    uint bits=bitfieldReverse(k)>>22;
+    return ((bits&0x155)<<1)|((bits&0x2aa)>>1);
+}
+void main() {
+    uint block=gl_WorkGroupID.x,channel=gl_WorkGroupID.y,lane=gl_LocalInvocationID.x;
+    if(block*p.hop>=p.count)return;
+    vec4 b=blocks[block],c=blocks[block_count+channel];
+    vec4 phase=blocks[block_count+p.channels+channel*block_count+block];
+    // Select and translate the filtered spectrum. The 1024-point inverse FFT
+    // synthesizes a 16 MS/s grid, without a separate upsampling transform.
+    // A spectral phase ramp removes the entire block-centre fractional delay.
+    // Only the small within-block rate error remains after synthesis. Eight
+    // local phase products have a bounded error; there is no stream recurrence.
+    float first_angle=6.283185307179586*b.y*(float(lane)-512.0)/1024.0;
+    float step_angle=6.283185307179586*b.y/8.0;
+    vec2 shift=vec2(cos(first_angle),sin(first_angle));
+    vec2 advance=vec2(cos(step_angle),sin(step_angle));
+    for(uint ordinal=0;ordinal<8;++ordinal) {
+        int frequency=int(lane)+128*int(ordinal)-512;
+        uint k=uint(frequency<0 ? frequency+1024 : frequency);
+        int raw_bin=floatBitsToInt(c.x)+frequency;
+        vec2 value=vec2(0);
+        // Prewarped windows live on the original discrete ADC grid. A channel
+        // whose transition crosses Nyquist retains the wrapped spectral bins.
+        bool prewarped=floatBitsToUint(b.w)!=0xffffffffu;
+        if(prewarped || (raw_bin>=-int(fft_size/2) && raw_bin<int(fft_size/2))) {
+            float position=abs((1.0+b.z)*float(raw_bin)-c.y)*(65536.0/float(fft_size));
+            if(position<32768) {
+                uint i=uint(position);float h=mix(response[i],response[i+1],position-float(i));
+                uint index=uint(raw_bin>=0 ? raw_bin : raw_bin+int(fft_size));
+                value=work[block*fft_size+index]*(h/float(fft_size));
+            }
+        }
+        tile[reverse_digits(k)]=multiply(value,shift);
+        shift=multiply(shift,advance);
+    }
+    barrier();
+    // Five deterministic radix-4 stages. The result stays in shared memory
+    // until interpolation, avoiding an intermediate global write/read.
+    for(uint length=4;length<=1024;length*=4) {
+        uint quarter=length/4;
+        for(uint k=lane;k<256;k+=128) {
+            uint offset=k%quarter,a=(k/quarter)*length+offset,w=offset*(1024/length);
+            vec2 x0=tile[a],x1=multiply(tile[a+quarter],twiddle(w));
+            vec2 x2=multiply(tile[a+2*quarter],twiddle(2*w));
+            vec2 x3=multiply(tile[a+3*quarter],twiddle(3*w));
+            vec2 s0=x0+x2,s1=x0-x2,s2=x1+x3,d=x1-x3,s3=vec2(-d.y,d.x);
+            tile[a]=s0+s2;tile[a+quarter]=s1+s3;
+            tile[a+2*quarter]=s0-s2;tile[a+3*quarter]=s1-s3;
+        }
+        barrier();
+    }
+    // Integer positions and small fractional offsets are kept separate. Each
+    // channel evaluates the same ADC time map and retains its own RF phase.
+    for(uint j=lane;j<p.hop;j+=128) {
+        uint m=block*p.hop+j;
+        if(m>=p.count)continue;
+        float offset=2.0*(float(j)-phase.w)*b.z;
+        int whole=int(floor(offset)),integer=floatBitsToInt(b.x)+int(2*j)+whole;
+        vec2 value;
+        if(b.z==0) {value=tile[integer];}
+        else if(abs(2.0*phase.w*b.z)<=.002) {
+            integer=floatBitsToInt(b.x)+int(2*j);
+            vec2 centre=tile[integer];
+            vec2 derivative=d1*(tile[integer+1]-tile[integer-1])+d2*(tile[integer+2]-tile[integer-2])+d3*(tile[integer+3]-tile[integer-3]);
+            vec2 curvature=tile[integer+1]+tile[integer-1]-2.0*centre;
+            value=centre+offset*derivative+(.5*offset*offset)*curvature;
+        } else {
+            float mu=(offset-float(whole))*2048;
+            uint index=min(2047,uint(mu));float alpha=mu-float(index);
+            value=vec2(0);
+            for(uint k=0;k<16;++k)
+                value+=tile[integer-7+int(k)]*mix(coefficients[index*16+k],coefficients[(index+1)*16+k],alpha);
+        }
+        float angle=phase.z*float(j);
+        result[channel*p.stride+m]=multiply(value,multiply(phase.xy,vec2(cos(angle),sin(angle))));
+    }
+}

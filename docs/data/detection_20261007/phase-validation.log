@@ -1,0 +1,23 @@
+Test project /Users/danielrd/sources/dvbt_passive_radar/build/debug
+    Start  1: matched_profiles_gpu
+1/7 Test  #1: matched_profiles_gpu .............   Passed    5.54 sec
+    Start  3: sar_coordinates_cpu
+2/7 Test  #3: sar_coordinates_cpu ..............   Passed    0.61 sec
+    Start  4: sar_multichannel_gpu
+3/7 Test  #4: sar_multichannel_gpu .............   Passed   80.94 sec
+    Start 19: phase_coordinates_cpu
+4/7 Test #19: phase_coordinates_cpu ............   Passed    3.81 sec
+    Start 20: phase_coordinates_gpu
+5/7 Test #20: phase_coordinates_gpu ............   Passed    2.63 sec
+    Start 21: receiver_phase_gpu
+6/7 Test #21: receiver_phase_gpu ...............   Passed   11.41 sec
+    Start 22: pipeline_phase_gpu
+7/7 Test #22: pipeline_phase_gpu ...............   Passed   15.35 sec
+
+100% tests passed out of 7
+
+Label Time Summary:
+cpu    =   4.41 sec*proc (2 tests)
+gpu    = 115.87 sec*proc (5 tests)
+
+Total Test time (real) = 120.28 sec

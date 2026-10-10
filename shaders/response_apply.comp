@@ -1,0 +1,24 @@
+#version 450
+layout(local_size_x=64) in;
+layout(set=0,binding=0,std430) readonly buffer Measured {vec2 measured[];};
+layout(set=0,binding=1,std430) readonly buffer Reference {vec2 reference[];};
+layout(set=0,binding=2,std430) readonly buffer Valid {uint valid[];};
+layout(set=0,binding=3,std430) readonly buffer Rotation {vec2 rotation[];};
+layout(set=0,binding=4,std430) readonly buffer Response {vec2 response[];};
+layout(set=0,binding=5,std430) writeonly buffer Aligned {vec2 aligned[];};
+layout(set=0,binding=6,std430) writeonly buffer Cross {vec2 cross_spectrum[];};
+layout(set=0,binding=7,std430) writeonly buffer Normalized {vec2 normalized[];};
+layout(push_constant) uniform Parameters {uint count;uint unused0;uint unused1;uint unused2;} pc;
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+void main() {
+    uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
+    if(i>=pc.count*6817)return;
+    if(valid[i]==0){aligned[i]=vec2(0);cross_spectrum[i]=vec2(0);normalized[i]=vec2(0);return;}
+    uint k=i%6817;vec2 x=multiply(reference[i],rotation[k]),h=response[k],predicted=multiply(h,x);
+    vec2 error=measured[i]-predicted;
+    aligned[i]=x;
+    cross_spectrum[i]=multiply(error,vec2(x.x,-x.y));
+    // Complex target/direct ratio. H's nuisance phase cancels explicitly. Keep
+    // X and H as well, so the consumer can recover E and measurement weights.
+    normalized[i]=multiply(error,vec2(predicted.x,-predicted.y))/max(dot(predicted,predicted),1e-30);
+}

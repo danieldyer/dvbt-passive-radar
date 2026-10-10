@@ -1,0 +1,23 @@
+{
+  "method": "Fixed lower limit 1.5 dB below median displayed noise floor; upper limit 0.25 dB above complete-recording maximum",
+  "power_limits_db": [
+    1.2415573596954346,
+    42.077110290527344
+  ],
+  "display_noise_floor_db": 2.7415573596954346,
+  "max_source": "renders/C31_3s_0-30km_pm200Hz_30p637fps_matched_dc_removed_20261007.json",
+  "sample_sources": [
+    {
+      "map": "build/detection-20261006/weighted-050-normalized.rdm",
+      "median_display_power_db": 2.7256555557250977
+    },
+    {
+      "map": "build/detection-20261006/weighted-140-normalized.rdm",
+      "median_display_power_db": 2.7415573596954346
+    },
+    {
+      "map": "build/detection-20261006/weighted-265-normalized.rdm",
+      "median_display_power_db": 2.766366481781006
+    }
+  ]
+}

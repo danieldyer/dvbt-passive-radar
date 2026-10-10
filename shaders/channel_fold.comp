@@ -1,0 +1,23 @@
+#version 450
+layout(local_size_x=64) in;
+layout(constant_id=0) const uint decimation=7;
+layout(constant_id=1) const uint size=512;
+layout(constant_id=2) const uint channels=1;
+layout(set=0,binding=1,std430) readonly buffer Transform { vec2 work[]; };
+layout(set=0,binding=2,std430) readonly buffer Coefficients { vec2 response[]; };
+layout(set=0,binding=3,std430) writeonly buffer Decimated { vec2 folded[]; };
+layout(push_constant) uniform Parameters { uint fft_size; uint hop; uint decimation; uint count; uint channels; uint stride; uint taps; uint batches; } p;
+vec2 multiply(vec2 a,vec2 b) { return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x); }
+void main() {
+    uint block=gl_WorkGroupID.x/(size/64), k=(gl_WorkGroupID.x%(size/64))*64+gl_LocalInvocationID.x;
+    if(block>=p.batches) return;
+    // Load each spectral sample once, reuse the registers for EVERY channel.
+    vec2 raw[decimation];
+    for(uint alias=0;alias<decimation;++alias) raw[alias]=work[block*p.fft_size+alias*size+k];
+    for(uint channel=0;channel<channels;++channel) {
+        vec2 sum=vec2(0);
+        for(uint alias=0;alias<decimation;++alias)
+            sum+=multiply(raw[alias],response[channel*p.fft_size+alias*size+k]);
+        folded[(channel*p.batches+block)*size+k]=sum;
+    }
+}

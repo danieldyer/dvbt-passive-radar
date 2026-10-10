@@ -1,0 +1,35 @@
+#version 450
+layout(local_size_x=64) in;
+layout(set=0,binding=0,std430) readonly buffer Measured {vec2 y[];};
+layout(set=0,binding=1,std430) readonly buffer Reference {vec2 x[];};
+layout(set=0,binding=2,std430) readonly buffer Valid {uint valid[];};
+layout(set=0,binding=3,std430) readonly buffer Response {vec2 h[];};
+layout(set=0,binding=4,std430) writeonly buffer Modes {vec2 modes[];};
+layout(push_constant) uniform Parameters {uint first;uint last;uint ready;uint unused;} pc;
+shared vec4 rhs[64];shared vec4 gram[64];
+vec2 mul(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+void main() {
+    uint row=gl_WorkGroupID.x,lane=gl_LocalInvocationID.x;
+    vec4 b=vec4(0),g=vec4(0);
+    for(uint k=lane;k<6817;k+=64) {
+        uint i=row*6817+k;float p=dot(x[i],x[i]);
+        if(valid[i]==0 || p<=0)continue;
+        vec2 r=mul(y[i],vec2(x[i].x,-x[i].y))/p;
+        float u=(int(k)-3408)/8192.0,energy=dot(h[k],h[k]);
+        // Bound each carrier's influence on the common-mode fit. A very strong
+        // narrow interferer must not spread into every quiet variance estimate.
+        vec2 error=r-h[k];float weight=min(1,16*energy/max(dot(error,error),1e-30));
+        vec2 z=mul(r,vec2(h[k].x,-h[k].y));
+        b+=weight*vec4(z,vec2(z.y,-z.x)*u);g+=weight*vec4(energy,energy*u,energy*u*u,1);
+    }
+    rhs[lane]=b;gram[lane]=g;barrier();
+    for(uint step=32;step>0;step/=2) {
+        if(lane<step){rhs[lane]+=rhs[lane+step];gram[lane]+=gram[lane+step];}barrier();
+    }
+    if(lane==0) {
+        g=gram[0];b=rhs[0];float determinant=g.x*g.z-g.y*g.y;
+        bool usable=g.w>64 && determinant>1e-12*g.x*g.z;
+        modes[row*2]=usable ? (g.z*b.xy+g.y*vec2(b.w,-b.z))/determinant : vec2(0);
+        modes[row*2+1]=usable ? (g.x*b.zw+g.y*vec2(-b.y,b.x))/determinant : vec2(0);
+    }
+}

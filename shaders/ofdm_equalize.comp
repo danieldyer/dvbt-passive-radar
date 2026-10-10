@@ -1,0 +1,23 @@
+#version 450
+layout(local_size_x=64) in;
+layout(set=0,binding=2,std430) readonly buffer Fourier {vec2 spectrum[];};
+layout(set=0,binding=3,std430) writeonly buffer Measured {vec2 measured[];};
+layout(set=0,binding=4,std430) writeonly buffer Equalized {vec2 equalized[];};
+layout(set=0,binding=5,std430) readonly buffer Statistics {vec2 stats[];};
+layout(set=0,binding=6,std430) readonly buffer Tables {vec2 table[];};
+layout(push_constant) uniform Parameters {uint count;uint capacity;uint pilots;uint unused;} pc;
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+vec2 value(uint w,uint k){return spectrum[w*8192+(k+8192-3408)%8192];}
+void main() {
+    uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
+    if(i>=pc.count*6817)return;
+    uint w=i/6817,k=i%6817,start=3*floatBitsToUint(stats[w*(pc.pilots+3)].x);
+    uint left=start+(k>start ? (k-start)/12*12 : 0),right=min(left+12,6816);
+    if(left==6816){left-=12;right=6816;}
+    vec2 a=multiply(value(w,left),table[left]),b=multiply(value(w,right),table[right]);
+    float mu=(float(k)-float(left))/float(right-left);
+    vec2 channel=multiply(a+(b-a)*mu,table[6817+k]);
+    vec2 raw=value(w,k);
+    measured[i]=raw; // Measurement branch: no decoder channel equalization.
+    equalized[i]=multiply(raw,vec2(channel.x,-channel.y))/max(dot(channel,channel),1e-30);
+}

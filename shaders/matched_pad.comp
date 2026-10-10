@@ -1,0 +1,11 @@
+#version 450
+layout(local_size_x=64) in;
+layout(set=0,binding=5,std430) readonly buffer Samples {vec2 samples[];};
+layout(set=0,binding=6,std430) writeonly buffer Moments {vec2 moments[];};
+layout(push_constant) uniform Parameters {uint start,count,total,capacity,guard;int origin;float fraction,gain;} p;
+void main(){
+    uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
+    uint stride=p.capacity*8192;if(i>=stride)return;
+    uint row=i/8192,j=i%8192;
+    moments[stride+i]=row<p.count ? samples[(p.capacity+row+2)*8192+j]*((float(j)-4095.5)/8192) : vec2(0);
+}

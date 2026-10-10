@@ -1,0 +1,29 @@
+#version 450
+layout(local_size_x=64) in;
+layout(constant_id=0) const uint taps=64;
+layout(constant_id=1) const uint fft_size=3584;
+layout(constant_id=2) const uint block_count=800;
+layout(set=0,binding=0,std430) readonly buffer Input {vec2 input_samples[];};
+layout(set=0,binding=1,std430) writeonly buffer Transform {vec2 work[];};
+layout(set=0,binding=5,std430) readonly buffer Blocks {vec4 blocks[];};
+layout(set=0,binding=6,std430) readonly buffer Coefficients {float coefficients[];};
+layout(set=0,binding=7,std430) readonly buffer Coordinates {vec4 coordinates[];};
+layout(push_constant) uniform Parameters {uint fft_size;uint hop;uint decimation;uint count;uint channels;uint stride;uint input_count;uint guard;} p;
+void main() {
+    uint index=(gl_WorkGroupID.x+gl_WorkGroupID.y*gl_NumWorkGroups.x)*64+gl_LocalInvocationID.x;
+    uint ordinal=index/fft_size,j=index%fft_size;
+    uint block=floatBitsToUint(blocks[block_count+p.channels+block_count*p.channels+ordinal].x);
+    uint coordinate=floatBitsToUint(blocks[block].w);
+    vec4 c=coordinates[coordinate+2*(j/64)];
+    float split=coordinates[coordinate+2*(j/64)+1].x,lane=float(j%64);
+    float offset=c.y+min(lane,split)*c.z+max(0.0,lane-split)*c.w;
+    int whole=int(floor(offset));
+    int begin=floatBitsToInt(c.x)+int(j%64)+whole-int(taps/2-1);
+    if(begin<0 || begin+int(taps)>int(p.input_count)) {work[block*fft_size+j]=vec2(0);return;}
+    float phase=(offset-float(whole))*2048;
+    uint phase_index=min(2047,uint(phase));float alpha=phase-float(phase_index);
+    vec2 value=vec2(0);
+    for(uint k=0;k<taps;++k)
+        value+=input_samples[begin+k]*mix(coefficients[2049*16+phase_index*taps+k],coefficients[2049*16+(phase_index+1)*taps+k],alpha);
+    work[block*fft_size+j]=value;
+}

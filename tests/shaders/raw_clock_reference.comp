@@ -1,0 +1,31 @@
+#version 450
+layout(local_size_x=64) in;
+layout(constant_id=0) const uint taps=96;
+layout(set=0,binding=0,std430) writeonly buffer Corrected { vec2 corrected[]; };
+layout(set=0,binding=5,std430) readonly buffer Input { vec2 input_samples[]; };
+layout(set=0,binding=6,std430) readonly buffer Coefficients { float coefficients[]; };
+// Exact integer offset, fractional offset, and rate for each 64-sample group.
+// Keeping the local coordinate small avoids FP32 loss at large file offsets.
+layout(set=0,binding=7,std430) readonly buffer Coordinates { vec4 coordinates[]; };
+layout(push_constant) uniform Parameters { uint count; uint padded_count; } p;
+void main() {
+    uint group=gl_WorkGroupID.x+gl_WorkGroupID.y*gl_NumWorkGroups.x;
+    uint lane=gl_LocalInvocationID.x,m=group*64+lane;
+    if(m>=p.padded_count)return;
+    if(m>=p.count) {corrected[m]=vec2(0);return;}
+    vec4 c=coordinates[2*group];
+    float split=coordinates[2*group+1].x;
+    float offset=c.y+min(float(lane),split)*c.z+max(0.0,float(lane)-split)*c.w;
+    int whole=int(floor(offset));
+    int begin=floatBitsToInt(c.x)+int(lane)+whole-int(taps/2-1);
+    float phase=(offset-float(whole))*2048.0;
+    uint index=min(2047,uint(phase));float fraction=phase-float(index);
+    vec2 a=vec2(0),b=vec2(0),d=vec2(0),e=vec2(0);
+    for(uint j=0;j<taps;j+=4) {
+        a+=input_samples[begin+j]*mix(coefficients[index*taps+j],coefficients[(index+1)*taps+j],fraction);
+        b+=input_samples[begin+j+1]*mix(coefficients[index*taps+j+1],coefficients[(index+1)*taps+j+1],fraction);
+        d+=input_samples[begin+j+2]*mix(coefficients[index*taps+j+2],coefficients[(index+1)*taps+j+2],fraction);
+        e+=input_samples[begin+j+3]*mix(coefficients[index*taps+j+3],coefficients[(index+1)*taps+j+3],fraction);
+    }
+    corrected[m]=(a+b)+(d+e);
+}

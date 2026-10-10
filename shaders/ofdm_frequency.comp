@@ -1,0 +1,27 @@
+#version 450
+layout(local_size_x=64) in;
+layout(set=0,binding=2,std430) readonly buffer Fourier {vec2 spectrum[];};
+layout(set=0,binding=6,std430) readonly buffer Tables {vec2 table[];};
+layout(set=0,binding=7,std430) writeonly buffer Scores {float scores[];};
+layout(push_constant) uniform Parameters {uint count;uint radius;uint pilots;uint unused;} pc;
+shared vec4 reduction[64];
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+vec2 channel(uint w,uint k,int shift) {
+    uint bin=uint((int(k)+8192-3408+shift)%8192);
+    return multiply(spectrum[w*8192+bin],table[k]);
+}
+void main() {
+    uint row=gl_WorkGroupID.x,lane=gl_LocalInvocationID.x,n=2*pc.radius+1,w=row/n;
+    int shift=int(row%n)-int(pc.radius);
+    vec2 sum=vec2(0);float power=0;
+    for(uint j=lane;j+1<pc.pilots;j+=64) {
+        uint a=floatBitsToUint(table[2*6817+j].x),b=floatBitsToUint(table[2*6817+j+1].x);
+        vec2 x=channel(w,a,shift),y=channel(w,b,shift);
+        sum+=multiply(y,vec2(x.x,-x.y));power+=dot(x,x)+dot(y,y);
+    }
+    reduction[lane]=vec4(sum,power,0);barrier();
+    for(uint step=32;step>0;step/=2) {
+        if(lane<step)reduction[lane]+=reduction[lane+step];barrier();
+    }
+    if(lane==0)scores[row]=2*length(reduction[0].xy)/max(reduction[0].z,1e-30);
+}

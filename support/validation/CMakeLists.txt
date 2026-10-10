@@ -1,0 +1,8 @@
+add_executable(sensitivity_response EXCLUDE_FROM_ALL response_probe.cpp)
+target_link_libraries(sensitivity_response PRIVATE radar_dsp)
+add_executable(detection_replay EXCLUDE_FROM_ALL detection_replay.cpp)
+target_link_libraries(detection_replay PRIVATE radar_dsp)
+add_executable(legacy_map_benchmark EXCLUDE_FROM_ALL legacy_map_benchmark.cpp)
+target_link_libraries(legacy_map_benchmark PRIVATE radar_dsp)
+add_executable(detection_pipeline_benchmark EXCLUDE_FROM_ALL detection_pipeline_benchmark.cpp)
+target_link_libraries(detection_pipeline_benchmark PRIVATE radar_dsp)

@@ -1,0 +1,17 @@
+#version 450
+layout(local_size_x=64) in;
+layout(binding=5) readonly buffer Focus {vec2 focused[];};
+layout(binding=6) writeonly buffer Output {vec2 output_values[];};
+layout(binding=8) readonly buffer Scales {float scales[];};
+layout(push_constant) uniform Parameters {uint rows,size,frequencies,first,count,ranges;int offset_bin;uint remove_dc;float interval,rf;} p;
+shared vec2 tile[64];
+void main(){
+    uint group=gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x,lane=gl_LocalInvocationID.x;
+    uint columns=(p.count+7)/8,first_f=(group%columns)*8,first_r=(group/columns)*8;
+    uint r=first_r+lane%8,local=first_f+lane/8;
+    // Coalesce both the frequency-major IFFT reads and range-major map writes.
+    tile[(lane%8)*8+lane/8]=r<p.ranges && local<p.count ? focused[local*4096+r]*scales[p.first+local] : vec2(0);
+    barrier();
+    r=first_r+lane/8;local=first_f+lane%8;
+    if(r<p.ranges && local<p.count)output_values[r*p.frequencies+p.first+local]=tile[lane];
+}

@@ -1,0 +1,272 @@
+{
+  "cpi_s": 0.999872,
+  "rows": 919,
+  "reference_origin_samples": 128,
+  "operator": "finite integer delay plus frequency shift; no baseband range migration",
+  "dc_removal": false,
+  "noise": "held-out diagonal physical carrier noise; white slow time",
+  "noise_source": "build/sensitivity-20261006/excerpt-050-carrier-noise.npz",
+  "response": "frozen first-batch fitted H",
+  "cases": [
+    {
+      "delay_samples": 0,
+      "doppler_hz": 0.0,
+      "current_template_loss_db": {
+        "rect": 0.5657105528731345,
+        "hann": 2.326622226312903,
+        "hamming": 1.9101130850269459
+      },
+      "shaped_diagonal_rect_loss_db": -1.6441783304730434e-12,
+      "exact_hann_loss_db": 1.7609123872614432,
+      "gain_from_exact_template_with_hann_db": 0.5657098390514599,
+      "exact_rect_efficiency": 1.0000000000003835
+    },
+    {
+      "delay_samples": 0,
+      "doppler_hz": 50.0,
+      "current_template_loss_db": {
+        "rect": 0.6031175535864607,
+        "hann": 2.3640569146942356,
+        "hamming": 1.9475436715669323
+      },
+      "shaped_diagonal_rect_loss_db": 0.03744158873338631,
+      "exact_hann_loss_db": 1.7609123146917924,
+      "gain_from_exact_template_with_hann_db": 0.6031446000024432,
+      "exact_rect_efficiency": 0.9999999999999711
+    },
+    {
+      "delay_samples": 0,
+      "doppler_hz": 100.0,
+      "current_template_loss_db": {
+        "rect": 0.7158042192905123,
+        "hann": 2.476828808589717,
+        "hamming": 2.0603029391032415
+      },
+      "shaped_diagonal_rect_loss_db": 0.1501603317176255,
+      "exact_hann_loss_db": 1.7609114680802076,
+      "gain_from_exact_template_with_hann_db": 0.7159173405095096,
+      "exact_rect_efficiency": 1.000000000000011
+    },
+    {
+      "delay_samples": 0,
+      "doppler_hz": 200.0,
+      "current_template_loss_db": {
+        "rect": 1.172687406749154,
+        "hann": 2.934068904525866,
+        "hamming": 2.5174901587403697
+      },
+      "shaped_diagonal_rect_loss_db": 0.6071003788739675,
+      "exact_hann_loss_db": 1.7609075277756507,
+      "gain_from_exact_template_with_hann_db": 1.1731613767502154,
+      "exact_rect_efficiency": 1.0000000000000089
+    },
+    {
+      "delay_samples": 128,
+      "doppler_hz": 0.0,
+      "current_template_loss_db": {
+        "rect": 0.5657105528696463,
+        "hann": 2.326622226312909,
+        "hamming": 1.9101130850268802
+      },
+      "shaped_diagonal_rect_loss_db": -8.370362409681725e-13,
+      "exact_hann_loss_db": 1.7609123872614179,
+      "gain_from_exact_template_with_hann_db": 0.565709839051491,
+      "exact_rect_efficiency": 1.0000000000002063
+    },
+    {
+      "delay_samples": 128,
+      "doppler_hz": 50.0,
+      "current_template_loss_db": {
+        "rect": 0.6031738808018076,
+        "hann": 2.364108229594197,
+        "hamming": 1.9475957290005717
+      },
+      "shaped_diagonal_rect_loss_db": 0.03744317294936692,
+      "exact_hann_loss_db": 1.7609134284452101,
+      "gain_from_exact_template_with_hann_db": 0.6031948011489867,
+      "exact_rect_efficiency": 1.0000000000000142
+    },
+    {
+      "delay_samples": 128,
+      "doppler_hz": 100.0,
+      "current_template_loss_db": {
+        "rect": 0.7159197209277584,
+        "hann": 2.4769349147065527,
+        "hamming": 2.0604104370277216
+      },
+      "shaped_diagonal_rect_loss_db": 0.1501664078373918,
+      "exact_hann_loss_db": 1.7609151682759179,
+      "gain_from_exact_template_with_hann_db": 0.7160197464306348,
+      "exact_rect_efficiency": 1.0
+    },
+    {
+      "delay_samples": 128,
+      "doppler_hz": 200.0,
+      "current_template_loss_db": {
+        "rect": 1.172925226550776,
+        "hann": 2.934290530680439,
+        "hamming": 2.5177141834828936
+      },
+      "shaped_diagonal_rect_loss_db": 0.6071193938965441,
+      "exact_hann_loss_db": 1.7609196561644542,
+      "gain_from_exact_template_with_hann_db": 1.1733708745159848,
+      "exact_rect_efficiency": 0.9999999999999607
+    },
+    {
+      "delay_samples": 384,
+      "doppler_hz": 0.0,
+      "current_template_loss_db": {
+        "rect": 0.5657105528718219,
+        "hann": 2.326622226312987,
+        "hamming": 1.910113085026788
+      },
+      "shaped_diagonal_rect_loss_db": 3.8476665915477864e-13,
+      "exact_hann_loss_db": 1.7609123872614216,
+      "gain_from_exact_template_with_hann_db": 0.5657098390515654,
+      "exact_rect_efficiency": 0.9999999999999164
+    },
+    {
+      "delay_samples": 384,
+      "doppler_hz": 50.0,
+      "current_template_loss_db": {
+        "rect": 0.6031470211679106,
+        "hann": 2.364087608279715,
+        "hamming": 1.9475741835303322
+      },
+      "shaped_diagonal_rect_loss_db": 0.03744022759708291,
+      "exact_hann_loss_db": 1.7609119082976046,
+      "gain_from_exact_template_with_hann_db": 0.6031756999821105,
+      "exact_rect_efficiency": 1.0000000000000138
+    },
+    {
+      "delay_samples": 384,
+      "doppler_hz": 100.0,
+      "current_template_loss_db": {
+        "rect": 0.7158609043816128,
+        "hann": 2.476886925201371,
+        "hamming": 2.0603608436686067
+      },
+      "shaped_diagonal_rect_loss_db": 0.15015478127395324,
+      "exact_hann_loss_db": 1.7609107625098877,
+      "gain_from_exact_template_with_hann_db": 0.7159761626914833,
+      "exact_rect_efficiency": 0.9999999999999885
+    },
+    {
+      "delay_samples": 384,
+      "doppler_hz": 200.0,
+      "current_template_loss_db": {
+        "rect": 1.1727886432133197,
+        "hann": 2.9341687833176717,
+        "hamming": 2.517590238833592
+      },
+      "shaped_diagonal_rect_loss_db": 0.6070742618695514,
+      "exact_hann_loss_db": 1.76090677372224,
+      "gain_from_exact_template_with_hann_db": 1.1732620095954318,
+      "exact_rect_efficiency": 1.0000000000000164
+    },
+    {
+      "delay_samples": 512,
+      "doppler_hz": 0.0,
+      "current_template_loss_db": {
+        "rect": 0.7018421160126155,
+        "hann": 2.463189766272723,
+        "hamming": 2.046616036415236
+      },
+      "shaped_diagonal_rect_loss_db": 0.1360270427699686,
+      "exact_hann_loss_db": 1.7608792373034912,
+      "gain_from_exact_template_with_hann_db": 0.7023105289692317,
+      "exact_rect_efficiency": 0.9999999999999857
+    },
+    {
+      "delay_samples": 512,
+      "doppler_hz": 50.0,
+      "current_template_loss_db": {
+        "rect": 0.7381332603068889,
+        "hann": 2.499581448207574,
+        "hamming": 2.0829928234070216
+      },
+      "shaped_diagonal_rect_loss_db": 0.17235433162660643,
+      "exact_hann_loss_db": 1.7608832099305938,
+      "gain_from_exact_template_with_hann_db": 0.7386982382769804,
+      "exact_rect_efficiency": 0.9999999999999597
+    },
+    {
+      "delay_samples": 512,
+      "doppler_hz": 100.0,
+      "current_template_loss_db": {
+        "rect": 0.8473922906410143,
+        "hann": 2.6089900073647905,
+        "hamming": 2.192379229001255
+      },
+      "shaped_diagonal_rect_loss_db": 0.2816478043537367,
+      "exact_hann_loss_db": 1.7608867795544096,
+      "gain_from_exact_template_with_hann_db": 0.8481032278103808,
+      "exact_rect_efficiency": 0.9999999999999875
+    },
+    {
+      "delay_samples": 512,
+      "doppler_hz": 200.0,
+      "current_template_loss_db": {
+        "rect": 1.2900945314016763,
+        "hann": 3.052150063150437,
+        "hamming": 2.635471454518602
+      },
+      "shaped_diagonal_rect_loss_db": 0.7244135138016277,
+      "exact_hann_loss_db": 1.7608911051989582,
+      "gain_from_exact_template_with_hann_db": 1.2912589579514788,
+      "exact_rect_efficiency": 1.0000000000000073
+    },
+    {
+      "delay_samples": 800,
+      "doppler_hz": 0.0,
+      "current_template_loss_db": {
+        "rect": 1.0169392731386384,
+        "hann": 2.7776546809049147,
+        "hamming": 2.361174616902248
+      },
+      "shaped_diagonal_rect_loss_db": 0.4511716710408101,
+      "exact_hann_loss_db": 1.7606057165162758,
+      "gain_from_exact_template_with_hann_db": 1.017048964388639,
+      "exact_rect_efficiency": 1.0000000000000113
+    },
+    {
+      "delay_samples": 800,
+      "doppler_hz": 50.0,
+      "current_template_loss_db": {
+        "rect": 1.0505393443542665,
+        "hann": 2.811348422727069,
+        "hamming": 2.394854482279297
+      },
+      "shaped_diagonal_rect_loss_db": 0.48480438274507565,
+      "exact_hann_loss_db": 1.7606025031223815,
+      "gain_from_exact_template_with_hann_db": 1.0507459196046876,
+      "exact_rect_efficiency": 0.9999999999999677
+    },
+    {
+      "delay_samples": 800,
+      "doppler_hz": 100.0,
+      "current_template_loss_db": {
+        "rect": 1.1519690679212355,
+        "hann": 2.912933117386325,
+        "hamming": 2.4964162188402845
+      },
+      "shaped_diagonal_rect_loss_db": 0.5862635041488516,
+      "exact_hann_loss_db": 1.7605978026779985,
+      "gain_from_exact_template_with_hann_db": 1.1523353147083264,
+      "exact_rect_efficiency": 1.0000000000000113
+    },
+    {
+      "delay_samples": 800,
+      "doppler_hz": 200.0,
+      "current_template_loss_db": {
+        "rect": 1.5628781906601594,
+        "hann": 3.3243479050888354,
+        "hamming": 2.907756092226499
+      },
+      "shaped_diagonal_rect_loss_db": 0.9972209355021142,
+      "exact_hann_loss_db": 1.7605855440509508,
+      "gain_from_exact_template_with_hann_db": 1.5637623610378846,
+      "exact_rect_efficiency": 0.999999999999999
+    }
+  ]
+}

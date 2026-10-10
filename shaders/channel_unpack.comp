@@ -1,0 +1,23 @@
+#version 450
+layout(local_size_x=64) in;
+layout(constant_id=0) const uint decimation=7;
+layout(constant_id=1) const uint size=512;
+layout(set=0,binding=2,std430) readonly buffer Coefficients { vec2 response[]; };
+layout(set=0,binding=3,std430) readonly buffer Decimated { vec2 filtered[]; };
+layout(set=0,binding=4,std430) writeonly buffer Output { vec2 result[]; };
+layout(push_constant) uniform Parameters { uint fft_size; uint hop; uint decimation; uint count; uint channels; uint stride; uint taps; uint batches; } p;
+vec2 multiply(vec2 a,vec2 b) { return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x); }
+void main() {
+    uint block=gl_WorkGroupID.x, channel=gl_WorkGroupID.y;
+    uint skip=(p.taps-1)/decimation;
+    uint oscillator_size=256+p.stride/256;
+    uint oscillator_start=p.channels*p.fft_size+channel*oscillator_size;
+    vec2 anchor=response[p.channels*(p.fft_size+oscillator_size)+channel];
+    for(uint j=gl_LocalInvocationID.x;j<p.hop;j+=64) {
+        uint m=block*p.hop+j;
+        if(m<p.count) {
+            vec2 phase=multiply(multiply(response[oscillator_start+(m&255)],response[oscillator_start+256+(m>>8)]),anchor);
+            result[channel*p.stride+m]=multiply(filtered[(channel*p.batches+block)*size+j+skip],phase);
+        }
+    }
+}

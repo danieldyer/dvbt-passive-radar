@@ -1,0 +1,54 @@
+{
+  "video": "/Users/danielrd/sources/dvbt_passive_radar/renders/C31_3s_0-30km_pm200Hz_30p637fps_matched_dc_removed_fixed_noise_floor_max_20261007.mov",
+  "frame_count": 9248,
+  "fps": "3125/102",
+  "recording_duration_s": 301.84,
+  "maps": 9027,
+  "power_limits_db": [
+    1.2415573596954346,
+    42.077110290527344
+  ],
+  "noise_floor_db": 2.7415573596954346,
+  "noise_floor_above_lower_limit_db": 1.5,
+  "maximum_map_power_db": 41.827110290527344,
+  "upper_headroom_db": 0.25,
+  "maps_with_upper_clipping": 0,
+  "limits_fixed_on_all_maps": true,
+  "timing_phase_and_geometry_equal_to_previous_video": true,
+  "all_frames_keyframes": true,
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "prores",
+        "profile": "Standard",
+        "width": 1920,
+        "height": 1080,
+        "pix_fmt": "yuv422p10le",
+        "color_space": "bt709",
+        "color_transfer": "bt709",
+        "color_primaries": "bt709",
+        "r_frame_rate": "3125/102",
+        "duration": "301.854720",
+        "nb_frames": "9248"
+      }
+    ],
+    "format": {
+      "duration": "301.854720",
+      "size": "5561227524"
+    }
+  },
+  "render_elapsed_s": 1018.7346402076073,
+  "native_seeks": {
+    "framework": "AVFoundation",
+    "count": 34,
+    "max_timestamp_error_s": 0.0,
+    "median_latency_ms": 6.2339582946151495
+  },
+  "full_decode": {
+    "tool": "ffmpeg",
+    "exit_code": 0,
+    "error_log_bytes": 0
+  }
+}

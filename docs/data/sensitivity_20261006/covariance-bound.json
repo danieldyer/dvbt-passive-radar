@@ -1,0 +1,2556 @@
+{
+  "model": "white slow-time innovations; diagonal carrier noise plus gain/phase and timing modes",
+  "limitations": "Common modes can include wanted reflections. Temporal whiteness and covariance structure require validation. No adaptive-response self-subtraction or finite-waveform coupling is included.",
+  "excerpts": [
+    {
+      "source": "build/sensitivity-20261006/excerpt-050.sar",
+      "records": [
+        {
+          "batch": 0,
+          "rows": 950,
+          "gaussian_power_median_ratio": 0.9056450336434291,
+          "gaussian_fourth_moment_ratio": 1.3691930599020359,
+          "lag_correlations": [
+            0.007616594482121896,
+            0.006309559342238482,
+            0.006424593350130069,
+            0.006262558942149184
+          ],
+          "carrier_lag_correlations": [
+            0.00693618607637139,
+            0.004237497926009063,
+            0.002934326378760032,
+            0.00014157508366567138
+          ],
+          "innovation_pseudocovariance_ratio": 0.0003120797359698984,
+          "common_variation_trace": 3.004493683336017,
+          "common_pseudocovariance_ratio": 0.4860302177025661,
+          "per_carrier_variance_median": 0.05929044815529525
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9954065741539052,
+          "gaussian_fourth_moment_ratio": 1.0358560484523258,
+          "lag_correlations": [
+            0.0073994587276799,
+            0.0068974869516396095,
+            0.006660998575574904,
+            0.007043423578918585
+          ],
+          "carrier_lag_correlations": [
+            0.005399746347050942,
+            0.0037998402534110084,
+            0.0016681083191576109,
+            0.0004071126975271931
+          ],
+          "innovation_pseudocovariance_ratio": 0.0005536790211515166,
+          "common_variation_trace": 2.3723937214232955,
+          "common_pseudocovariance_ratio": 0.5138874414391085,
+          "per_carrier_variance_median": 0.04987057178540464
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9997928429618388,
+          "gaussian_fourth_moment_ratio": 1.028222190824745,
+          "lag_correlations": [
+            0.007700823170197413,
+            0.007298853212403137,
+            0.00719287643480487,
+            0.0070897850668574704
+          ],
+          "carrier_lag_correlations": [
+            0.005327406826987658,
+            0.0033932204506329834,
+            0.0023298670156442227,
+            0.00044521432656985296
+          ],
+          "innovation_pseudocovariance_ratio": 0.0008636385767756761,
+          "common_variation_trace": 2.6522503031694673,
+          "common_pseudocovariance_ratio": 0.6057608337129338,
+          "per_carrier_variance_median": 0.04867413121167922
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9988073588025171,
+          "gaussian_fourth_moment_ratio": 1.0301398232830428,
+          "lag_correlations": [
+            0.007686461102091473,
+            0.006896597439869045,
+            0.007287269972062982,
+            0.00757241686330695
+          ],
+          "carrier_lag_correlations": [
+            0.005719450998082316,
+            0.004832511214873941,
+            0.002123873184965158,
+            0.0009539227913755836
+          ],
+          "innovation_pseudocovariance_ratio": 0.0010723881100546814,
+          "common_variation_trace": 2.857727963292643,
+          "common_pseudocovariance_ratio": 0.6143764480390189,
+          "per_carrier_variance_median": 0.0491844206556677
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9994047020259733,
+          "gaussian_fourth_moment_ratio": 1.0296839582759563,
+          "lag_correlations": [
+            0.008053072399639366,
+            0.007402193366101985,
+            0.0071201590010978024,
+            0.007917355224459105
+          ],
+          "carrier_lag_correlations": [
+            0.005665551153575624,
+            0.0038639244935773052,
+            0.002414862670856215,
+            0.0006341646596456355
+          ],
+          "innovation_pseudocovariance_ratio": 0.00035681154225326606,
+          "common_variation_trace": 2.4391905513779237,
+          "common_pseudocovariance_ratio": 0.4945730327774481,
+          "per_carrier_variance_median": 0.04869657680948523
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9880375738867955,
+          "gaussian_fourth_moment_ratio": 1.052374239718827,
+          "lag_correlations": [
+            0.007618553669192867,
+            0.006953904527172205,
+            0.0071196281664080005,
+            0.006527626636580892
+          ],
+          "carrier_lag_correlations": [
+            0.004977248318099728,
+            0.003273113134126922,
+            0.002389005539267455,
+            0.0008378640218249539
+          ],
+          "innovation_pseudocovariance_ratio": 0.00037516659342621666,
+          "common_variation_trace": 2.9556944541974954,
+          "common_pseudocovariance_ratio": 0.611425269625913,
+          "per_carrier_variance_median": 0.05179630827462572
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9928804357604851,
+          "gaussian_fourth_moment_ratio": 1.0387654032125984,
+          "lag_correlations": [
+            0.007205403704556099,
+            0.006200522396345397,
+            0.0065689748701854836,
+            0.006693076389861595
+          ],
+          "carrier_lag_correlations": [
+            0.005356174900931263,
+            0.0037535755321948974,
+            0.0012943218726847608,
+            0.0012537706369342373
+          ],
+          "innovation_pseudocovariance_ratio": 0.00045170653122936607,
+          "common_variation_trace": 2.4391632485337698,
+          "common_pseudocovariance_ratio": 0.48812931734260545,
+          "per_carrier_variance_median": 0.04989260172528222
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9971604676321033,
+          "gaussian_fourth_moment_ratio": 1.0374403434318862,
+          "lag_correlations": [
+            0.007911651150374536,
+            0.0076605700960741645,
+            0.006378320970714801,
+            0.0068714992872403015
+          ],
+          "carrier_lag_correlations": [
+            0.004863349467623516,
+            0.004040702340227197,
+            0.0020637381961371324,
+            0.0007830388316064393
+          ],
+          "innovation_pseudocovariance_ratio": 0.0005109227747620246,
+          "common_variation_trace": 7.0525161645552,
+          "common_pseudocovariance_ratio": 0.7558761596805341,
+          "per_carrier_variance_median": 0.04920753497418436
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9909756991588095,
+          "gaussian_fourth_moment_ratio": 1.0388086780344845,
+          "lag_correlations": [
+            0.0071065258972076,
+            0.007164074403019902,
+            0.0062505727071812,
+            0.006451216428122182
+          ],
+          "carrier_lag_correlations": [
+            0.0056958325473202885,
+            0.003205251721901157,
+            0.0013380270726524317,
+            0.0009105565454090635
+          ],
+          "innovation_pseudocovariance_ratio": 0.00026864702675874236,
+          "common_variation_trace": 5.274634067792766,
+          "common_pseudocovariance_ratio": 0.7474851551810574,
+          "per_carrier_variance_median": 0.05018704135303394
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.988252657257277,
+          "gaussian_fourth_moment_ratio": 1.055013468498424,
+          "lag_correlations": [
+            0.007592356397618501,
+            0.006991976202463057,
+            0.00730177998712755,
+            0.007021998915269941
+          ],
+          "carrier_lag_correlations": [
+            0.006502472431326463,
+            0.0035431197329303106,
+            0.002162886741355917,
+            0.0007265325800934697
+          ],
+          "innovation_pseudocovariance_ratio": 0.00031182280169717914,
+          "common_variation_trace": 8.659885634304391,
+          "common_pseudocovariance_ratio": 0.6654746579127097,
+          "per_carrier_variance_median": 0.052618054108515305
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9512461347194838,
+          "gaussian_fourth_moment_ratio": 1.1581102914925425,
+          "lag_correlations": [
+            0.00793842579482503,
+            0.007099185236947512,
+            0.006958981434783198,
+            0.0073343414294613
+          ],
+          "carrier_lag_correlations": [
+            0.005286714715967149,
+            0.004320378185755421,
+            0.0024263185885230335,
+            0.000438907742220873
+          ],
+          "innovation_pseudocovariance_ratio": 0.0002462866922795728,
+          "common_variation_trace": 3.0986339657149413,
+          "common_pseudocovariance_ratio": 0.5290934739780214,
+          "per_carrier_variance_median": 0.05529786302877813
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9359629969863125,
+          "gaussian_fourth_moment_ratio": 1.1925100866101017,
+          "lag_correlations": [
+            0.007693046104675266,
+            0.007211482090957449,
+            0.006886852288448187,
+            0.00756616326307838
+          ],
+          "carrier_lag_correlations": [
+            0.007320493239340608,
+            0.001850987311386237,
+            0.002237754160790304,
+            0.0005239578331871673
+          ],
+          "innovation_pseudocovariance_ratio": 0.00044350350584526404,
+          "common_variation_trace": 5.073689284506123,
+          "common_pseudocovariance_ratio": 0.7081967708825311,
+          "per_carrier_variance_median": 0.057352683527975734
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9920628786885082,
+          "gaussian_fourth_moment_ratio": 1.0478848410582058,
+          "lag_correlations": [
+            0.007035468924937832,
+            0.007058079151615559,
+            0.006915081538468252,
+            0.007175237071157638
+          ],
+          "carrier_lag_correlations": [
+            0.005341003118930471,
+            0.0025905710644836054,
+            0.0019082795495708336,
+            0.00021246951484298713
+          ],
+          "innovation_pseudocovariance_ratio": 0.00025942022356895833,
+          "common_variation_trace": 4.408227867712026,
+          "common_pseudocovariance_ratio": 0.7093473793743601,
+          "per_carrier_variance_median": 0.050250943327615004
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9969586379605536,
+          "gaussian_fourth_moment_ratio": 1.0379580044873187,
+          "lag_correlations": [
+            0.007990918894692563,
+            0.007063227413497397,
+            0.006840743876625909,
+            0.007120453836136691
+          ],
+          "carrier_lag_correlations": [
+            0.007181123013653732,
+            0.003878604616558882,
+            0.0012792208407227223,
+            0.0007492265672232521
+          ],
+          "innovation_pseudocovariance_ratio": 0.00043218627721161557,
+          "common_variation_trace": 8.28951856490639,
+          "common_pseudocovariance_ratio": 0.6541275872145267,
+          "per_carrier_variance_median": 0.04936984332881785
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9975929286837029,
+          "gaussian_fourth_moment_ratio": 1.0323754978500563,
+          "lag_correlations": [
+            0.008279060134939134,
+            0.006856834805033462,
+            0.007428989817021012,
+            0.00692272684933173
+          ],
+          "carrier_lag_correlations": [
+            0.005076388857381301,
+            0.0038261081815729177,
+            0.0020429861179471877,
+            0.0003775116934082799
+          ],
+          "innovation_pseudocovariance_ratio": 0.0002966128630665324,
+          "common_variation_trace": 4.094747981132761,
+          "common_pseudocovariance_ratio": 0.6861320342972956,
+          "per_carrier_variance_median": 0.05049073379784937
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 1.0016025185065685,
+          "gaussian_fourth_moment_ratio": 1.0254738623640391,
+          "lag_correlations": [
+            0.008151193876432632,
+            0.007261746230912104,
+            0.006930108347038782,
+            0.007323230073684339
+          ],
+          "carrier_lag_correlations": [
+            0.006230819753915279,
+            0.00389691128811595,
+            0.0018001535181664502,
+            0.00016706857696477466
+          ],
+          "innovation_pseudocovariance_ratio": 0.0004118010480504076,
+          "common_variation_trace": 2.785373282873886,
+          "common_pseudocovariance_ratio": 0.5878338051952745,
+          "per_carrier_variance_median": 0.04832495756878383
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9950421000527797,
+          "gaussian_fourth_moment_ratio": 1.0358331558293807,
+          "lag_correlations": [
+            0.007488674483365067,
+            0.007772388421472572,
+            0.006586595820628533,
+            0.007348546128877539
+          ],
+          "carrier_lag_correlations": [
+            0.00549525175180271,
+            0.003331952434924664,
+            0.002732464572906,
+            0.0006181474976423875
+          ],
+          "innovation_pseudocovariance_ratio": 0.00019566771116209168,
+          "common_variation_trace": 2.3746526184140873,
+          "common_pseudocovariance_ratio": 0.5283231686807405,
+          "per_carrier_variance_median": 0.049286018078851614
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9954474804983191,
+          "gaussian_fourth_moment_ratio": 1.0360216734593901,
+          "lag_correlations": [
+            0.007659448760095538,
+            0.0071253115901969205,
+            0.007467025287986187,
+            0.006424401517863593
+          ],
+          "carrier_lag_correlations": [
+            0.005316877477427196,
+            0.0038911405800534423,
+            0.0016664903082069709,
+            0.0005972205378347768
+          ],
+          "innovation_pseudocovariance_ratio": 0.00030058832929629446,
+          "common_variation_trace": 2.373276209924846,
+          "common_pseudocovariance_ratio": 0.5221566173868577,
+          "per_carrier_variance_median": 0.04936516409614751
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9945027649786136,
+          "gaussian_fourth_moment_ratio": 1.03632141836677,
+          "lag_correlations": [
+            0.007811401820603076,
+            0.007472898207390368,
+            0.006764538213532089,
+            0.007438618195168267
+          ],
+          "carrier_lag_correlations": [
+            0.0053189103500864785,
+            0.0031372550038507906,
+            0.00214254360097866,
+            0.0007651135856870233
+          ],
+          "innovation_pseudocovariance_ratio": 0.0004430791849435171,
+          "common_variation_trace": 6.698132567010118,
+          "common_pseudocovariance_ratio": 0.6596526957925897,
+          "per_carrier_variance_median": 0.04940628903693553
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9763316291755484,
+          "gaussian_fourth_moment_ratio": 1.123700084084824,
+          "lag_correlations": [
+            0.00794735992040807,
+            0.00741709111235327,
+            0.007384162266733663,
+            0.007244564100499719
+          ],
+          "carrier_lag_correlations": [
+            0.005884787588369146,
+            0.0035031709627248333,
+            0.0029174223148107593,
+            0.0005959483015209077
+          ],
+          "innovation_pseudocovariance_ratio": 0.00034148087745800054,
+          "common_variation_trace": 3.8181757346886367,
+          "common_pseudocovariance_ratio": 0.6488616946670267,
+          "per_carrier_variance_median": 0.05160651568342866
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.956689181181977,
+          "gaussian_fourth_moment_ratio": 1.201447047902526,
+          "lag_correlations": [
+            0.007629448940820407,
+            0.007569526976391955,
+            0.007293041875740264,
+            0.007456349511295891
+          ],
+          "carrier_lag_correlations": [
+            0.006425763386932278,
+            0.004634126412042218,
+            0.001195581900602392,
+            0.0008201028312101968
+          ],
+          "innovation_pseudocovariance_ratio": 0.00028525682374999563,
+          "common_variation_trace": 5.0799703234225015,
+          "common_pseudocovariance_ratio": 0.7294256193621264,
+          "per_carrier_variance_median": 0.05271415975094239
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9723181798005412,
+          "gaussian_fourth_moment_ratio": 1.1219022925132962,
+          "lag_correlations": [
+            0.008388676669095235,
+            0.0070552034875259306,
+            0.0072790689124255835,
+            0.006978424355051823
+          ],
+          "carrier_lag_correlations": [
+            0.005743559356029582,
+            0.0041592771235288714,
+            0.002924098606212953,
+            0.0002451971185142918
+          ],
+          "innovation_pseudocovariance_ratio": 0.0004107460444599418,
+          "common_variation_trace": 2.8984323787332,
+          "common_pseudocovariance_ratio": 0.5395043038306494,
+          "per_carrier_variance_median": 0.054147228758639365
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9857459970752885,
+          "gaussian_fourth_moment_ratio": 1.0486605096062744,
+          "lag_correlations": [
+            0.007230464149607464,
+            0.006973455669307775,
+            0.00652115948175477,
+            0.0063924846093794
+          ],
+          "carrier_lag_correlations": [
+            0.00585166704829059,
+            0.0033884234260569152,
+            0.0014473133895125854,
+            0.0002608523052323237
+          ],
+          "innovation_pseudocovariance_ratio": 0.0008334540766001355,
+          "common_variation_trace": 8.53691145272984,
+          "common_pseudocovariance_ratio": 0.8052456848198383,
+          "per_carrier_variance_median": 0.05659883066825265
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9854835825105794,
+          "gaussian_fourth_moment_ratio": 1.0548787226740597,
+          "lag_correlations": [
+            0.007663502657493216,
+            0.006576083145026869,
+            0.006465501779928782,
+            0.006770250895862135
+          ],
+          "carrier_lag_correlations": [
+            0.006005770435166072,
+            0.00351814236247568,
+            0.0022428054749356963,
+            0.0007374499723503836
+          ],
+          "innovation_pseudocovariance_ratio": 0.0011115159707849908,
+          "common_variation_trace": 3.720470585375784,
+          "common_pseudocovariance_ratio": 0.6523181004434782,
+          "per_carrier_variance_median": 0.055369397518875096
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9864852954242899,
+          "gaussian_fourth_moment_ratio": 1.0644539119912848,
+          "lag_correlations": [
+            0.00711690658544089,
+            0.006940691454455124,
+            0.006114594095939949,
+            0.006352142072566952
+          ],
+          "carrier_lag_correlations": [
+            0.00505491630041862,
+            0.0032149319569079954,
+            0.0013290480004100717,
+            0.00111761915847382
+          ],
+          "innovation_pseudocovariance_ratio": 0.00020907209303251036,
+          "common_variation_trace": 2.5494011141142856,
+          "common_pseudocovariance_ratio": 0.43859792547162685,
+          "per_carrier_variance_median": 0.05930325215165419
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9890447938985657,
+          "gaussian_fourth_moment_ratio": 1.0501457980830802,
+          "lag_correlations": [
+            0.007420396626330448,
+            0.006676991063458523,
+            0.007100641316838497,
+            0.00711886079629564
+          ],
+          "carrier_lag_correlations": [
+            0.005887449081626987,
+            0.0034103197550121897,
+            0.0013719516675034654,
+            0.0006454180098348727
+          ],
+          "innovation_pseudocovariance_ratio": 0.00029917285387117543,
+          "common_variation_trace": 2.599443335241439,
+          "common_pseudocovariance_ratio": 0.4883915914194342,
+          "per_carrier_variance_median": 0.05384182899522783
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9867081121622807,
+          "gaussian_fourth_moment_ratio": 1.0509776962535724,
+          "lag_correlations": [
+            0.007041035790754313,
+            0.006554049218112782,
+            0.006750380205159098,
+            0.006209639776885005
+          ],
+          "carrier_lag_correlations": [
+            0.004963427650268291,
+            0.0038310190166706867,
+            0.002156795284935098,
+            0.0016477197924435333
+          ],
+          "innovation_pseudocovariance_ratio": 0.0006796863697103949,
+          "common_variation_trace": 2.791378691512057,
+          "common_pseudocovariance_ratio": 0.5711675766584964,
+          "per_carrier_variance_median": 0.05355891159407761
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.99114896747664,
+          "gaussian_fourth_moment_ratio": 1.0363784706433306,
+          "lag_correlations": [
+            0.006415824440855463,
+            0.006183166193367671,
+            0.005719483229074881,
+            0.0057134985830767085
+          ],
+          "carrier_lag_correlations": [
+            0.0048981550318207695,
+            0.002921503088087856,
+            0.0010324001656753109,
+            0.0005335310215673712
+          ],
+          "innovation_pseudocovariance_ratio": 0.0006839585712012719,
+          "common_variation_trace": 3.417701792446674,
+          "common_pseudocovariance_ratio": 0.630267082680834,
+          "per_carrier_variance_median": 0.052417420757866436
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9592649794143304,
+          "gaussian_fourth_moment_ratio": 1.1604176298769493,
+          "lag_correlations": [
+            0.007362706066236665,
+            0.007054697411390301,
+            0.006286225810257777,
+            0.006841129711136721
+          ],
+          "carrier_lag_correlations": [
+            0.004821729765147479,
+            0.002794880532709474,
+            0.002713320566453361,
+            0.000850854863049667
+          ],
+          "innovation_pseudocovariance_ratio": 0.0006621645774637009,
+          "common_variation_trace": 6.792434764750097,
+          "common_pseudocovariance_ratio": 0.6706789668349824,
+          "per_carrier_variance_median": 0.05417373051697018
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9715383418047782,
+          "gaussian_fourth_moment_ratio": 1.1153863072676293,
+          "lag_correlations": [
+            0.007590564214035227,
+            0.007715996217788191,
+            0.006692748889832511,
+            0.007019879990889432
+          ],
+          "carrier_lag_correlations": [
+            0.006288480078886097,
+            0.003676065428927543,
+            0.0023293657406372108,
+            0.00046280563950890926
+          ],
+          "innovation_pseudocovariance_ratio": 0.0001977788370578892,
+          "common_variation_trace": 10.965965671352704,
+          "common_pseudocovariance_ratio": 0.6807971455338594,
+          "per_carrier_variance_median": 0.051937798217272915
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9949663572666694,
+          "gaussian_fourth_moment_ratio": 1.0363703331757876,
+          "lag_correlations": [
+            0.007546528161573824,
+            0.007247233615312794,
+            0.007243494762036586,
+            0.006520380663445466
+          ],
+          "carrier_lag_correlations": [
+            0.005864274002338148,
+            0.004136217419572519,
+            0.001658849921248171,
+            0.0003644704293768643
+          ],
+          "innovation_pseudocovariance_ratio": 0.00031960419457633787,
+          "common_variation_trace": 6.016705890228515,
+          "common_pseudocovariance_ratio": 0.8721987925365312,
+          "per_carrier_variance_median": 0.04804543138416955
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 1.0001052986742036,
+          "gaussian_fourth_moment_ratio": 1.0292192672148595,
+          "lag_correlations": [
+            0.007913355426726313,
+            0.007208972747822761,
+            0.006998118665081949,
+            0.007744158052877883
+          ],
+          "carrier_lag_correlations": [
+            0.006314683136867224,
+            0.004674269194125404,
+            0.002256620075128277,
+            0.000549143580595604
+          ],
+          "innovation_pseudocovariance_ratio": 0.0007880136014200018,
+          "common_variation_trace": 2.439540117003346,
+          "common_pseudocovariance_ratio": 0.5571570571936528,
+          "per_carrier_variance_median": 0.04757467852055291
+        },
+        {
+          "batch": 0,
+          "rows": 814,
+          "gaussian_power_median_ratio": 0.9923582457939021,
+          "gaussian_fourth_moment_ratio": 1.0369931122323413,
+          "lag_correlations": [
+            0.007353002441015504,
+            0.006814044137875078,
+            0.007169483092915121,
+            0.006588109765280104
+          ],
+          "carrier_lag_correlations": [
+            0.005582763554776353,
+            0.0039012581448929296,
+            0.0020901168331749803,
+            0.00025109349108882556
+          ],
+          "innovation_pseudocovariance_ratio": 0.0003128004249314735,
+          "common_variation_trace": 2.4270881188852185,
+          "common_pseudocovariance_ratio": 0.5041235467970436,
+          "per_carrier_variance_median": 0.04947096490540118
+        }
+      ],
+      "heldout_variance_ratio_quantiles": [
+        0.9832181703379593,
+        1.0149467851351976,
+        1.0888822552836057
+      ],
+      "heldout_oracle_diagonal_gain_db": 0.563345661625651,
+      "heldout_training_weights_gain_db": 0.5569464119966373,
+      "bounds": [
+        {
+          "delay_samples": 0,
+          "diagonal_noise_only_gain_db": 0.5613684943563539,
+          "two_mode_conditional_gain_db": 0.4698840740096253,
+          "common_to_thermal_output_variance": 54.64256596861367,
+          "information_fraction_vs_thermal_only": 0.017597233978848152,
+          "improper_noise_gain_db_phase_min_max": [
+            0.026004173290459644,
+            1.4099284057265948
+          ]
+        },
+        {
+          "delay_samples": 1,
+          "diagonal_noise_only_gain_db": 0.5613684943563472,
+          "two_mode_conditional_gain_db": 8.77915584450351,
+          "common_to_thermal_output_variance": 12.678469861177534,
+          "information_fraction_vs_thermal_only": 0.48499941768203103,
+          "improper_noise_gain_db_phase_min_max": [
+            7.01797872032334,
+            10.04182201796199
+          ]
+        },
+        {
+          "delay_samples": 4,
+          "diagonal_noise_only_gain_db": 0.5613684943563539,
+          "two_mode_conditional_gain_db": 2.0517891376640476,
+          "common_to_thermal_output_variance": 0.4250368400221321,
+          "information_fraction_vs_thermal_only": 0.9890448194127817,
+          "improper_noise_gain_db_phase_min_max": [
+            1.3009203590598037,
+            2.6921778043696465
+          ]
+        },
+        {
+          "delay_samples": 8,
+          "diagonal_noise_only_gain_db": 0.5613684943563472,
+          "two_mode_conditional_gain_db": 1.3232132507188998,
+          "common_to_thermal_output_variance": 0.19800118720137486,
+          "information_fraction_vs_thermal_only": 0.9947804168500458,
+          "improper_noise_gain_db_phase_min_max": [
+            1.0164576842623494,
+            1.610023371092808
+          ]
+        },
+        {
+          "delay_samples": 16,
+          "diagonal_noise_only_gain_db": 0.5613684943563472,
+          "two_mode_conditional_gain_db": 0.7160021867604933,
+          "common_to_thermal_output_variance": 0.037118307994829396,
+          "information_fraction_vs_thermal_only": 0.9991600669180617,
+          "improper_noise_gain_db_phase_min_max": [
+            0.6270359567300577,
+            0.8032257341020956
+          ]
+        },
+        {
+          "delay_samples": 64,
+          "diagonal_noise_only_gain_db": 0.5613684943563514,
+          "two_mode_conditional_gain_db": 0.571924471532987,
+          "common_to_thermal_output_variance": 0.0025574904661541144,
+          "information_fraction_vs_thermal_only": 0.9998763855570723,
+          "improper_noise_gain_db_phase_min_max": [
+            0.566486762920757,
+            0.5773615862590443
+          ]
+        },
+        {
+          "delay_samples": 128,
+          "diagonal_noise_only_gain_db": 0.5613684943563497,
+          "two_mode_conditional_gain_db": 0.5645987402662608,
+          "common_to_thermal_output_variance": 0.0007483178063497765,
+          "information_fraction_vs_thermal_only": 0.9999957536607196,
+          "improper_noise_gain_db_phase_min_max": [
+            0.5624905314260618,
+            0.5667062702989764
+          ]
+        },
+        {
+          "delay_samples": 256,
+          "diagonal_noise_only_gain_db": 0.5613684943563472,
+          "two_mode_conditional_gain_db": 0.5615848612695564,
+          "common_to_thermal_output_variance": 5.409694178142727e-05,
+          "information_fraction_vs_thermal_only": 0.999995724853441,
+          "improper_noise_gain_db_phase_min_max": [
+            0.5615549872796113,
+            0.561614964727243
+          ]
+        },
+        {
+          "delay_samples": 512,
+          "diagonal_noise_only_gain_db": 0.5613684943563437,
+          "two_mode_conditional_gain_db": 0.5616471616587805,
+          "common_to_thermal_output_variance": 6.553287085739967e-05,
+          "information_fraction_vs_thermal_only": 0.9999986347949087,
+          "improper_noise_gain_db_phase_min_max": [
+            0.5616000602176201,
+            0.5616943393690531
+          ]
+        },
+        {
+          "delay_samples": 800,
+          "diagonal_noise_only_gain_db": 0.5613684943563514,
+          "two_mode_conditional_gain_db": 0.561511169323897,
+          "common_to_thermal_output_variance": 3.43992037971795e-05,
+          "information_fraction_vs_thermal_only": 0.999998453514379,
+          "improper_noise_gain_db_phase_min_max": [
+            0.5614524298706763,
+            0.5615700138255759
+          ]
+        }
+      ]
+    },
+    {
+      "source": "build/sensitivity-20261006/excerpt-140.sar",
+      "records": [
+        {
+          "batch": 0,
+          "rows": 950,
+          "gaussian_power_median_ratio": 1.0005744821680822,
+          "gaussian_fourth_moment_ratio": 1.0266825955982262,
+          "lag_correlations": [
+            0.007787930261842683,
+            0.006730743353301203,
+            0.006890522987142469,
+            0.006578717120230272
+          ],
+          "carrier_lag_correlations": [
+            0.005889644401374489,
+            0.003440733830394774,
+            0.0021724647545434688,
+            0.00024679825682857474
+          ],
+          "innovation_pseudocovariance_ratio": 0.000485542522494962,
+          "common_variation_trace": 9.450007982931638,
+          "common_pseudocovariance_ratio": 0.6966168009685388,
+          "per_carrier_variance_median": 0.048887771933797716
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9976281984408404,
+          "gaussian_fourth_moment_ratio": 1.0361066721243724,
+          "lag_correlations": [
+            0.008359578129840676,
+            0.00715882087768163,
+            0.006574048829884297,
+            0.007078078822024316
+          ],
+          "carrier_lag_correlations": [
+            0.005947116053959463,
+            0.0047827513078303645,
+            0.0022083484245843175,
+            0.000859490131611726
+          ],
+          "innovation_pseudocovariance_ratio": 0.0004404293091697195,
+          "common_variation_trace": 14.126273157048749,
+          "common_pseudocovariance_ratio": 0.7482402197533963,
+          "per_carrier_variance_median": 0.04901778101997311
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9505119855691541,
+          "gaussian_fourth_moment_ratio": 1.1822431270947877,
+          "lag_correlations": [
+            0.007731397903478795,
+            0.008197926386654108,
+            0.00701981019303565,
+            0.006716031079767283
+          ],
+          "carrier_lag_correlations": [
+            0.0057655931304151945,
+            0.005683474202793048,
+            0.0025596796747827345,
+            0.0013193230833269654
+          ],
+          "innovation_pseudocovariance_ratio": 0.0004309155571251849,
+          "common_variation_trace": 5.986251085572675,
+          "common_pseudocovariance_ratio": 0.7512645864880386,
+          "per_carrier_variance_median": 0.053851139533773115
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.8563129673719427,
+          "gaussian_fourth_moment_ratio": 1.289957581182046,
+          "lag_correlations": [
+            0.008166905307828253,
+            0.007125764020998202,
+            0.00725055473697566,
+            0.006980928175646853
+          ],
+          "carrier_lag_correlations": [
+            0.006243220083343011,
+            0.003153867341411944,
+            0.002245057099489783,
+            0.0013127237346622735
+          ],
+          "innovation_pseudocovariance_ratio": 0.0003224458461129615,
+          "common_variation_trace": 3.785502670352863,
+          "common_pseudocovariance_ratio": 0.48232344426614276,
+          "per_carrier_variance_median": 0.07789296615966187
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9984381909362956,
+          "gaussian_fourth_moment_ratio": 1.032245077878668,
+          "lag_correlations": [
+            0.00783495624737107,
+            0.006811411273051833,
+            0.007102463795043091,
+            0.006940993687982709
+          ],
+          "carrier_lag_correlations": [
+            0.0057650266431162325,
+            0.004725194845651772,
+            0.0019673863727358073,
+            0.0012465970526526753
+          ],
+          "innovation_pseudocovariance_ratio": 0.00027878170786592503,
+          "common_variation_trace": 7.859678752405232,
+          "common_pseudocovariance_ratio": 0.6730417692977783,
+          "per_carrier_variance_median": 0.0481109097737186
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9996033590011889,
+          "gaussian_fourth_moment_ratio": 1.0306335040971517,
+          "lag_correlations": [
+            0.008126937213032743,
+            0.007314326802080982,
+            0.007250212268451163,
+            0.007005960392372612
+          ],
+          "carrier_lag_correlations": [
+            0.005981654825685821,
+            0.0037751470332539642,
+            0.0016416821698320358,
+            0.0007474133933783611
+          ],
+          "innovation_pseudocovariance_ratio": 0.0008971444719660419,
+          "common_variation_trace": 2.918587567083044,
+          "common_pseudocovariance_ratio": 0.6203109967019665,
+          "per_carrier_variance_median": 0.04762142517778292
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.998371745009567,
+          "gaussian_fourth_moment_ratio": 1.0307553865218455,
+          "lag_correlations": [
+            0.007505682396995445,
+            0.007414004386631233,
+            0.007100303487478973,
+            0.006850082709732328
+          ],
+          "carrier_lag_correlations": [
+            0.005680832917600618,
+            0.004007949265127253,
+            0.0029022478301840462,
+            0.0004084957613789489
+          ],
+          "innovation_pseudocovariance_ratio": 0.0002799189627908131,
+          "common_variation_trace": 5.512412894228399,
+          "common_pseudocovariance_ratio": 0.6083109140046968,
+          "per_carrier_variance_median": 0.048947242358486104
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 1.0012186816586828,
+          "gaussian_fourth_moment_ratio": 1.0272575436314553,
+          "lag_correlations": [
+            0.00795988835927872,
+            0.007537812222908256,
+            0.007152971870311717,
+            0.007415367580945756
+          ],
+          "carrier_lag_correlations": [
+            0.0059186284912070754,
+            0.004223414543101747,
+            0.0025262844743135513,
+            0.0010471197753690593
+          ],
+          "innovation_pseudocovariance_ratio": 0.00036502578578610133,
+          "common_variation_trace": 6.213171691039214,
+          "common_pseudocovariance_ratio": 0.5883720131777738,
+          "per_carrier_variance_median": 0.04816762440513316
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 1.0005206769828436,
+          "gaussian_fourth_moment_ratio": 1.0274927491599195,
+          "lag_correlations": [
+            0.008123721715148323,
+            0.0071962423892772695,
+            0.007404747006296363,
+            0.0069891113440903796
+          ],
+          "carrier_lag_correlations": [
+            0.0056985673840132065,
+            0.004086389798448536,
+            0.0024804322280213846,
+            0.0014067749691405
+          ],
+          "innovation_pseudocovariance_ratio": 0.00016071804320048097,
+          "common_variation_trace": 8.961257535981863,
+          "common_pseudocovariance_ratio": 0.819306523823065,
+          "per_carrier_variance_median": 0.04751221614927331
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9971518245337561,
+          "gaussian_fourth_moment_ratio": 1.0330288761173918,
+          "lag_correlations": [
+            0.007639395063419675,
+            0.007023958721539267,
+            0.006774307705719668,
+            0.006994174427911946
+          ],
+          "carrier_lag_correlations": [
+            0.0060272434222656355,
+            0.004562842474558791,
+            0.001649540691056731,
+            0.0006778100086197573
+          ],
+          "innovation_pseudocovariance_ratio": 0.00035813904281626,
+          "common_variation_trace": 7.641715915179551,
+          "common_pseudocovariance_ratio": 0.6935577190519632,
+          "per_carrier_variance_median": 0.04882625686176786
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9965576367103917,
+          "gaussian_fourth_moment_ratio": 1.0330610450744284,
+          "lag_correlations": [
+            0.007798732062995686,
+            0.006573580896329764,
+            0.0071018853528613665,
+            0.007056704842321081
+          ],
+          "carrier_lag_correlations": [
+            0.0059208315882941075,
+            0.004018255340252216,
+            0.002293658246597921,
+            0.0010061396953858705
+          ],
+          "innovation_pseudocovariance_ratio": 0.0003578781639208908,
+          "common_variation_trace": 2.879157254966816,
+          "common_pseudocovariance_ratio": 0.5435769955077746,
+          "per_carrier_variance_median": 0.048821104563390325
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9967028222906191,
+          "gaussian_fourth_moment_ratio": 1.0397761180313403,
+          "lag_correlations": [
+            0.007474108050483764,
+            0.006811129359885521,
+            0.007661739882516656,
+            0.006796615637745132
+          ],
+          "carrier_lag_correlations": [
+            0.005790885301211742,
+            0.003702006370140797,
+            0.002210094468152839,
+            0.00090057967089322
+          ],
+          "innovation_pseudocovariance_ratio": 0.000389382300849805,
+          "common_variation_trace": 2.6364675351908744,
+          "common_pseudocovariance_ratio": 0.5991481860471745,
+          "per_carrier_variance_median": 0.048553671576999184
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9984439222129317,
+          "gaussian_fourth_moment_ratio": 1.032522026741927,
+          "lag_correlations": [
+            0.007694969972090872,
+            0.007125100077217917,
+            0.006540618378169057,
+            0.007040807060101208
+          ],
+          "carrier_lag_correlations": [
+            0.0060636341482354856,
+            0.004712847511195016,
+            0.00228048927912431,
+            0.0003831453883233612
+          ],
+          "innovation_pseudocovariance_ratio": 0.0006264818012529476,
+          "common_variation_trace": 5.503599002606712,
+          "common_pseudocovariance_ratio": 0.7648475282808826,
+          "per_carrier_variance_median": 0.04799385389348958
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9884818676220118,
+          "gaussian_fourth_moment_ratio": 1.066978613788464,
+          "lag_correlations": [
+            0.008258338693590746,
+            0.007348178314265215,
+            0.0077493698003045204,
+            0.007025447711105838
+          ],
+          "carrier_lag_correlations": [
+            0.006843206006645772,
+            0.0035844394427190433,
+            0.0025547162991820522,
+            0.0015641172226273296
+          ],
+          "innovation_pseudocovariance_ratio": 0.0008702547539531282,
+          "common_variation_trace": 3.472047804961341,
+          "common_pseudocovariance_ratio": 0.6130895514618832,
+          "per_carrier_variance_median": 0.04973937343138277
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9860039940315222,
+          "gaussian_fourth_moment_ratio": 1.0641421743018276,
+          "lag_correlations": [
+            0.00763634395647403,
+            0.0069172677076350724,
+            0.006539404822538162,
+            0.00689689142725585
+          ],
+          "carrier_lag_correlations": [
+            0.005444231179470335,
+            0.004927699889413675,
+            0.001377831569918288,
+            0.001312478081304069
+          ],
+          "innovation_pseudocovariance_ratio": 0.00013885478521288318,
+          "common_variation_trace": 3.238997087064474,
+          "common_pseudocovariance_ratio": 0.6415751197529795,
+          "per_carrier_variance_median": 0.05061635684934699
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9724716484726124,
+          "gaussian_fourth_moment_ratio": 1.1219473007950607,
+          "lag_correlations": [
+            0.007585179908289005,
+            0.0075759325284122615,
+            0.0068237123265410034,
+            0.007277005695850769
+          ],
+          "carrier_lag_correlations": [
+            0.005437626119705386,
+            0.0020467886904072465,
+            0.0024463503880014885,
+            0.0009964405500697592
+          ],
+          "innovation_pseudocovariance_ratio": 0.0006437918960530877,
+          "common_variation_trace": 5.290933835609055,
+          "common_pseudocovariance_ratio": 0.7501484203990757,
+          "per_carrier_variance_median": 0.05168422008668912
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9758818591716572,
+          "gaussian_fourth_moment_ratio": 1.1134544750881539,
+          "lag_correlations": [
+            0.007630786891779912,
+            0.00701303533109061,
+            0.006988645474911156,
+            0.007470884034328971
+          ],
+          "carrier_lag_correlations": [
+            0.006582667489894734,
+            0.004843084391029046,
+            0.002213387739147639,
+            0.00030267749243116464
+          ],
+          "innovation_pseudocovariance_ratio": 0.0002547519296251766,
+          "common_variation_trace": 5.742481009552225,
+          "common_pseudocovariance_ratio": 0.8041657510658844,
+          "per_carrier_variance_median": 0.05126732710638696
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9912445771223866,
+          "gaussian_fourth_moment_ratio": 1.045479917411784,
+          "lag_correlations": [
+            0.008110879707541367,
+            0.007058807012918081,
+            0.007156245630975801,
+            0.006678526772221878
+          ],
+          "carrier_lag_correlations": [
+            0.005450402201219918,
+            0.0030796116164641973,
+            0.0025516631531038213,
+            0.0008779531798662819
+          ],
+          "innovation_pseudocovariance_ratio": 0.00046700441945550557,
+          "common_variation_trace": 5.8104242170406515,
+          "common_pseudocovariance_ratio": 0.7821029126780281,
+          "per_carrier_variance_median": 0.05285113808353432
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 1.0002142748359741,
+          "gaussian_fourth_moment_ratio": 1.0271720649161311,
+          "lag_correlations": [
+            0.007707720875867182,
+            0.006831339287320788,
+            0.007728859517426146,
+            0.0070768375425973576
+          ],
+          "carrier_lag_correlations": [
+            0.006522865622465278,
+            0.003599262400241867,
+            0.0031463611352425627,
+            0.0008825887444311816
+          ],
+          "innovation_pseudocovariance_ratio": 0.00033253719516580945,
+          "common_variation_trace": 2.8649051878649745,
+          "common_pseudocovariance_ratio": 0.5893299478214744,
+          "per_carrier_variance_median": 0.049080565054405056
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9948650281997841,
+          "gaussian_fourth_moment_ratio": 1.0418386147121874,
+          "lag_correlations": [
+            0.007956194678416318,
+            0.007301049905327721,
+            0.007429910100878026,
+            0.0074543826931741716
+          ],
+          "carrier_lag_correlations": [
+            0.00614641532143282,
+            0.0033069488120913474,
+            0.0006567789090419028,
+            0.000596679213611356
+          ],
+          "innovation_pseudocovariance_ratio": 0.000609009190032334,
+          "common_variation_trace": 3.047028791277402,
+          "common_pseudocovariance_ratio": 0.630108124311961,
+          "per_carrier_variance_median": 0.04887571626677479
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9541313882581766,
+          "gaussian_fourth_moment_ratio": 1.1366496707012346,
+          "lag_correlations": [
+            0.00691989805463759,
+            0.0072167367045259286,
+            0.007286992751921715,
+            0.006918662495093052
+          ],
+          "carrier_lag_correlations": [
+            0.00500829853394046,
+            0.00486589939892806,
+            0.001955025526586078,
+            0.0008806111954087195
+          ],
+          "innovation_pseudocovariance_ratio": 0.000964785823808184,
+          "common_variation_trace": 2.5666418067454613,
+          "common_pseudocovariance_ratio": 0.528481866315783,
+          "per_carrier_variance_median": 0.05568295942675289
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9661938153706486,
+          "gaussian_fourth_moment_ratio": 1.0910546305137943,
+          "lag_correlations": [
+            0.008168159090436418,
+            0.007277432675527321,
+            0.007885273648261453,
+            0.0077338662108712795
+          ],
+          "carrier_lag_correlations": [
+            0.00619489685162512,
+            0.003944967152011596,
+            0.0017150263153817187,
+            0.0011414672886040761
+          ],
+          "innovation_pseudocovariance_ratio": 0.0003025084345719101,
+          "common_variation_trace": 2.450646887746421,
+          "common_pseudocovariance_ratio": 0.4774997717633429,
+          "per_carrier_variance_median": 0.05520896269139086
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9401485415097812,
+          "gaussian_fourth_moment_ratio": 1.1296316278907585,
+          "lag_correlations": [
+            0.007601599122009163,
+            0.006782248717213514,
+            0.006519686556867242,
+            0.0070569059138109146
+          ],
+          "carrier_lag_correlations": [
+            0.0054285436473298695,
+            0.003320241969818414,
+            0.002028463041976155,
+            0.00044849596218364145
+          ],
+          "innovation_pseudocovariance_ratio": 0.0006835617804960187,
+          "common_variation_trace": 2.7879298355537663,
+          "common_pseudocovariance_ratio": 0.4936785541733069,
+          "per_carrier_variance_median": 0.06462825918324261
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9908207749367115,
+          "gaussian_fourth_moment_ratio": 1.0463098189655367,
+          "lag_correlations": [
+            0.008108821494435163,
+            0.007550433757251532,
+            0.006797840201054776,
+            0.0071037894762166764
+          ],
+          "carrier_lag_correlations": [
+            0.006451496835177289,
+            0.003202081695913127,
+            0.001605953381501637,
+            0.0002640622696069281
+          ],
+          "innovation_pseudocovariance_ratio": 0.00031132598289636536,
+          "common_variation_trace": 2.3370552804459073,
+          "common_pseudocovariance_ratio": 0.4911564918933818,
+          "per_carrier_variance_median": 0.05019334611294802
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9989738028760586,
+          "gaussian_fourth_moment_ratio": 1.0296599855121769,
+          "lag_correlations": [
+            0.007824453291719368,
+            0.0073178581319102,
+            0.007310179673775836,
+            0.007919574771825312
+          ],
+          "carrier_lag_correlations": [
+            0.005796209785021839,
+            0.00482614406414961,
+            0.0022961836544434194,
+            0.0005508475745993686
+          ],
+          "innovation_pseudocovariance_ratio": 0.0007809552609680273,
+          "common_variation_trace": 3.3303072002800818,
+          "common_pseudocovariance_ratio": 0.6658812712760235,
+          "per_carrier_variance_median": 0.04816777753592157
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9854899322394537,
+          "gaussian_fourth_moment_ratio": 1.0548733576025546,
+          "lag_correlations": [
+            0.00695384207198646,
+            0.0061625466823671355,
+            0.006965242436365214,
+            0.0064640048705636366
+          ],
+          "carrier_lag_correlations": [
+            0.005142610773926044,
+            0.0028331095304694547,
+            0.002187848451341506,
+            0.00034455698747228134
+          ],
+          "innovation_pseudocovariance_ratio": 0.0001615350485688869,
+          "common_variation_trace": 2.6714044022027057,
+          "common_pseudocovariance_ratio": 0.537644551645999,
+          "per_carrier_variance_median": 0.04931747555870641
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.972965168787689,
+          "gaussian_fourth_moment_ratio": 1.0764624671203569,
+          "lag_correlations": [
+            0.006750600071620843,
+            0.005562975826674948,
+            0.0061618655132279305,
+            0.006660327541490619
+          ],
+          "carrier_lag_correlations": [
+            0.004958567166227054,
+            0.0040456412997566344,
+            0.0014276030393448643,
+            0.00046330848373731887
+          ],
+          "innovation_pseudocovariance_ratio": 0.0004739143769527597,
+          "common_variation_trace": 2.8381583877571086,
+          "common_pseudocovariance_ratio": 0.5534242283518778,
+          "per_carrier_variance_median": 0.05234307235926478
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9792385754790257,
+          "gaussian_fourth_moment_ratio": 1.0615961275544785,
+          "lag_correlations": [
+            0.006909872701167012,
+            0.006332745771155519,
+            0.005743470817266892,
+            0.006069430212591997
+          ],
+          "carrier_lag_correlations": [
+            0.004869987086183814,
+            0.0034219166526421765,
+            0.0009363826979036905,
+            0.0004138998604716758
+          ],
+          "innovation_pseudocovariance_ratio": 0.0003447689633448184,
+          "common_variation_trace": 2.9157308603323764,
+          "common_pseudocovariance_ratio": 0.5709591632334581,
+          "per_carrier_variance_median": 0.05238787832450656
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9911914997576812,
+          "gaussian_fourth_moment_ratio": 1.0377109716255037,
+          "lag_correlations": [
+            0.006854917577778428,
+            0.006818382592393004,
+            0.005908133342064017,
+            0.006020698305823834
+          ],
+          "carrier_lag_correlations": [
+            0.0055636178356602865,
+            0.003911344174083199,
+            0.001354162504137009,
+            9.823025752437677e-05
+          ],
+          "innovation_pseudocovariance_ratio": 0.0003040786487576104,
+          "common_variation_trace": 2.914358606663504,
+          "common_pseudocovariance_ratio": 0.5991525052767142,
+          "per_carrier_variance_median": 0.04905489296763126
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9934625215521813,
+          "gaussian_fourth_moment_ratio": 1.0355674000481527,
+          "lag_correlations": [
+            0.007477183789908457,
+            0.0063638425424533416,
+            0.005966843825188631,
+            0.005518634622021089
+          ],
+          "carrier_lag_correlations": [
+            0.004639084394371668,
+            0.0020726272834911785,
+            0.0016141720990783307,
+            0.0013393786965018358
+          ],
+          "innovation_pseudocovariance_ratio": 0.0007052177398401439,
+          "common_variation_trace": 5.461617509474697,
+          "common_pseudocovariance_ratio": 0.699031373722627,
+          "per_carrier_variance_median": 0.05118218087832176
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9874573355952578,
+          "gaussian_fourth_moment_ratio": 1.0505370398384142,
+          "lag_correlations": [
+            0.0075110742458895045,
+            0.006287020004083733,
+            0.006027974286335862,
+            0.006613709665883319
+          ],
+          "carrier_lag_correlations": [
+            0.005297380220474984,
+            0.0029163797583257366,
+            0.0018621617011108885,
+            0.0007978944742154687
+          ],
+          "innovation_pseudocovariance_ratio": 0.0003918502984208985,
+          "common_variation_trace": 5.233205068574756,
+          "common_pseudocovariance_ratio": 0.8031090060533578,
+          "per_carrier_variance_median": 0.050715915347813834
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9897964264186108,
+          "gaussian_fourth_moment_ratio": 1.0456105570576513,
+          "lag_correlations": [
+            0.006780639276911433,
+            0.006383406298595328,
+            0.0065319857647636965,
+            0.005816690225478421
+          ],
+          "carrier_lag_correlations": [
+            0.005437877385751121,
+            0.0036253739372276907,
+            0.0013163444755679508,
+            0.00124317205571316
+          ],
+          "innovation_pseudocovariance_ratio": 0.0005277247683879795,
+          "common_variation_trace": 2.4577000227434747,
+          "common_pseudocovariance_ratio": 0.519677239383376,
+          "per_carrier_variance_median": 0.049278839619141666
+        },
+        {
+          "batch": 0,
+          "rows": 814,
+          "gaussian_power_median_ratio": 0.9880354778780578,
+          "gaussian_fourth_moment_ratio": 1.0437700115015682,
+          "lag_correlations": [
+            0.006459291815467128,
+            0.005811555428653293,
+            0.006475695417220241,
+            0.005988858333145462
+          ],
+          "carrier_lag_correlations": [
+            0.0047676012027973915,
+            0.0024663327397361906,
+            0.001772874647777165,
+            0.0006583610690801347
+          ],
+          "innovation_pseudocovariance_ratio": 0.00020305961270899921,
+          "common_variation_trace": 2.3965041922618786,
+          "common_pseudocovariance_ratio": 0.5139115661843023,
+          "per_carrier_variance_median": 0.048701843914048096
+        }
+      ],
+      "heldout_variance_ratio_quantiles": [
+        0.9663986954177757,
+        1.0122953440674367,
+        1.1582778843420756
+      ],
+      "heldout_oracle_diagonal_gain_db": 0.5899560360544595,
+      "heldout_training_weights_gain_db": 0.5761872661522397,
+      "bounds": [
+        {
+          "delay_samples": 0,
+          "diagonal_noise_only_gain_db": 0.5844909231385118,
+          "two_mode_conditional_gain_db": 0.318407849591495,
+          "common_to_thermal_output_variance": 56.36229507338289,
+          "information_fraction_vs_thermal_only": 0.016397029328014578,
+          "improper_noise_gain_db_phase_min_max": [
+            0.027203711839875817,
+            1.1585517602904716
+          ]
+        },
+        {
+          "delay_samples": 1,
+          "diagonal_noise_only_gain_db": 0.5844909231385136,
+          "two_mode_conditional_gain_db": 9.319802382673375,
+          "common_to_thermal_output_variance": 14.478633182747732,
+          "information_fraction_vs_thermal_only": 0.48283477063576163,
+          "improper_noise_gain_db_phase_min_max": [
+            7.079984692289582,
+            10.800409536084672
+          ]
+        },
+        {
+          "delay_samples": 4,
+          "diagonal_noise_only_gain_db": 0.5844909231385144,
+          "two_mode_conditional_gain_db": 2.1543491108393864,
+          "common_to_thermal_output_variance": 0.45178830249040913,
+          "information_fraction_vs_thermal_only": 0.9887409603168242,
+          "improper_noise_gain_db_phase_min_max": [
+            1.3109451151466098,
+            2.8608092056378647
+          ]
+        },
+        {
+          "delay_samples": 8,
+          "diagonal_noise_only_gain_db": 0.5844909231385094,
+          "two_mode_conditional_gain_db": 1.458807081406828,
+          "common_to_thermal_output_variance": 0.22956939972141707,
+          "information_fraction_vs_thermal_only": 0.9946689693442108,
+          "improper_noise_gain_db_phase_min_max": [
+            1.0282701156069451,
+            1.8508468511124385
+          ]
+        },
+        {
+          "delay_samples": 16,
+          "diagonal_noise_only_gain_db": 0.5844909231385118,
+          "two_mode_conditional_gain_db": 0.7489823076717871,
+          "common_to_thermal_output_variance": 0.03949002868392602,
+          "information_fraction_vs_thermal_only": 0.9991456702885735,
+          "improper_noise_gain_db_phase_min_max": [
+            0.6505966704965434,
+            0.8452449433647906
+          ]
+        },
+        {
+          "delay_samples": 64,
+          "diagonal_noise_only_gain_db": 0.5844909231385118,
+          "two_mode_conditional_gain_db": 0.5960076929156177,
+          "common_to_thermal_output_variance": 0.0027665615705170323,
+          "information_fraction_vs_thermal_only": 0.9998890987080872,
+          "improper_noise_gain_db_phase_min_max": [
+            0.589752511541449,
+            0.6022614008861072
+          ]
+        },
+        {
+          "delay_samples": 128,
+          "diagonal_noise_only_gain_db": 0.5844909231385136,
+          "two_mode_conditional_gain_db": 0.5877617565084563,
+          "common_to_thermal_output_variance": 0.0007572625760654172,
+          "information_fraction_vs_thermal_only": 0.9999961612258694,
+          "improper_noise_gain_db_phase_min_max": [
+            0.5856148885558208,
+            0.5899078980352206
+          ]
+        },
+        {
+          "delay_samples": 256,
+          "diagonal_noise_only_gain_db": 0.5844909231385101,
+          "two_mode_conditional_gain_db": 0.5847253041955562,
+          "common_to_thermal_output_variance": 5.783298263732463e-05,
+          "information_fraction_vs_thermal_only": 0.9999961369298903,
+          "improper_noise_gain_db_phase_min_max": [
+            0.5846914138622276,
+            0.5847594831052967
+          ]
+        },
+        {
+          "delay_samples": 512,
+          "diagonal_noise_only_gain_db": 0.5844909231385118,
+          "two_mode_conditional_gain_db": 0.5847941820633565,
+          "common_to_thermal_output_variance": 7.040371145656073e-05,
+          "information_fraction_vs_thermal_only": 0.9999994267148992,
+          "improper_noise_gain_db_phase_min_max": [
+            0.5847492905640327,
+            0.5848391160432533
+          ]
+        },
+        {
+          "delay_samples": 800,
+          "diagonal_noise_only_gain_db": 0.5844909231385118,
+          "two_mode_conditional_gain_db": 0.584643039401639,
+          "common_to_thermal_output_variance": 3.6718724873566455e-05,
+          "information_fraction_vs_thermal_only": 0.9999983080146616,
+          "improper_noise_gain_db_phase_min_max": [
+            0.5845823314959622,
+            0.5847038824995696
+          ]
+        }
+      ]
+    },
+    {
+      "source": "build/sensitivity-20261006/excerpt-265.sar",
+      "records": [
+        {
+          "batch": 0,
+          "rows": 950,
+          "gaussian_power_median_ratio": 0.9985642003445682,
+          "gaussian_fourth_moment_ratio": 1.028902498239825,
+          "lag_correlations": [
+            0.007795384922803222,
+            0.006864372562571887,
+            0.007253082748964989,
+            0.00701907937698053
+          ],
+          "carrier_lag_correlations": [
+            0.006303103430662686,
+            0.004384323569242029,
+            0.002259327779121237,
+            0.000742245940254534
+          ],
+          "innovation_pseudocovariance_ratio": 5.398878245332929e-05,
+          "common_variation_trace": 2.601438134792177,
+          "common_pseudocovariance_ratio": 0.5566702535241483,
+          "per_carrier_variance_median": 0.04837620188545845
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9953259583356963,
+          "gaussian_fourth_moment_ratio": 1.0378779214138827,
+          "lag_correlations": [
+            0.00808865806464203,
+            0.007126492757394882,
+            0.007060890888366722,
+            0.00733466016211147
+          ],
+          "carrier_lag_correlations": [
+            0.005526898057840079,
+            0.0038303629218926845,
+            0.0017381427514663842,
+            0.0007880547190459063
+          ],
+          "innovation_pseudocovariance_ratio": 0.000380176650100236,
+          "common_variation_trace": 2.493905925422739,
+          "common_pseudocovariance_ratio": 0.5249718093171065,
+          "per_carrier_variance_median": 0.04875628701027752
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9988865038287335,
+          "gaussian_fourth_moment_ratio": 1.029477782795286,
+          "lag_correlations": [
+            0.007916661174556163,
+            0.0076031249530662546,
+            0.006859207305348538,
+            0.007539651744946001
+          ],
+          "carrier_lag_correlations": [
+            0.006092134159697423,
+            0.0050772008333996544,
+            0.002526447169920685,
+            0.0009009282165686516
+          ],
+          "innovation_pseudocovariance_ratio": 0.00019824155239286015,
+          "common_variation_trace": 2.489352208990722,
+          "common_pseudocovariance_ratio": 0.5346384327749462,
+          "per_carrier_variance_median": 0.04871667717916302
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 1.0014731022663488,
+          "gaussian_fourth_moment_ratio": 1.0269972395425708,
+          "lag_correlations": [
+            0.008395293329947207,
+            0.007778173943042476,
+            0.007019583617572479,
+            0.007598015714179602
+          ],
+          "carrier_lag_correlations": [
+            0.005583272229854404,
+            0.004263972085834241,
+            0.0020589183121017163,
+            0.0012134200300450361
+          ],
+          "innovation_pseudocovariance_ratio": 0.0002867213605501944,
+          "common_variation_trace": 8.48083082416333,
+          "common_pseudocovariance_ratio": 0.7805832077208561,
+          "per_carrier_variance_median": 0.04805160618139378
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9890832786723415,
+          "gaussian_fourth_moment_ratio": 1.0439294199351328,
+          "lag_correlations": [
+            0.007840782292699564,
+            0.006883567071824389,
+            0.007199841742719931,
+            0.006772476943742598
+          ],
+          "carrier_lag_correlations": [
+            0.005042048224133435,
+            0.003297948153973503,
+            0.0023659107591763135,
+            0.0010762843909380203
+          ],
+          "innovation_pseudocovariance_ratio": 0.00043327825537928157,
+          "common_variation_trace": 4.1405830851254946,
+          "common_pseudocovariance_ratio": 0.6692212272339243,
+          "per_carrier_variance_median": 0.0488334093532878
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9931659436823637,
+          "gaussian_fourth_moment_ratio": 1.0443608643318651,
+          "lag_correlations": [
+            0.007645413921614599,
+            0.007157287598891255,
+            0.007000503941048879,
+            0.006720397731117712
+          ],
+          "carrier_lag_correlations": [
+            0.006298120861294382,
+            0.004272859351259983,
+            0.001935058322672054,
+            0.000774059498837478
+          ],
+          "innovation_pseudocovariance_ratio": 0.0006123443538138582,
+          "common_variation_trace": 2.664173277209929,
+          "common_pseudocovariance_ratio": 0.5845085458589439,
+          "per_carrier_variance_median": 0.048548052353411766
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9958376641940603,
+          "gaussian_fourth_moment_ratio": 1.034478614124843,
+          "lag_correlations": [
+            0.007872606971600115,
+            0.0067345521862041,
+            0.007072714253665238,
+            0.007299162270251555
+          ],
+          "carrier_lag_correlations": [
+            0.005399475881332469,
+            0.003810975807757339,
+            0.0025522890479165177,
+            0.0013711746435193584
+          ],
+          "innovation_pseudocovariance_ratio": 0.00085224560035993,
+          "common_variation_trace": 2.7815080179338323,
+          "common_pseudocovariance_ratio": 0.5679935450114527,
+          "per_carrier_variance_median": 0.04853967682718947
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9975404869263256,
+          "gaussian_fourth_moment_ratio": 1.030945458450209,
+          "lag_correlations": [
+            0.007489536314361448,
+            0.007947934631432403,
+            0.0075177274615644794,
+            0.007148860633851364
+          ],
+          "carrier_lag_correlations": [
+            0.0058971398054745595,
+            0.004981815189577941,
+            0.0020129721475659642,
+            0.0003746676394023064
+          ],
+          "innovation_pseudocovariance_ratio": 8.781816642231601e-05,
+          "common_variation_trace": 2.5300228037210934,
+          "common_pseudocovariance_ratio": 0.5580193421664659,
+          "per_carrier_variance_median": 0.04918305403783848
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9965820420735461,
+          "gaussian_fourth_moment_ratio": 1.0359662874876603,
+          "lag_correlations": [
+            0.008784256979251117,
+            0.0076505057072992246,
+            0.006631976748362029,
+            0.007091861632944746
+          ],
+          "carrier_lag_correlations": [
+            0.006676662190888076,
+            0.004343427576820223,
+            0.0022754731597593608,
+            0.0007699650207459265
+          ],
+          "innovation_pseudocovariance_ratio": 0.0005334345212727309,
+          "common_variation_trace": 2.7471215405649847,
+          "common_pseudocovariance_ratio": 0.5912746180109265,
+          "per_carrier_variance_median": 0.050333448715596835
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.998462636098399,
+          "gaussian_fourth_moment_ratio": 1.0307894471225172,
+          "lag_correlations": [
+            0.00823379032380509,
+            0.0073677613931708566,
+            0.007385752965552238,
+            0.007386859777234825
+          ],
+          "carrier_lag_correlations": [
+            0.006559789839925157,
+            0.0045114917079431644,
+            0.0022167051488149185,
+            0.0014398967213252408
+          ],
+          "innovation_pseudocovariance_ratio": 0.0011319422068545232,
+          "common_variation_trace": 3.210560615075897,
+          "common_pseudocovariance_ratio": 0.673368639373788,
+          "per_carrier_variance_median": 0.048880195526809354
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.998371870107429,
+          "gaussian_fourth_moment_ratio": 1.0291923774563083,
+          "lag_correlations": [
+            0.007737237987044462,
+            0.006885168240561692,
+            0.00753284449513673,
+            0.006733204242549706
+          ],
+          "carrier_lag_correlations": [
+            0.006073962479841249,
+            0.004040678181189777,
+            0.002121340260338756,
+            0.0003132874042507091
+          ],
+          "innovation_pseudocovariance_ratio": 0.00021236217309549517,
+          "common_variation_trace": 2.372341151669644,
+          "common_pseudocovariance_ratio": 0.557329923272197,
+          "per_carrier_variance_median": 0.048163915391385766
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.998373413656396,
+          "gaussian_fourth_moment_ratio": 1.0312553549389227,
+          "lag_correlations": [
+            0.008083583423704938,
+            0.00787394610277374,
+            0.007669623539665817,
+            0.006912873364533478
+          ],
+          "carrier_lag_correlations": [
+            0.005997236790807565,
+            0.004578142432333492,
+            0.0027526282108622157,
+            0.00035437641843687174
+          ],
+          "innovation_pseudocovariance_ratio": 0.00045652796344063394,
+          "common_variation_trace": 2.74774272146343,
+          "common_pseudocovariance_ratio": 0.56870198964509,
+          "per_carrier_variance_median": 0.0506041264211907
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 1.0001290962067337,
+          "gaussian_fourth_moment_ratio": 1.0287810256420102,
+          "lag_correlations": [
+            0.008403978649720258,
+            0.007712858194306789,
+            0.00698946003351639,
+            0.007309900700831513
+          ],
+          "carrier_lag_correlations": [
+            0.005780656484894063,
+            0.004061979187524566,
+            0.0023153483286547827,
+            0.000656406926332137
+          ],
+          "innovation_pseudocovariance_ratio": 0.0005193431093704336,
+          "common_variation_trace": 2.5689573954807625,
+          "common_pseudocovariance_ratio": 0.5734737103021623,
+          "per_carrier_variance_median": 0.04853902282776246
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 1.0006351547743424,
+          "gaussian_fourth_moment_ratio": 1.0265975746025542,
+          "lag_correlations": [
+            0.00841852273146444,
+            0.0074302662887192755,
+            0.007414819758320798,
+            0.006920064366720321
+          ],
+          "carrier_lag_correlations": [
+            0.006301531933789583,
+            0.004573471533051603,
+            0.0025016286625675495,
+            0.0009091465940898499
+          ],
+          "innovation_pseudocovariance_ratio": 0.0006212584825540642,
+          "common_variation_trace": 4.649020411050415,
+          "common_pseudocovariance_ratio": 0.7513542597738613,
+          "per_carrier_variance_median": 0.04933627716998769
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9996138312956222,
+          "gaussian_fourth_moment_ratio": 1.0278257375218545,
+          "lag_correlations": [
+            0.008034148509577623,
+            0.007466019955799623,
+            0.006926021573727102,
+            0.007063592689421212
+          ],
+          "carrier_lag_correlations": [
+            0.005983722315667727,
+            0.004358430283546015,
+            0.00320143040034189,
+            0.0008938309826162799
+          ],
+          "innovation_pseudocovariance_ratio": 0.00040380452889869856,
+          "common_variation_trace": 3.1706403325188095,
+          "common_pseudocovariance_ratio": 0.6511221797474833,
+          "per_carrier_variance_median": 0.04879558046700491
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9879756153380935,
+          "gaussian_fourth_moment_ratio": 1.0561810522449797,
+          "lag_correlations": [
+            0.008163872317618108,
+            0.007035835369194266,
+            0.007228812488809206,
+            0.007059793790408567
+          ],
+          "carrier_lag_correlations": [
+            0.006239701578608949,
+            0.0032192601238207204,
+            0.0024144820031384807,
+            0.001174955511967438
+          ],
+          "innovation_pseudocovariance_ratio": 9.561788305137934e-05,
+          "common_variation_trace": 2.465409047641965,
+          "common_pseudocovariance_ratio": 0.4959313515315225,
+          "per_carrier_variance_median": 0.04958951797798531
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9947775649264131,
+          "gaussian_fourth_moment_ratio": 1.037756926285063,
+          "lag_correlations": [
+            0.008250879749358628,
+            0.00728446351826355,
+            0.0072977172526940024,
+            0.00704024038925831
+          ],
+          "carrier_lag_correlations": [
+            0.006591195200699859,
+            0.003692725467786025,
+            0.0026127249159253563,
+            0.000845004472128129
+          ],
+          "innovation_pseudocovariance_ratio": 0.0004507755007107854,
+          "common_variation_trace": 2.587822782286462,
+          "common_pseudocovariance_ratio": 0.563661075460881,
+          "per_carrier_variance_median": 0.05015480403849099
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9928550234350216,
+          "gaussian_fourth_moment_ratio": 1.0415353157975045,
+          "lag_correlations": [
+            0.007820571855502282,
+            0.00721005403472863,
+            0.007389733822339674,
+            0.007244925492776782
+          ],
+          "carrier_lag_correlations": [
+            0.0051357231632018574,
+            0.004570865792299138,
+            0.002958979267017439,
+            0.0003189451789555612
+          ],
+          "innovation_pseudocovariance_ratio": 0.00018361432851504833,
+          "common_variation_trace": 4.599225409092698,
+          "common_pseudocovariance_ratio": 0.7529752895095966,
+          "per_carrier_variance_median": 0.04997362815280107
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9983664719848424,
+          "gaussian_fourth_moment_ratio": 1.0312886544926605,
+          "lag_correlations": [
+            0.007876838241477451,
+            0.007177863756695771,
+            0.0076653430341463895,
+            0.006928135354869585
+          ],
+          "carrier_lag_correlations": [
+            0.006686008614915221,
+            0.003670184558303227,
+            0.0025926050804936044,
+            0.0006879622848860699
+          ],
+          "innovation_pseudocovariance_ratio": 0.0003376044994972149,
+          "common_variation_trace": 2.94567760249543,
+          "common_pseudocovariance_ratio": 0.6089446053950459,
+          "per_carrier_variance_median": 0.04773458739623591
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9973504476066526,
+          "gaussian_fourth_moment_ratio": 1.03450793485158,
+          "lag_correlations": [
+            0.008544298717198145,
+            0.006860680124416935,
+            0.007270305213186906,
+            0.007941053660124403
+          ],
+          "carrier_lag_correlations": [
+            0.006319968572418969,
+            0.0041763400722790705,
+            0.0021709491662783883,
+            0.0004473709632278102
+          ],
+          "innovation_pseudocovariance_ratio": 3.318066385845749e-05,
+          "common_variation_trace": 3.1536359572765065,
+          "common_pseudocovariance_ratio": 0.6388020574408058,
+          "per_carrier_variance_median": 0.04846293429383574
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9970718848106698,
+          "gaussian_fourth_moment_ratio": 1.03384533879268,
+          "lag_correlations": [
+            0.007798821587500302,
+            0.007128128346360535,
+            0.006977128657808192,
+            0.0072181498429353804
+          ],
+          "carrier_lag_correlations": [
+            0.006196406033973346,
+            0.0047297560686497325,
+            0.001616578368637515,
+            0.0003091021719040195
+          ],
+          "innovation_pseudocovariance_ratio": 0.0004956836186813452,
+          "common_variation_trace": 3.564915666702054,
+          "common_pseudocovariance_ratio": 0.6256985147000576,
+          "per_carrier_variance_median": 0.04912806681687824
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9928705390582325,
+          "gaussian_fourth_moment_ratio": 1.0391698403148577,
+          "lag_correlations": [
+            0.007951522189918825,
+            0.007121189839795223,
+            0.006596304518589681,
+            0.006714397307859173
+          ],
+          "carrier_lag_correlations": [
+            0.005338073966347195,
+            0.003669058051398121,
+            0.0020851399248722332,
+            0.0008551965862556851
+          ],
+          "innovation_pseudocovariance_ratio": 0.0004199264416893539,
+          "common_variation_trace": 2.8406081912271333,
+          "common_pseudocovariance_ratio": 0.5632083405175848,
+          "per_carrier_variance_median": 0.048619516233871535
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9923353191818344,
+          "gaussian_fourth_moment_ratio": 1.0441987812993891,
+          "lag_correlations": [
+            0.008279016167109857,
+            0.007184013222013994,
+            0.006584475289082568,
+            0.007619787572871844
+          ],
+          "carrier_lag_correlations": [
+            0.006568565763796681,
+            0.004425307004240591,
+            0.0021942083081557683,
+            0.00011129278898001028
+          ],
+          "innovation_pseudocovariance_ratio": 0.00045866279295369585,
+          "common_variation_trace": 2.4363148452604686,
+          "common_pseudocovariance_ratio": 0.5314095825281219,
+          "per_carrier_variance_median": 0.05004099844014985
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9948106025861897,
+          "gaussian_fourth_moment_ratio": 1.036305963046532,
+          "lag_correlations": [
+            0.007667989382527622,
+            0.0068789326109844435,
+            0.007266469924175414,
+            0.006861826553291534
+          ],
+          "carrier_lag_correlations": [
+            0.005282405091238362,
+            0.004297650003638866,
+            0.003113877603248749,
+            0.0006651671362409154
+          ],
+          "innovation_pseudocovariance_ratio": 9.333074326931295e-05,
+          "common_variation_trace": 2.3954508917300528,
+          "common_pseudocovariance_ratio": 0.5303139377406985,
+          "per_carrier_variance_median": 0.048994057702676036
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9980151292106332,
+          "gaussian_fourth_moment_ratio": 1.0345872054842833,
+          "lag_correlations": [
+            0.00812091073439363,
+            0.007398950980918192,
+            0.006830800049718698,
+            0.007041979168078754
+          ],
+          "carrier_lag_correlations": [
+            0.0054983081570186085,
+            0.00429045125668865,
+            0.0024229512942679585,
+            0.0011882244270688686
+          ],
+          "innovation_pseudocovariance_ratio": 0.000855103865120478,
+          "common_variation_trace": 2.6252858595787387,
+          "common_pseudocovariance_ratio": 0.5896538402832878,
+          "per_carrier_variance_median": 0.047604177160758696
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9956176461486287,
+          "gaussian_fourth_moment_ratio": 1.0397432731732426,
+          "lag_correlations": [
+            0.007857273883968537,
+            0.006990875146522873,
+            0.007335492014367806,
+            0.006822305675501515
+          ],
+          "carrier_lag_correlations": [
+            0.00612520634943835,
+            0.003309180665375413,
+            0.002192430635830301,
+            0.0008799384640781615
+          ],
+          "innovation_pseudocovariance_ratio": 0.0003043160469128769,
+          "common_variation_trace": 2.6905755319446185,
+          "common_pseudocovariance_ratio": 0.5685678545988091,
+          "per_carrier_variance_median": 0.04871099630986382
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9917197467686746,
+          "gaussian_fourth_moment_ratio": 1.0435381171953106,
+          "lag_correlations": [
+            0.007365279698710994,
+            0.0067597143642032405,
+            0.006966269830063835,
+            0.007085911500105181
+          ],
+          "carrier_lag_correlations": [
+            0.005956480496437593,
+            0.003441663377256802,
+            0.002300636094359127,
+            0.000508509100695712
+          ],
+          "innovation_pseudocovariance_ratio": 0.0005931270112828576,
+          "common_variation_trace": 2.463649394299099,
+          "common_pseudocovariance_ratio": 0.5519320021348477,
+          "per_carrier_variance_median": 0.04905211835418764
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9952039453381396,
+          "gaussian_fourth_moment_ratio": 1.0358689206162774,
+          "lag_correlations": [
+            0.007446923272258073,
+            0.006695374183878639,
+            0.007027532519954149,
+            0.006922922713254008
+          ],
+          "carrier_lag_correlations": [
+            0.006609498919581884,
+            0.004616589382210308,
+            0.0017583020865658038,
+            0.001513337452834446
+          ],
+          "innovation_pseudocovariance_ratio": 0.0006916323110062395,
+          "common_variation_trace": 7.221833908202964,
+          "common_pseudocovariance_ratio": 0.6773946343124071,
+          "per_carrier_variance_median": 0.049320136720500805
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.997212291837767,
+          "gaussian_fourth_moment_ratio": 1.0304201062410643,
+          "lag_correlations": [
+            0.00751263755079871,
+            0.007499751343612123,
+            0.007181893680558393,
+            0.007009237482585306
+          ],
+          "carrier_lag_correlations": [
+            0.0053813620069474,
+            0.004281903348124414,
+            0.0017328549585504498,
+            0.0011346776377217213
+          ],
+          "innovation_pseudocovariance_ratio": 0.0005725397879725727,
+          "common_variation_trace": 3.6349658170201957,
+          "common_pseudocovariance_ratio": 0.6222156639590634,
+          "per_carrier_variance_median": 0.049817398171191254
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9221348759810409,
+          "gaussian_fourth_moment_ratio": 1.2750802518939623,
+          "lag_correlations": [
+            0.007512761694868402,
+            0.007235129407731556,
+            0.006660949005348149,
+            0.006784842846397364
+          ],
+          "carrier_lag_correlations": [
+            0.005553370192916382,
+            0.0026991914543602843,
+            0.0018067798310581,
+            0.0010753313033752523
+          ],
+          "innovation_pseudocovariance_ratio": 0.0003416186811838266,
+          "common_variation_trace": 4.4225891712273135,
+          "common_pseudocovariance_ratio": 0.7115405997588846,
+          "per_carrier_variance_median": 0.05781488999134719
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9249526368850187,
+          "gaussian_fourth_moment_ratio": 1.260642104603969,
+          "lag_correlations": [
+            0.00713713100713009,
+            0.006232561020383349,
+            0.006745527906368023,
+            0.006682974884973672
+          ],
+          "carrier_lag_correlations": [
+            0.004330417083901252,
+            0.0036736647109024217,
+            0.0019769783592809907,
+            0.001276145891148035
+          ],
+          "innovation_pseudocovariance_ratio": 0.0003086790120427436,
+          "common_variation_trace": 2.4537793593941077,
+          "common_pseudocovariance_ratio": 0.43571572772600436,
+          "per_carrier_variance_median": 0.05794387893614578
+        },
+        {
+          "batch": 0,
+          "rows": 884,
+          "gaussian_power_median_ratio": 0.9930280860504777,
+          "gaussian_fourth_moment_ratio": 1.044652102531392,
+          "lag_correlations": [
+            0.008228511118200523,
+            0.007371934907467597,
+            0.007458783643192218,
+            0.007978326545303045
+          ],
+          "carrier_lag_correlations": [
+            0.0057130362781170315,
+            0.005251890722956874,
+            0.0023826121924827902,
+            0.001009802962039541
+          ],
+          "innovation_pseudocovariance_ratio": 0.00024228610113963828,
+          "common_variation_trace": 3.0551491591457025,
+          "common_pseudocovariance_ratio": 0.6160826444762486,
+          "per_carrier_variance_median": 0.05119468888448158
+        },
+        {
+          "batch": 0,
+          "rows": 814,
+          "gaussian_power_median_ratio": 0.9972639582703396,
+          "gaussian_fourth_moment_ratio": 1.0343181136058635,
+          "lag_correlations": [
+            0.00764324098661616,
+            0.0074747620973052145,
+            0.007439987545613766,
+            0.0069437618426439526
+          ],
+          "carrier_lag_correlations": [
+            0.006873024103191578,
+            0.0037509826812020942,
+            0.002290431523139058,
+            0.0008967489402441031
+          ],
+          "innovation_pseudocovariance_ratio": 0.0004106905925422981,
+          "common_variation_trace": 4.062433733934371,
+          "common_pseudocovariance_ratio": 0.7224049677854885,
+          "per_carrier_variance_median": 0.04909417293329872
+        }
+      ],
+      "heldout_variance_ratio_quantiles": [
+        0.9935561524310863,
+        1.0283648568564236,
+        1.0663751302237034
+      ],
+      "heldout_oracle_diagonal_gain_db": 0.6173243778005759,
+      "heldout_training_weights_gain_db": 0.6150094976463504,
+      "bounds": [
+        {
+          "delay_samples": 0,
+          "diagonal_noise_only_gain_db": 0.6226922635176031,
+          "two_mode_conditional_gain_db": 0.2721013242247912,
+          "common_to_thermal_output_variance": 52.901130414306515,
+          "information_fraction_vs_thermal_only": 0.01711366525000574,
+          "improper_noise_gain_db_phase_min_max": [
+            0.040126323363920746,
+            0.6233010926551718
+          ]
+        },
+        {
+          "delay_samples": 1,
+          "diagonal_noise_only_gain_db": 0.6226922635176122,
+          "two_mode_conditional_gain_db": 5.862351303298016,
+          "common_to_thermal_output_variance": 5.520553290865052,
+          "information_fraction_vs_thermal_only": 0.5124853502976258,
+          "improper_noise_gain_db_phase_min_max": [
+            4.164223252414443,
+            7.074908807373344
+          ]
+        },
+        {
+          "delay_samples": 4,
+          "diagonal_noise_only_gain_db": 0.6226922635176055,
+          "two_mode_conditional_gain_db": 1.9401597104701487,
+          "common_to_thermal_output_variance": 0.36956268867432673,
+          "information_fraction_vs_thermal_only": 0.9889283537082197,
+          "improper_noise_gain_db_phase_min_max": [
+            1.2098259166814165,
+            2.5656232377053314
+          ]
+        },
+        {
+          "delay_samples": 8,
+          "diagonal_noise_only_gain_db": 0.6226922635176048,
+          "two_mode_conditional_gain_db": 0.9758068937675974,
+          "common_to_thermal_output_variance": 0.09020121036025046,
+          "information_fraction_vs_thermal_only": 0.9949581256402602,
+          "improper_noise_gain_db_phase_min_max": [
+            0.8163570910902909,
+            1.129977776157062
+          ]
+        },
+        {
+          "delay_samples": 16,
+          "diagonal_noise_only_gain_db": 0.6226922635176089,
+          "two_mode_conditional_gain_db": 0.7599842726107044,
+          "common_to_thermal_output_variance": 0.03300847698666205,
+          "information_fraction_vs_thermal_only": 0.9991376291217117,
+          "improper_noise_gain_db_phase_min_max": [
+            0.6784056203180789,
+            0.8401115699316075
+          ]
+        },
+        {
+          "delay_samples": 64,
+          "diagonal_noise_only_gain_db": 0.6226922635176122,
+          "two_mode_conditional_gain_db": 0.6305612288349882,
+          "common_to_thermal_output_variance": 0.0019401111116200665,
+          "information_fraction_vs_thermal_only": 0.9998736726769424,
+          "improper_noise_gain_db_phase_min_max": [
+            0.6261665389294129,
+            0.6349596787252478
+          ]
+        },
+        {
+          "delay_samples": 128,
+          "diagonal_noise_only_gain_db": 0.6226922635176089,
+          "two_mode_conditional_gain_db": 0.6254777207671292,
+          "common_to_thermal_output_variance": 0.0006467231811519725,
+          "information_fraction_vs_thermal_only": 0.99999486110136,
+          "improper_noise_gain_db_phase_min_max": [
+            0.6236953832624864,
+            0.6272598112718524
+          ]
+        },
+        {
+          "delay_samples": 256,
+          "diagonal_noise_only_gain_db": 0.6226922635176072,
+          "two_mode_conditional_gain_db": 0.6227787880967259,
+          "common_to_thermal_output_variance": 2.5194976845640353e-05,
+          "information_fraction_vs_thermal_only": 0.9999947283750433,
+          "improper_noise_gain_db_phase_min_max": [
+            0.6227616190208904,
+            0.6227963707619009
+          ]
+        },
+        {
+          "delay_samples": 512,
+          "diagonal_noise_only_gain_db": 0.6226922635176105,
+          "two_mode_conditional_gain_db": 0.6228276247713062,
+          "common_to_thermal_output_variance": 3.172396609478157e-05,
+          "information_fraction_vs_thermal_only": 0.9999994446177467,
+          "improper_noise_gain_db_phase_min_max": [
+            0.622798557906484,
+            0.6228567259931121
+          ]
+        },
+        {
+          "delay_samples": 800,
+          "diagonal_noise_only_gain_db": 0.6226922635176072,
+          "two_mode_conditional_gain_db": 0.6227659721988025,
+          "common_to_thermal_output_variance": 1.797065307878528e-05,
+          "information_fraction_vs_thermal_only": 0.9999990015599445,
+          "improper_noise_gain_db_phase_min_max": [
+            0.6227275372241989,
+            0.6228044944640198
+          ]
+        }
+      ]
+    }
+  ]
+}

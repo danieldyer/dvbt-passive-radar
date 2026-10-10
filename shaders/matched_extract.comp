@@ -1,0 +1,30 @@
+#version 450
+layout(local_size_x=64) in;
+layout(binding=5) readonly buffer Samples {vec2 samples[];};
+layout(binding=6) readonly buffer Correlation {vec2 correlation[];};
+layout(binding=7) writeonly buffer Profiles {vec2 profiles[];};
+layout(push_constant) uniform Parameters {uint start,count,total,capacity,guard;int origin;float fraction,gain;uint cancel_direct,output_count,output_first;} p;
+vec2 mul_conj(vec2 a,vec2 b){return vec2(a.x*b.x+a.y*b.y,a.y*b.x-a.x*b.y);}
+void main(){
+    uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
+    if(i>=p.capacity*1024)return;
+    uint row=i/1024,range=i%1024;if(row>=p.count)return;
+    vec2 zero=vec2(0),one=vec2(0);
+    if(range<=928 || range>=960){
+        int lag=range<=928 ? int(range) : int(range)-1024;
+        uint bin=uint((lag+8192)%8192),stride=p.capacity*8192;
+        zero=correlation[row*8192+bin];one=correlation[stride+row*8192+bin];
+        // Circular correlation is exact inside the guard. Replace only the
+        // short prefix belonging to the previous symbol: an exact finite CAF.
+        int cp=int(8192/p.guard),end=max(0,p.origin+lag-cp);
+        for(int j=0;j<end;++j){
+            uint current=uint(8192+j-p.origin-lag);
+            vec2 difference=samples[row*8192+current+uint(cp)]-samples[(row+1)*8192+current];
+            vec2 error=samples[(p.capacity+row+2)*8192+uint(j)];
+            vec2 value=mul_conj(error,difference);
+            zero+=value;one+=value*((float(j)-4095.5)/8192);
+        }
+    }
+    uint at=(p.start-p.output_first+row)*1024+range;
+    profiles[at]=zero/p.gain;profiles[p.output_count*1024+at]=one/p.gain;
+}

@@ -1,0 +1,24 @@
+Validation: enabled
+Storage buffer limit: 4294967295
+Independent stationary training, freeze, reset and 80 dB magnitude span: PASS
+Independent expected-noise calibration RMS dB, colored=0: 0.0153405
+Independent expected-noise calibration RMS dB, colored=1: 0.396847
+Noise: median=0.00991263 coherent carrier=14.9022 fixed_pilot=0
+Noise: median=9.91263e-07 coherent carrier=0.00149022 fixed_pilot=0
+Noise: median=99.1263 coherent carrier=149022 fixed_pilot=0
+Noise: median=0.00984885 coherent carrier=16.8066 fixed_pilot=0
+Noise: median=0.00965995 coherent carrier=15.2857 fixed_pilot=0
+Noise: median=0.00991175 coherent carrier=12.9782 fixed_pilot=1
+Noise: median=0.00991183 coherent carrier=9.29687e+07 fixed_pilot=0
+Finite CP context, frozen stationary subtraction, fractional origin, complex phase and Doppler moments: PASS; GPU 12.5641 ms
+Finite CP context, frozen stationary subtraction, fractional origin, complex phase and Doppler moments: PASS; GPU 13.7299 ms
+Finite CP context, frozen stationary subtraction, fractional origin, complex phase and Doppler moments: PASS; GPU 10.7959 ms
+Constant-velocity focus complex error=4.51753e-05 weighted=0 GPU=3.84467 ms
+Constant-velocity focus complex error=4.39735e-05 weighted=0 GPU=4.16275 ms
+Constant-velocity focus complex error=2.71198e-05 weighted=0 GPU=16.3001 ms
+Constant-velocity focus complex error=2.71161e-05 weighted=0 GPU=17.6626 ms
+Constant-velocity focus complex error=4.06249e-05 weighted=1 GPU=17.6587 ms
+Noise step true/median=0.01 / 0.00990284
+Noise step true/median=0.1 / 0.102611
+Noise step true/median=0.001 / 0.00102363
+Owned async profiles, interchannel phase, caller-thread delivery, drain, normalization and failures: PASS

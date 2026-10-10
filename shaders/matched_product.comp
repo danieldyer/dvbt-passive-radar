@@ -1,0 +1,31 @@
+#version 450
+layout(local_size_x=64) in;
+layout(binding=0) readonly buffer Measured {vec2 y[];};
+layout(binding=1) readonly buffer Source {vec2 x[];};
+layout(binding=2) readonly buffer Valid {uint valid[];};
+layout(binding=3) readonly buffer Response {vec2 h[];};
+layout(binding=4) readonly buffer Noise {float variance[];};
+layout(binding=6) buffer Correlation {vec2 correlation[];};
+layout(binding=8) readonly buffer Rotations {vec2 rotations[];};
+layout(binding=9) readonly buffer Stationary {vec2 stationary[];};
+layout(push_constant) uniform Parameters {uint start,count,total,capacity,guard;int origin;float fraction,gain;uint cancel_direct;} p;
+vec2 mul(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+void main(){
+    uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
+    uint stride=p.capacity*8192;if(i>=stride)return;
+    uint row=i/8192,bin=i%8192;int k=bin<4096 ? int(bin) : int(bin)-8192;
+    vec2 zero=vec2(0),one=vec2(0);
+    if(row<p.count && abs(k)<=3408){
+        uint carrier=uint(k+3408),at=(p.start+row)*6817+carrier;
+        if(valid[at]!=0){
+            vec2 aligned=mul(x[at],rotations[6817+carrier]);
+            float power=dot(x[at],x[at]);float balance=abs(power-16.0/9)<1e-5 ? 9.0/16 : 1;
+            vec2 source=balance*vec2(aligned.x,-aligned.y);
+            vec2 direct=mul(h[carrier],mul(vec2(1,0)+stationary[carrier],aligned));
+            vec2 error=y[at]-((p.cancel_direct&1)!=0 ? direct : vec2(0));
+            vec2 weighted=mul(error,vec2(h[carrier].x,-h[carrier].y))/max(variance[carrier],1e-30);
+            zero=mul(weighted,source);one=mul(correlation[stride+i],source);
+        }
+    }
+    correlation[i]=zero;correlation[stride+i]=one;
+}

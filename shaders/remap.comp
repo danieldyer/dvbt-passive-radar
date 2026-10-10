@@ -1,0 +1,37 @@
+#version 450
+layout(local_size_x=64) in;
+layout(set=0,binding=1,std430) readonly buffer Mapping {uint mapping[];};
+layout(set=0,binding=2,std430) readonly buffer Codes {uint codes[];};
+layout(set=0,binding=3,std430) writeonly buffer Carriers {vec2 carriers[];};
+layout(set=0,binding=4,std430) writeonly buffer Valid {uint valid[];};
+layout(set=0,binding=5,std430) readonly buffer Signalling {float tps_sign[];};
+layout(set=0,binding=6,std430) readonly buffer Constants {vec2 table[];};
+layout(push_constant) uniform Parameters {uint bits;uint count;uint packets;uint rate;} pc;
+const uint lengths[5]=uint[5](2,4,6,10,14);
+const uint masks[5]=uint[5](3,11,27,411,6571);
+const uint sent[5]=uint[5](2,3,4,6,8);
+uint full_bit(uint at) {
+    uint rank=at%sent[pc.rate],mask=masks[pc.rate],position=0;
+    // Select the rank-th transmitted bit in this puncturing period.
+    for(uint j=0;j<14;++j)if((mask&(1U<<j))!=0) {
+        if(rank==0){position=j;break;}--rank;
+    }
+    return at/sent[pc.rate]*lengths[pc.rate]+position;
+}
+void main() {
+    uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
+    if(i>=pc.count*6817)return;
+    uint s=i/6817,k=i%6817,m=uint(table[64+6817].x),base=((s%4)*6817+k)*m;
+    if(mapping[base]==0xffffffffU) {
+        vec2 pilot=table[64+k];
+        carriers[i]=vec2(pilot.y==0 ? pilot.x : pilot.x*.75*tps_sign[s],0);
+        valid[i]=1;return;
+    }
+    uint label=0,good=1;
+    for(uint e=0;e<m;++e) {
+        uint at=full_bit(s*6048*m+mapping[base+e]),word=codes[at/2];
+        label=(label<<1)|((word>>(at%2))&1U);good&=uint((word&4U)!=0);
+    }
+    carriers[i]=vec2(table[label].x,table[label].y);
+    valid[i]=good;
+}

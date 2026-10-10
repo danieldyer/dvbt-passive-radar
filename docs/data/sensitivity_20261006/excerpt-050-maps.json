@@ -1,0 +1,30 @@
+[
+  {
+    "cpi_s": 1.0,
+    "actual_cpi_s": 0.999872,
+    "zero_delay_zero_doppler_suppression_db": 36.221493350206,
+    "raw_direct_peak_power": 15.787901220019284,
+    "residual_direct_peak_power": 0.0037685568007510594,
+    "ghost_frequency_hz": 230.02944376880242,
+    "ghost_power": 0.00031464856394737263,
+    "ghost_relative_raw_direct_db": -47.00498646513937,
+    "flat_ghost_change_db": -37.41444578181066,
+    "stationary_ghost_fraction": 1.0171267187165152,
+    "background_power_proxy": 1.6565785367260216e-08,
+    "ghost_above_background_db": 42.78613723801108
+  },
+  {
+    "cpi_s": 10.0,
+    "actual_cpi_s": 9.999808,
+    "zero_delay_zero_doppler_suppression_db": 36.09957476820218,
+    "raw_direct_peak_power": 15.789713224958748,
+    "residual_direct_peak_power": 0.0038762945049148675,
+    "ghost_frequency_hz": 229.8044122447151,
+    "ghost_power": 0.00031813955160489197,
+    "ghost_relative_raw_direct_db": -46.95756577730418,
+    "flat_ghost_change_db": -49.88586583338631,
+    "stationary_ghost_fraction": 1.0031478378669958,
+    "background_power_proxy": 1.7323174833361813e-09,
+    "ghost_above_background_db": 52.639901761263786
+  }
+]

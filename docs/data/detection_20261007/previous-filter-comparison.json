@@ -1,0 +1,58 @@
+{
+  "source": "build/sensitivity-20261006/excerpt-050.sar",
+  "rows": 2758,
+  "cpi_s": 3.000704,
+  "previous": "Exact supported Hann operator, slow-decimation=1; optimistic noiseless best native cell",
+  "new": "Full-CPI matched-filter cases with independent 10 percent log-variance error",
+  "limitations": "Specified diagonal covariance and template only. Shared guard/clock allowances cancel; the conservative new constant-projection allowance is retained. This is not a real-scene target SNR measurement.",
+  "results": [
+    {
+      "delay_samples": 800.125,
+      "doppler_hz": 100.00989328022877,
+      "noise": "white",
+      "channel": "recorded",
+      "efficiency": 0.8814480048079416,
+      "loss_including_cp_clock_dc_db": 0.8723986019474352,
+      "previous_best_efficiency": 0.17322314168106487,
+      "previous_best_range_samples": 800,
+      "previous_best_doppler_hz": 99.89021650326798,
+      "conditional_snr_gain_db": 7.016738105414576
+    },
+    {
+      "delay_samples": 16.125,
+      "doppler_hz": -100.00989328022877,
+      "noise": "white",
+      "channel": "flat",
+      "efficiency": 0.8826960014889393,
+      "loss_including_cp_clock_dc_db": 0.8662539996874129,
+      "previous_best_efficiency": 0.19266181989159847,
+      "previous_best_range_samples": 16,
+      "previous_best_doppler_hz": -99.89021650326798,
+      "conditional_snr_gain_db": 6.560985234008136
+    },
+    {
+      "delay_samples": 800.125,
+      "doppler_hz": 200.0,
+      "noise": "recorded",
+      "channel": "recorded",
+      "efficiency": 0.912039818655347,
+      "loss_including_cp_clock_dc_db": 0.7242275969489187,
+      "previous_best_efficiency": 0.02389999073161308,
+      "previous_best_range_samples": 800,
+      "previous_best_doppler_hz": 199.46129493464053,
+      "conditional_snr_gain_db": 15.76699089478696
+    },
+    {
+      "delay_samples": 384.125,
+      "doppler_hz": 1.17,
+      "noise": "white",
+      "channel": "recorded",
+      "efficiency": 0.9048765413354207,
+      "loss_including_cp_clock_dc_db": 0.758472298572894,
+      "previous_best_efficiency": 0.5672994209354076,
+      "previous_best_range_samples": 384,
+      "previous_best_doppler_hz": 1.2765522875816995,
+      "conditional_snr_gain_db": 1.9786001158195206
+    }
+  ]
+}

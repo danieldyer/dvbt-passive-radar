@@ -1,0 +1,482 @@
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:47:34: remark: the cost-model indicates that vectorization is not beneficial [-Rpass-missed=loop-vectorize]
+   47 |     for(std::size_t r=0;r<nr;++r)for(std::size_t f=0;f<nf;++f)
+      |                                  ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:47:34: remark: the cost-model indicates that interleaving is not beneficial [-Rpass-missed=loop-vectorize]
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_buffer.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/memory:946:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:19:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__new/allocate.h:61:28: remark: loop not vectorized: Loop contains an unsupported terminator [-Rpass-analysis=loop-vectorize]
+   61 |   return static_cast<_Tp*>(__builtin_operator_new(__size _LIBCPP_ADD_TYPE_DESCRIPTOR(_Tp)));
+      |                            ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:51:24: remark: loop not vectorized: value that could not be identified as reduction is used outside the loop [-Rpass-analysis=loop-vectorize]
+   51 |         values.clear();for(std::size_t r=(first+stride-1)/stride;r<nr;++r)values.push_back(power[r*nf+f]);
+      |                        ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:51:24: remark: loop not vectorized: Cannot vectorize early exit loop with more than one early exit [-Rpass-analysis=loop-vectorize]
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:51:24: remark: loop not vectorized: instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:51:24: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:55:5: remark: the cost-model indicates that vectorization is not beneficial [-Rpass-missed=loop-vectorize]
+   55 |     for(std::size_t f=0;f<nf;++f)map.noise_doppler[f*frequency_stride]=scales[f];
+      |     ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:55:5: remark: the cost-model indicates that interleaving is not beneficial [-Rpass-missed=loop-vectorize]
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:4:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/modem.hpp:8:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/vector:314:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:407:12: remark: loop not vectorized: cannot identify array bounds [-Rpass-analysis=loop-vectorize]
+  407 |     return this->__begin_[__n];
+      |            ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:56:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+   56 |     for(std::size_t f=0;f<map.frequencies;++f){
+      |     ^
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_buffer.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/memory:946:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:19:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__new/allocate.h:61:28: remark: loop not vectorized: Loop contains an unsupported terminator [-Rpass-analysis=loop-vectorize]
+   61 |   return static_cast<_Tp*>(__builtin_operator_new(__size _LIBCPP_ADD_TYPE_DESCRIPTOR(_Tp)));
+      |                            ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:65:24: remark: loop not vectorized: value that could not be identified as reduction is used outside the loop [-Rpass-analysis=loop-vectorize]
+   65 |         values.clear();for(std::size_t f=0;f<nf;f+=2){
+      |                        ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:65:24: remark: loop not vectorized: Cannot vectorize early exit loop with more than one early exit [-Rpass-analysis=loop-vectorize]
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:65:24: remark: loop not vectorized: instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:65:24: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:72:5: remark: the cost-model indicates that vectorization is not beneficial [-Rpass-missed=loop-vectorize]
+   72 |     for(std::size_t r=0;r<nr;++r)map.noise_range[r*stride]=scales[r];
+      |     ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:72:5: remark: the cost-model indicates that interleaving is not beneficial [-Rpass-missed=loop-vectorize]
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:4:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/modem.hpp:8:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/vector:314:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:407:12: remark: loop not vectorized: cannot identify array bounds [-Rpass-analysis=loop-vectorize]
+  407 |     return this->__begin_[__n];
+      |            ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:73:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+   73 |     for(std::size_t r=0;r<map.ranges;++r){
+      |     ^
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_buffer.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/memory:946:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:19:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__new/allocate.h:61:28: remark: loop not vectorized: Loop contains an unsupported terminator [-Rpass-analysis=loop-vectorize]
+   61 |   return static_cast<_Tp*>(__builtin_operator_new(__size _LIBCPP_ADD_TYPE_DESCRIPTOR(_Tp)));
+      |                            ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:24:5: remark: loop not vectorized: value that could not be identified as reduction is used outside the loop [-Rpass-analysis=loop-vectorize]
+   24 |     for(std::size_t i=first;i<scales.size();++i)logs.push_back(std::log(scales[i]));
+      |     ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:24:5: remark: loop not vectorized: Cannot vectorize early exit loop with more than one early exit [-Rpass-analysis=loop-vectorize]
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:24:5: remark: loop not vectorized: instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:24:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:27:23: remark: vectorized loop (vectorization width: 4, interleaved count: 4) [-Rpass=loop-vectorize]
+   27 |     double observed=0;for(float value:logs)observed+=std::min(std::pow(double(value-centre),2),16*variance);
+      |                       ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:29:5: remark: the cost-model indicates that interleaving is not beneficial [-Rpass-analysis=loop-vectorize]
+   29 |     for(std::size_t i=first;i<scales.size();++i){
+      |     ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:29:5: remark: vectorized loop (vectorization width: 2, interleaved count: 1) [-Rpass=loop-vectorize]
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:30:32: remark: floating point conversion changes vector width. Mixed floating point precision requires an up/down cast that will negatively impact performance. [-Rpass-analysis=loop-vectorize]
+   30 |         const double deviation=std::log(scales[i])-centre;
+      |                                ^
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:3:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_timings.hpp:2:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/array:118:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/fill_n.h:74:3: remark: vectorized loop (vectorization width: 4, interleaved count: 4) [-Rpass=loop-vectorize]
+   74 |   for (; __n > 0; ++__first, (void)--__n)
+      |   ^
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:4:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/modem.hpp:8:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/vector:314:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:935:3: remark: vectorized loop (vectorization width: 4, interleaved count: 4) [-Rpass=loop-vectorize]
+  935 |   for (pointer __pos = __tx.__pos_; __pos != __new_end; __tx.__pos_ = ++__pos) {
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:935:3: remark: vectorized loop (vectorization width: 4, interleaved count: 4) [-Rpass=loop-vectorize]
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:4:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/modem.hpp:8:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/vector:326:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector_bool_formatter.h:15:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__format/formatter_bool.h:19:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__format/formatter_integral.h:21:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__format/formatter_output.h:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/ranges_transform.h:49:5: remark: vectorized loop (vectorization width: 4, interleaved count: 4) [-Rpass=loop-vectorize]
+   49 |     while (__first != __last) {
+      |     ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:86:9: remark: vectorized loop (vectorization width: 4, interleaved count: 2) [-Rpass=loop-vectorize]
+   86 |         for(std::size_t f=0;f<map.frequencies;++f)map.values[r*map.frequencies+f]*=range_gain*gain[f];
+      |         ^
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_buffer.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/memory:950:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/inout_ptr.h:16:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:36:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:290:7: remark: loop not vectorized: Control flow cannot be substituted for a select [-Rpass-analysis=loop-vectorize]
+  290 |       __deleter_(__tmp);
+      |       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:290:7: remark: loop not vectorized: call instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:289:9: remark: loop not vectorized: instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+  289 |     if (__tmp)
+      |         ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:289:9: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:290:7: remark: loop not vectorized: Control flow cannot be substituted for a select [-Rpass-analysis=loop-vectorize]
+  290 |       __deleter_(__tmp);
+      |       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:290:7: remark: loop not vectorized: call instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:289:9: remark: loop not vectorized: instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+  289 |     if (__tmp)
+      |         ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:289:9: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:131:34: remark: loop not vectorized: call instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+  131 |     for(auto& channel:p.channels)Impl::collect(*channel,consume,timing,false);
+      |                                  ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:131:5: remark: loop not vectorized: instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+  131 |     for(auto& channel:p.channels)Impl::collect(*channel,consume,timing,false);
+      |     ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:131:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:3:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/range_doppler.hpp:3:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/deque:2535:3: remark: loop not vectorized: value that could not be identified as reduction is used outside the loop [-Rpass-analysis=loop-vectorize]
+ 2535 |   while (__map_.size() > 2) {
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/deque:2535:3: remark: loop not vectorized: Cannot vectorize uncountable loop [-Rpass-analysis=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/deque:2535:3: remark: loop not vectorized: could not determine number of loop iterations [-Rpass-analysis=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/deque:2535:3: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_buffer.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/memory:950:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/inout_ptr.h:16:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:35:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/uninitialized_algorithms.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/copy.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/copy_move_common.h:18:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__string/constexpr_c_functions.h:229:5: remark: loop not vectorized: call instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+  229 |     ::__builtin_memmove(__dest, __src, (__count - 1) * sizeof(_Tp) + __datasizeof_v<_Tp>);
+      |     ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:162:9: remark: loop not vectorized: instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+  162 |         for(std::size_t r=0;r<required;++r)for(unsigned moment=0;moment<2;++moment)
+      |         ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:162:9: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:161:72: remark: loop not vectorized: cannot identify array bounds [-Rpass-analysis=loop-vectorize]
+  161 |         for(std::size_t r=0;r<required;++r)information[r]=c.history[r].information;
+      |                                                                        ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:161:9: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+  161 |         for(std::size_t r=0;r<required;++r)information[r]=c.history[r].information;
+      |         ^
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:3:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_response.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_reconstruction.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/cpu_fec.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/fec.hpp:2:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1844:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/any_of.h:26:3: remark: loop not vectorized: Cannot vectorize potentially faulting early exit loop [-Rpass-analysis=loop-vectorize]
+   26 |   for (; __first != __last; ++__first) {
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/any_of.h:26:3: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:3:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/range_doppler.hpp:3:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/deque:2535:3: remark: loop not vectorized: value that could not be identified as reduction is used outside the loop [-Rpass-analysis=loop-vectorize]
+ 2535 |   while (__map_.size() > 2) {
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/deque:2535:3: remark: loop not vectorized: Cannot vectorize uncountable loop [-Rpass-analysis=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/deque:2535:3: remark: loop not vectorized: could not determine number of loop iterations [-Rpass-analysis=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/deque:2535:3: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:3:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_response.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_reconstruction.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/cpu_fec.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/fec.hpp:2:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1844:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/any_of.h:26:3: remark: loop not vectorized: Cannot vectorize potentially faulting early exit loop [-Rpass-analysis=loop-vectorize]
+   26 |   for (; __first != __last; ++__first) {
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/any_of.h:26:3: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:196:39: remark: loop not vectorized: call instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+  196 |     for(auto& channel:impl_->channels)Impl::collect(*channel,consume,timing,true);
+      |                                       ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:196:5: remark: loop not vectorized: instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+  196 |     for(auto& channel:impl_->channels)Impl::collect(*channel,consume,timing,true);
+      |     ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:196:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:3:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_response.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_reconstruction.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/cpu_fec.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/fec.hpp:2:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1888:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:191:9: remark: loop not vectorized: Cannot vectorize early exit loop [-Rpass-analysis=loop-vectorize]
+  191 |         while (true) {
+      |         ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:191:9: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:205:9: remark: loop not vectorized: Cannot vectorize early exit loop [-Rpass-analysis=loop-vectorize]
+  205 |         while (true) {
+      |         ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:205:9: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:161:9: remark: loop not vectorized: Cannot vectorize uncountable loop [-Rpass-analysis=loop-vectorize]
+  161 |         do {
+      |         ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:161:9: remark: loop not vectorized: could not determine number of loop iterations [-Rpass-analysis=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:161:9: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:154:9: remark: loop not vectorized: Cannot vectorize uncountable loop [-Rpass-analysis=loop-vectorize]
+  154 |         while (__comp(*__i, *__m)) {
+      |         ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:154:9: remark: loop not vectorized: could not determine number of loop iterations [-Rpass-analysis=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:154:9: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:124:11: remark: loop not vectorized: Cannot vectorize uncountable loop [-Rpass-analysis=loop-vectorize]
+  124 |           do {
+      |           ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:124:11: remark: loop not vectorized: could not determine number of loop iterations [-Rpass-analysis=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:124:11: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:118:11: remark: loop not vectorized: Cannot vectorize uncountable loop [-Rpass-analysis=loop-vectorize]
+  118 |           while (!__comp(*__first, *__i)) {
+      |           ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:118:11: remark: loop not vectorized: could not determine number of loop iterations [-Rpass-analysis=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:118:11: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:101:11: remark: loop not vectorized: Cannot vectorize potentially faulting early exit loop [-Rpass-analysis=loop-vectorize]
+  101 |           while (true) {
+      |           ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:101:11: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:35:3: remark: loop not vectorized: Cannot vectorize early exit loop [-Rpass-analysis=loop-vectorize]
+   35 |   while (true) {
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/nth_element.h:35:3: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_buffer.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/memory:950:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/inout_ptr.h:16:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:35:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/uninitialized_algorithms.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/copy.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/copy_move_common.h:18:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__string/constexpr_c_functions.h:29:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__utility/is_pointer_in_range.h:12:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/comp.h:41:20: remark: loop not vectorized: value that could not be identified as reduction is used outside the loop [-Rpass-analysis=loop-vectorize]
+   41 |     return __lhs < __rhs;
+      |                    ^
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_buffer.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/memory:950:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/inout_ptr.h:16:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:35:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/uninitialized_algorithms.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/copy.h:14:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/min.h:14:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/min_element.h:37:3: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+   37 |   while (++__i != __last)
+      |   ^
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_buffer.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/memory:950:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/inout_ptr.h:16:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:36:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:759:26: remark: loop not vectorized: Loop contains an unsupported terminator [-Rpass-analysis=loop-vectorize]
+  759 |   return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...));
+      |                          ^
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_buffer.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/memory:950:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/inout_ptr.h:16:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:34:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_count.h:92:7: remark: loop not vectorized: call instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+   92 |       __on_zero_shared();
+      |       ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:123:9: remark: loop not vectorized: Cannot vectorize early exit loop with more than one early exit [-Rpass-analysis=loop-vectorize]
+  123 |         for(std::size_t i=0;i<count;++i)channels.push_back(std::make_unique<Channel>(context));
+      |         ^
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:123:9: remark: loop not vectorized: instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+/Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:123:9: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_buffer.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/memory:950:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/inout_ptr.h:16:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:36:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:290:7: remark: loop not vectorized: Control flow cannot be substituted for a select [-Rpass-analysis=loop-vectorize]
+  290 |       __deleter_(__tmp);
+      |       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:290:7: remark: loop not vectorized: call instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:289:9: remark: loop not vectorized: instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+  289 |     if (__tmp)
+      |         ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:289:9: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:3:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/range_doppler.hpp:3:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/deque:2535:3: remark: loop not vectorized: value that could not be identified as reduction is used outside the loop [-Rpass-analysis=loop-vectorize]
+ 2535 |   while (__map_.size() > 2) {
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/deque:2535:3: remark: loop not vectorized: Cannot vectorize uncountable loop [-Rpass-analysis=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/deque:2535:3: remark: loop not vectorized: could not determine number of loop iterations [-Rpass-analysis=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/deque:2535:3: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_buffer.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/memory:946:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:19:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__new/allocate.h:81:10: remark: loop not vectorized: call instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+   81 |   return __builtin_operator_delete(__ptr _LIBCPP_ONLY_IF_SIZED_DEALLOCATION(, __size));
+      |          ^
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:3:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/range_doppler.hpp:3:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/deque:623:5: remark: loop not vectorized: instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+  623 |     for (; __i != __e; ++__i)
+      |     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/deque:623:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:3:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/range_doppler.hpp:4:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/future:569:13: remark: loop not vectorized: Loop contains an unsupported terminator [-Rpass-analysis=loop-vectorize]
+  569 |       __cv_.wait_until(__lk, __abs_time);
+      |             ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/future:568:35: remark: loop not vectorized: call instruction cannot be vectorized [-Rpass-analysis=loop-vectorize]
+  568 |     while (!(__state_ & ready) && _Clock::now() < __abs_time)
+      |                                   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/future:568:5: remark: loop not vectorized: Cannot vectorize early exit loop with more than one early exit [-Rpass-analysis=loop-vectorize]
+  568 |     while (!(__state_ & ready) && _Clock::now() < __abs_time)
+      |     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/future:568:5: remark: loop not vectorized: could not determine number of loop iterations [-Rpass-analysis=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/future:568:5: remark: loop not vectorized [-Rpass-missed=loop-vectorize]
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.cpp:1:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_detector.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_focus.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/matched_profiles.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_pipeline.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_frames.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_receiver.hpp:2:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/gpu_ofdm.hpp:4:
+In file included from /Users/danielrd/sources/dvbt_passive_radar/src/modem.hpp:8:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/vector:314:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:49:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer:292:3: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+  292 |   for (; __tx.__pos_ != __tx.__end_; ++__tx.__pos_, (void)++__first) {
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer:292:3: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer:292:3: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer:292:3: remark: vectorized loop (vectorization width: 2, interleaved count: 4) [-Rpass=loop-vectorize]

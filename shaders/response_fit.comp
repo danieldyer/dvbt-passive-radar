@@ -1,0 +1,74 @@
+#version 450
+layout(local_size_x=256) in;
+layout(set=0,binding=4,std430) readonly buffer Statistics {vec4 stats[];};
+layout(set=0,binding=5,std430) buffer Response {vec2 response[];};
+layout(set=0,binding=6,std430) readonly buffer Basis {vec2 basis[];};
+layout(push_constant) uniform Parameters {uint count;uint order;uint iterations;uint unused;} pc;
+shared vec2 reduction[256];
+shared float coefficient[65];
+shared float gain,update;
+shared uint usable;
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+vec2 reduce(vec2 value) {
+    uint lane=gl_LocalInvocationID.x;reduction[lane]=value;barrier();
+    for(uint step=128;step>0;step/=2){if(lane<step)reduction[lane]+=reduction[lane+step];barrier();}
+    vec2 result=reduction[0];barrier();return result;
+}
+void main() {
+    uint lane=gl_LocalInvocationID.x,dimensions=2*pc.order+1;
+    vec2 sums=vec2(0);
+    for(uint k=lane;k<6817;k+=256)sums+=vec2(length(stats[k].xy),stats[k].z);
+    sums=reduce(sums);
+    if(lane==0) {
+        usable=uint(sums.x>1e-20 && sums.y>1e-20 && !any(isnan(sums)) && !any(isinf(sums)));
+        gain=usable==0 ? 0 : sums.x/sums.y;
+    }
+    if(lane<65)coefficient[lane]=0;barrier();
+    if(usable==0) {
+        for(uint k=lane;k<6817;k+=256)response[k]=vec2(0);
+        if(lane==0){response[6817]=vec2(0);response[6818]=vec2(0);}return;
+    }
+    if(lane==0)coefficient[0]=log(gain);
+    float amplitude[27],target[27],power[27];
+    for(uint j=0;j<27;++j) {
+        uint k=lane+256*j;amplitude[j]=gain;power[j]=k<6817 ? stats[k].z : 0;
+        target[j]=power[j]>1e-12 ? length(stats[k].xy)/power[j] : 0;
+    }
+    barrier();
+    // The small constrained solve has one workgroup. No global convergence
+    // polling, host round trips, atomics or per-coordinate dispatches are needed.
+    for(uint iteration=0;iteration<pc.iterations;++iteration)for(uint d=0;d<dimensions;++d) {
+        vec2 step=vec2(0);
+        for(uint j=0;j<27;++j) {
+            uint k=lane+256*j;if(k>=6817)break;
+            float derivative=amplitude[j]*basis[d*6817+k].x;
+            step+=vec2(derivative*(target[j]-amplitude[j]),derivative*derivative)*power[j];
+        }
+        step=reduce(step);
+        if(lane==0){update=clamp(step.x/(step.y+1e-12),-.25,.25);coefficient[d]+=update;}
+        barrier();
+        for(uint j=0;j<27;++j) {
+            uint k=lane+256*j;if(k>=6817)break;
+            amplitude[j]*=exp(update*basis[d*6817+k].x);
+        }
+        barrier();
+    }
+    vec2 phase=vec2(0);
+    for(uint j=0;j<27;++j) {
+        uint k=lane+256*j;if(k>=6817)break;float angle=0;
+        for(uint d=0;d<dimensions;++d)angle+=coefficient[d]*basis[d*6817+k].y;
+        vec2 h=amplitude[j]*vec2(cos(angle),sin(angle));response[k]=h;
+        phase+=multiply(stats[k].xy,vec2(h.x,-h.y));
+    }
+    phase=reduce(phase);phase=length(phase)>0 ? phase/length(phase) : vec2(1,0);
+    vec2 energy=vec2(0);
+    for(uint k=lane;k<6817;k+=256) {
+        vec2 h=multiply(response[k],phase);response[k]=h;
+        vec4 s=stats[k];energy+=vec2(s.w-2*dot(s.xy,h)+dot(h,h)*s.z,s.w);
+    }
+    energy=reduce(energy);
+    if(lane==0) {
+        response[6817]=vec2(max(energy.x,0)/max(energy.y,1e-30),energy.y);
+        response[6818]=vec2(gain,1);
+    }
+}

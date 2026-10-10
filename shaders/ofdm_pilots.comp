@@ -1,0 +1,47 @@
+#version 450
+layout(local_size_x=64) in;
+layout(set=0,binding=2,std430) readonly buffer Fourier {vec2 spectrum[];};
+layout(set=0,binding=5,std430) buffer Statistics {vec2 stats[];};
+layout(set=0,binding=6,std430) readonly buffer Tables {vec2 table[];};
+layout(push_constant) uniform Parameters {uint count;uint capacity;uint pilots;uint unused;} pc;
+shared vec4 reduction[64];
+shared uint selected;
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+vec2 value(uint w,uint k){return spectrum[w*8192+(k+8192-3408)%8192];}
+vec2 channel(uint w,uint k){return multiply(value(w,k),table[k]);}
+void reduce(vec4 v) {
+    uint lane=gl_LocalInvocationID.x;reduction[lane]=v;barrier();
+    for(uint step=32;step>0;step/=2) {
+        if(lane<step)reduction[lane]+=reduction[lane+step];barrier();
+    }
+}
+void main() {
+    uint w=gl_WorkGroupID.x,lane=gl_LocalInvocationID.x,base=w*(pc.pilots+3);
+    float best=-1;
+    for(uint mod=0;mod<4;++mod) {
+        vec2 sum=vec2(0);float power=0;
+        for(uint k=3*mod+12*lane;k+12<6817;k+=12*64) {
+            vec2 a=channel(w,k),b=channel(w,k+12);
+            sum+=multiply(a,vec2(b.x,-b.y));power+=dot(a,a)+dot(b,b);
+        }
+        reduce(vec4(sum,power,0));
+        if(lane==0) {
+            float quality=2*length(reduction[0].xy)/max(reduction[0].z,1e-30);
+            if(quality>best){best=quality;selected=mod;stats[base]=vec2(uintBitsToFloat(mod),quality);}
+        }
+        barrier();
+    }
+    float residual=0,power=0,n=0;
+    for(uint k=3*selected+12+12*lane;k+12<6817;k+=12*64) {
+        vec2 mid=channel(w,k),e=mid-.5*(channel(w,k-12)+channel(w,k+12));
+        residual+=dot(e,e);power+=dot(mid,mid);n+=1;
+    }
+    reduce(vec4(residual,power,n,0));
+    if(lane==0) {
+        // Pilots have magnitude 4/3; convert channel residuals to raw FFT noise.
+        float variance=reduction[0].x/(1.5*reduction[0].z)*(16.0/9);
+        float signal=reduction[0].y/reduction[0].z*(16.0/9);
+        stats[base+1]=vec2(max(variance,signal*1e-6),signal);
+    }
+    for(uint j=lane;j<pc.pilots;j+=64)stats[base+2+j]=value(w,floatBitsToUint(table[2*6817+j].x));
+}

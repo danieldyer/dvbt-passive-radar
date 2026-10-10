@@ -1,0 +1,3630 @@
+{
+  "source": "build/sensitivity-20261006/excerpt-050.sar",
+  "rows": 128,
+  "cpi_s": 3.000704,
+  "doppler_grid_hz": 0.07978451797385622,
+  "benchmark": "constant path rate; 0.6-30 km, |fD|>=3/CPI Hz and <=200 Hz; proper independent Gaussian carrier noise",
+  "formula": "eta=|w^H q|^2/[(w^H D w)(q^H D^-1 q)]",
+  "includes": [
+    "within-symbol Doppler moment",
+    "finite previous-symbol context",
+    "actual QAM/pilots",
+    "candidate range/Doppler grid",
+    "cropped finite-CAF range interpolation",
+    "10 percent RMS log carrier-variance estimation error",
+    "correct channel and diagonal noise shape",
+    "discarded guard interval mean-energy allowance",
+    "3 degree RMS phase allowance",
+    "conservative stationary suppression allowance"
+  ],
+  "excludes": [
+    "unidentified temporal/full covariance",
+    "unknown template mismatch",
+    "scene-dependent direct-path leakage",
+    "unknown front-end losses beyond existing regression mask",
+    "Keystone interpolation numerical error (separate GPU regression)"
+  ],
+  "worst_loss_db": 0.876612464810923,
+  "results": [
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9444375893990725,
+      "loss_including_cp_clock_db": 0.5726329522550447
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9139151213056982,
+      "loss_including_cp_clock_db": 0.7153069619269665
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9264273942784854,
+      "loss_including_cp_clock_db": 0.6562517067974599
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9386645861463074,
+      "loss_including_cp_clock_db": 0.5992612610513258
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9455092140913,
+      "loss_including_cp_clock_db": 0.5677079380745165
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9264507374663207,
+      "loss_including_cp_clock_db": 0.6561422790105621
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9139405868231925,
+      "loss_including_cp_clock_db": 0.7151859509119494
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9445056628465656,
+      "loss_including_cp_clock_db": 0.5723199314950191
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9115032285593843,
+      "loss_including_cp_clock_db": 0.7267834798473514
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8820581661594048,
+      "loss_including_cp_clock_db": 0.8693933420515787
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.894136663062709,
+      "loss_including_cp_clock_db": 0.8103265625713952
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9059447098780621,
+      "loss_including_cp_clock_db": 0.753348659148992
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9125508698146392,
+      "loss_including_cp_clock_db": 0.7217947586618733
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.894161640835251,
+      "loss_including_cp_clock_db": 0.8102052437873616
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.882089348756532,
+      "loss_including_cp_clock_db": 0.8692398126017944
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9116130132187507,
+      "loss_including_cp_clock_db": 0.7262604317747656
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9115358748005532,
+      "loss_including_cp_clock_db": 0.7266279364761757
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.882058977781625,
+      "loss_including_cp_clock_db": 0.8693893459104739
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.8941396566642131,
+      "loss_including_cp_clock_db": 0.8103120222612662
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9059445383621032,
+      "loss_including_cp_clock_db": 0.7533494813673982
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9125503284834782,
+      "loss_including_cp_clock_db": 0.7217973349259876
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.8941349086093753,
+      "loss_including_cp_clock_db": 0.8103350842010365
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8820610415796848,
+      "loss_including_cp_clock_db": 0.8693791845144317
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9115532312384294,
+      "loss_including_cp_clock_db": 0.7265452438072287
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9114958291024842,
+      "loss_including_cp_clock_db": 0.7268187354146793
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8820293017574048,
+      "loss_including_cp_clock_db": 0.8695354625613736
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.8941021286215767,
+      "loss_including_cp_clock_db": 0.8104943043438139
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9059337279766988,
+      "loss_including_cp_clock_db": 0.7534013048349639
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9125403693129426,
+      "loss_including_cp_clock_db": 0.7218447321628834
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.8941228242872621,
+      "loss_including_cp_clock_db": 0.810393779928334
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8820459136631787,
+      "loss_including_cp_clock_db": 0.8694536694615252
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9115555527045328,
+      "loss_including_cp_clock_db": 0.7265341835794734
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9115739398568812,
+      "loss_including_cp_clock_db": 0.7264465821355204
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8821181481643267,
+      "loss_including_cp_clock_db": 0.8690980217533796
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.8941376463081357,
+      "loss_including_cp_clock_db": 0.8103217868156741
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9059783095238845,
+      "loss_including_cp_clock_db": 0.7531875911497448
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9125899213170846,
+      "loss_including_cp_clock_db": 0.7216089116071466
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.8942032657711304,
+      "loss_including_cp_clock_db": 0.8100030760988937
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8820583092851441,
+      "loss_including_cp_clock_db": 0.869392637350731
+    },
+    {
+      "channel": "flat",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9115591679384774,
+      "loss_including_cp_clock_db": 0.7265169594724534
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9448830079369845,
+      "loss_including_cp_clock_db": 0.5705852022118888
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9143569854271835,
+      "loss_including_cp_clock_db": 0.7132077213080047
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9268763938404672,
+      "loss_including_cp_clock_db": 0.6541473778988645
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9391142227519805,
+      "loss_including_cp_clock_db": 0.5971814133130051
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9459620161484736,
+      "loss_including_cp_clock_db": 0.5656286102429576
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.926890978915557,
+      "loss_including_cp_clock_db": 0.6540790390369026
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9143717537170746,
+      "loss_including_cp_clock_db": 0.713137576549302
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9449296961649601,
+      "loss_including_cp_clock_db": 0.5703706154463352
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.934330921447086,
+      "loss_including_cp_clock_db": 0.6193583730438514
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9041414211673476,
+      "loss_including_cp_clock_db": 0.7620019335098684
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9165197960749101,
+      "loss_including_cp_clock_db": 0.7029470945294249
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9286174736473871,
+      "loss_including_cp_clock_db": 0.6459970779935976
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9353886545257942,
+      "loss_including_cp_clock_db": 0.6144446127739427
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9165253474382652,
+      "loss_including_cp_clock_db": 0.7029207893783411
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9041473456147632,
+      "loss_including_cp_clock_db": 0.7619734761653538
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.934358431775864,
+      "loss_including_cp_clock_db": 0.6192305017744627
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9343439196010523,
+      "loss_including_cp_clock_db": 0.6192979556141455
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9041398921690352,
+      "loss_including_cp_clock_db": 0.7620092778929024
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9165158062080373,
+      "loss_including_cp_clock_db": 0.7029660006233843
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9286173344699653,
+      "loss_including_cp_clock_db": 0.6459977288966071
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9353882355251835,
+      "loss_including_cp_clock_db": 0.6144465581652305
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9165053916988827,
+      "loss_including_cp_clock_db": 0.7030153504493742
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9041231583099181,
+      "loss_including_cp_clock_db": 0.76208965804195
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9343248245305927,
+      "loss_including_cp_clock_db": 0.619386712744145
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9343108931052786,
+      "loss_including_cp_clock_db": 0.619451469519176
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9041385506183504,
+      "loss_including_cp_clock_db": 0.7620157219011463
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9164621242022903,
+      "loss_including_cp_clock_db": 0.7032203822882508
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9285866681285166,
+      "loss_including_cp_clock_db": 0.6461411511900534
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9353600111413423,
+      "loss_including_cp_clock_db": 0.6145776040628292
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9165171769489194,
+      "loss_including_cp_clock_db": 0.702959505320717
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9040822512311727,
+      "loss_including_cp_clock_db": 0.7622861591527108
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9343039355871027,
+      "loss_including_cp_clock_db": 0.619483810178205
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9343973401865735,
+      "loss_including_cp_clock_db": 0.6190496572967975
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9042067407472903,
+      "loss_including_cp_clock_db": 0.7616881893566223
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9165060346344618,
+      "loss_including_cp_clock_db": 0.7030123038412602
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9286239434225119,
+      "loss_including_cp_clock_db": 0.6459668203479301
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9354014096282536,
+      "loss_including_cp_clock_db": 0.6143853921193065
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.916567330898019,
+      "loss_including_cp_clock_db": 0.7027218557933571
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9040914696978793,
+      "loss_including_cp_clock_db": 0.7622418765799026
+    },
+    {
+      "channel": "flat",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.934293640359921,
+      "loss_including_cp_clock_db": 0.6195316659649461
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9444442315481192,
+      "loss_including_cp_clock_db": 0.572602408801802
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9139220041080757,
+      "loss_including_cp_clock_db": 0.7152742548213824
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9264343004960854,
+      "loss_including_cp_clock_db": 0.6562193316644105
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9386714541075718,
+      "loss_including_cp_clock_db": 0.599229484985506
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9455160961155025,
+      "loss_including_cp_clock_db": 0.5676763274438247
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9264571948866432,
+      "loss_including_cp_clock_db": 0.6561120085155799
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9139468864065325,
+      "loss_including_cp_clock_db": 0.715156016090217
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9445111429962519,
+      "loss_including_cp_clock_db": 0.5722947332145015
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9115181117273844,
+      "loss_including_cp_clock_db": 0.7267125681405819
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8820727798800503,
+      "loss_including_cp_clock_db": 0.8693213898163911
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.894151099971204,
+      "loss_including_cp_clock_db": 0.8102564410861972
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9059594308861408,
+      "loss_including_cp_clock_db": 0.7532780897139655
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9125656598113746,
+      "loss_including_cp_clock_db": 0.7217243717702371
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.89417621282066,
+      "loss_including_cp_clock_db": 0.8101344682027516
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8821035758114658,
+      "loss_including_cp_clock_db": 0.8691697666179841
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.911627733946214,
+      "loss_including_cp_clock_db": 0.7261903024655452
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9115501345917533,
+      "loss_including_cp_clock_db": 0.7265599972939376
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.882073723184466,
+      "loss_including_cp_clock_db": 0.869316745395967
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.8941536215090526,
+      "loss_including_cp_clock_db": 0.8102441938448808
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9059592716078403,
+      "loss_including_cp_clock_db": 0.7532788532547018
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.912565146073912,
+      "loss_including_cp_clock_db": 0.7217268166727551
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.8941486863651935,
+      "loss_including_cp_clock_db": 0.8102681641292783
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8820757437878978,
+      "loss_including_cp_clock_db": 0.8693067968407343
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9115680560674692,
+      "loss_including_cp_clock_db": 0.7264746139320568
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9115087230564093,
+      "loss_including_cp_clock_db": 0.726757300866608
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8820419957987057,
+      "loss_including_cp_clock_db": 0.8694729599618726
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.89411498417343,
+      "loss_including_cp_clock_db": 0.8104318611964814
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9059473677017744,
+      "loss_including_cp_clock_db": 0.7533359180129561
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9125541137492169,
+      "loss_including_cp_clock_db": 0.7217793203950398
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.8941344954811508,
+      "loss_including_cp_clock_db": 0.8103370908260765
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8820595843274872,
+      "loss_including_cp_clock_db": 0.869386359495313
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.911569053502293,
+      "loss_including_cp_clock_db": 0.7264698618984573
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9115870389158764,
+      "loss_including_cp_clock_db": 0.7263841756985014
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8821307952674194,
+      "loss_including_cp_clock_db": 0.8690357565372852
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.8941502911733942,
+      "loss_including_cp_clock_db": 0.8102603694668106
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.905991187205545,
+      "loss_including_cp_clock_db": 0.7531258604628317
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9126029085749259,
+      "loss_including_cp_clock_db": 0.7215471066918167
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.8942149522776319,
+      "loss_including_cp_clock_db": 0.8099463177273318
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8820705236757634,
+      "loss_including_cp_clock_db": 0.8693324984045636
+    },
+    {
+      "channel": "flat",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9115713277984696,
+      "loss_including_cp_clock_db": 0.7264590265915347
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9443976370890783,
+      "loss_including_cp_clock_db": 0.5728166746626855
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9138876779030566,
+      "loss_including_cp_clock_db": 0.7154373755398351
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9263925470659792,
+      "loss_including_cp_clock_db": 0.6564150680800677
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9386249371272186,
+      "loss_including_cp_clock_db": 0.5994447101143737
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9454666389008632,
+      "loss_including_cp_clock_db": 0.567903500278513
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9264140997691301,
+      "loss_including_cp_clock_db": 0.656314029797795
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9139115909288988,
+      "loss_including_cp_clock_db": 0.7153237383878065
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.944462068086182,
+      "loss_including_cp_clock_db": 0.5725203898042616
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9100028020175456,
+      "loss_including_cp_clock_db": 0.7339382968401661
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8806204746040754,
+      "loss_including_cp_clock_db": 0.8764778058123098
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.8926733415015664,
+      "loss_including_cp_clock_db": 0.817439939144266
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.904458379445852,
+      "loss_including_cp_clock_db": 0.760479725747703
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9110510739859222,
+      "loss_including_cp_clock_db": 0.728938348319323
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.8927010597160416,
+      "loss_including_cp_clock_db": 0.8173050893605169
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.880652787659829,
+      "loss_including_cp_clock_db": 0.8763184508489494
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9101188945710823,
+      "loss_including_cp_clock_db": 0.7333842860226045
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9100421693380241,
+      "loss_including_cp_clock_db": 0.7337504222510998
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.88062393982647,
+      "loss_including_cp_clock_db": 0.8764607164526251
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.8926777417182704,
+      "loss_including_cp_clock_db": 0.8174185317039964
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9044581823600856,
+      "loss_including_cp_clock_db": 0.7604806720960597
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9110504734732303,
+      "loss_including_cp_clock_db": 0.7289412109407699
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.8926735603653814,
+      "loss_including_cp_clock_db": 0.8174388743501129
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8806235687999374,
+      "loss_including_cp_clock_db": 0.8764625462326529
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9100543269063647,
+      "loss_including_cp_clock_db": 0.7336924037355468
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9100047299970794,
+      "loss_including_cp_clock_db": 0.733929095659863
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8805931701740616,
+      "loss_including_cp_clock_db": 0.876612464810923
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.8926423521830983,
+      "loss_including_cp_clock_db": 0.8175907078857005
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9044485234814017,
+      "loss_including_cp_clock_db": 0.7605270514665412
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9110418442549039,
+      "loss_including_cp_clock_db": 0.7289823463087848
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.8926584992192884,
+      "loss_including_cp_clock_db": 0.8175121489278515
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8806072536954057,
+      "loss_including_cp_clock_db": 0.8765430076892603
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.910055583630117,
+      "loss_including_cp_clock_db": 0.7336864064252993
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9100811466008686,
+      "loss_including_cp_clock_db": 0.7335644171598247
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8806809774241263,
+      "loss_including_cp_clock_db": 0.8761794350721079
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.8926739269190721,
+      "loss_including_cp_clock_db": 0.8174370910306601
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9044917573211938,
+      "loss_including_cp_clock_db": 0.7603194579018885
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9110902673998293,
+      "loss_including_cp_clock_db": 0.7287515188675913
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.8927405857321609,
+      "loss_including_cp_clock_db": 0.8171128015785134
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8806180830907765,
+      "loss_including_cp_clock_db": 0.8764896000241115
+    },
+    {
+      "channel": "recorded",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.91006206551351,
+      "loss_including_cp_clock_db": 0.7336554738513388
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.944872998337198,
+      "loss_including_cp_clock_db": 0.5706312093571391
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9143557161553841,
+      "loss_including_cp_clock_db": 0.7132137500050002
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9268729144720855,
+      "loss_including_cp_clock_db": 0.6541636807558029
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9391062616241406,
+      "loss_including_cp_clock_db": 0.597218229798816
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9459516689843922,
+      "loss_including_cp_clock_db": 0.565676114696245
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9268860381361356,
+      "loss_including_cp_clock_db": 0.654102189105323
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9143731653387975,
+      "loss_including_cp_clock_db": 0.7131308718468755
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9449222065074613,
+      "loss_including_cp_clock_db": 0.5704050384285648
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9335602656213103,
+      "loss_including_cp_clock_db": 0.6229420035453365
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.903402458204905,
+      "loss_including_cp_clock_db": 0.7655529129185743
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9157873502543908,
+      "loss_including_cp_clock_db": 0.7064191892131679
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9278704346910748,
+      "loss_including_cp_clock_db": 0.6494922250672404
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9346326195006834,
+      "loss_including_cp_clock_db": 0.6179562504433219
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9157773715591325,
+      "loss_including_cp_clock_db": 0.7064665115079873
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9034336204947839,
+      "loss_including_cp_clock_db": 0.7654031083989634
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9336091208760545,
+      "loss_including_cp_clock_db": 0.6227147336714229
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9335774362956937,
+      "loss_including_cp_clock_db": 0.6228621258895235
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9034016441289191,
+      "loss_including_cp_clock_db": 0.7655568264442083
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.915783886010366,
+      "loss_including_cp_clock_db": 0.7064356177531469
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9278702814800134,
+      "loss_including_cp_clock_db": 0.6494929421794743
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9346321590829038,
+      "loss_including_cp_clock_db": 0.6179583898609515
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9157561621090731,
+      "loss_including_cp_clock_db": 0.7065670954935503
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9034077369564438,
+      "loss_including_cp_clock_db": 0.7655275363442022
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.933571117200838,
+      "loss_including_cp_clock_db": 0.6228915220296575
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9335467647115033,
+      "loss_including_cp_clock_db": 0.6230048105567687
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9033988415904493,
+      "loss_including_cp_clock_db": 0.7655702991768358
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9157296679494699,
+      "loss_including_cp_clock_db": 0.7066927450304488
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9278374992980974,
+      "loss_including_cp_clock_db": 0.6496463835872195
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.934601935757326,
+      "loss_including_cp_clock_db": 0.6180988305212259
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9157641935585357,
+      "loss_including_cp_clock_db": 0.7065290067639054
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9033651298496321,
+      "loss_including_cp_clock_db": 0.7657323659796431
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9335486305740431,
+      "loss_including_cp_clock_db": 0.6229961304024811
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9336306851689047,
+      "loss_including_cp_clock_db": 0.6226144224702471
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9034655120186756,
+      "loss_including_cp_clock_db": 0.7652498036283997
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9157725217785269,
+      "loss_including_cp_clock_db": 0.7064895109683149
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9278745295662563,
+      "loss_including_cp_clock_db": 0.6494730588377244
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.934643077580493,
+      "loss_including_cp_clock_db": 0.617907655296445
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9158134517018537,
+      "loss_including_cp_clock_db": 0.7062954098984672
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9033725376572926,
+      "loss_including_cp_clock_db": 0.7656967529512788
+    },
+    {
+      "channel": "recorded",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9335378453466804,
+      "loss_including_cp_clock_db": 0.6230463044548368
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9444050328619973,
+      "loss_including_cp_clock_db": 0.5727826642981384
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9138953755565882,
+      "loss_including_cp_clock_db": 0.7154007951760324
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9264002251021882,
+      "loss_including_cp_clock_db": 0.6563790734582453
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.938632566561791,
+      "loss_including_cp_clock_db": 0.5994094094555317
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9454742797110052,
+      "loss_including_cp_clock_db": 0.5678684028130209
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9264213075166964,
+      "loss_including_cp_clock_db": 0.6562802406659306
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9139186131966408,
+      "loss_including_cp_clock_db": 0.7152903684158702
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9444681543669301,
+      "loss_including_cp_clock_db": 0.5724924031892688
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9100206574936869,
+      "loss_including_cp_clock_db": 0.7338530832708613
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.880638107385298,
+      "loss_including_cp_clock_db": 0.8763908473195122
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.8926904452273583,
+      "loss_including_cp_clock_db": 0.8173567286099555
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9044758626916094,
+      "loss_including_cp_clock_db": 0.7603957771222463
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9110686595280733,
+      "loss_including_cp_clock_db": 0.728854519537084
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.8927186887737693,
+      "loss_including_cp_clock_db": 0.817219325746678
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8806696786112727,
+      "loss_including_cp_clock_db": 0.876235153813378
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9101364724150546,
+      "loss_including_cp_clock_db": 0.733300408114267
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9100593459286993,
+      "loss_including_cp_clock_db": 0.7336684521138759
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8806417425058903,
+      "loss_including_cp_clock_db": 0.8763729204373715
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.8926943250790303,
+      "loss_including_cp_clock_db": 0.8173378531473683
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9044756790473762,
+      "loss_including_cp_clock_db": 0.7603966589112301
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9110680892604017,
+      "loss_including_cp_clock_db": 0.7288572379291379
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.8926902725330158,
+      "loss_including_cp_clock_db": 0.8173575687691355
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8806409981167965,
+      "loss_including_cp_clock_db": 0.8763765914445115
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9100720092242124,
+      "loss_including_cp_clock_db": 0.7336080213175098
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9100203777132094,
+      "loss_including_cp_clock_db": 0.733854418483806
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8806086727916206,
+      "loss_including_cp_clock_db": 0.8765360090510338
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.8926577151195912,
+      "loss_including_cp_clock_db": 0.8175159637161675
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9044648259313528,
+      "loss_including_cp_clock_db": 0.7604487717185614
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9110582844328163,
+      "loss_including_cp_clock_db": 0.7289039765371497
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.8926728359375203,
+      "loss_including_cp_clock_db": 0.8174423987644589
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8806235813958134,
+      "loss_including_cp_clock_db": 0.8764624841139497
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9100718178072644,
+      "loss_including_cp_clock_db": 0.7336089347763586
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9100970424948466,
+      "loss_including_cp_clock_db": 0.7334885619597009
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8806964455473292,
+      "loss_including_cp_clock_db": 0.8761031570357829
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.8926890525702341,
+      "loss_including_cp_clock_db": 0.8173635039012026
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9045071919745699,
+      "loss_including_cp_clock_db": 0.7602453485742509
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9111058508829064,
+      "loss_including_cp_clock_db": 0.7286772368444714
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.8927549735908761,
+      "loss_including_cp_clock_db": 0.8170428090477123
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8806327302038055,
+      "loss_including_cp_clock_db": 0.876417365447225
+    },
+    {
+      "channel": "recorded",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9100767652451669,
+      "loss_including_cp_clock_db": 0.7335853252205167
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9446297037212011,
+      "loss_including_cp_clock_db": 0.5717496148473564
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9141076938133131,
+      "loss_including_cp_clock_db": 0.7143919495207633
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.926622617118175,
+      "loss_including_cp_clock_db": 0.6553366294729315
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9388575474406919,
+      "loss_including_cp_clock_db": 0.5983685735653248
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9457032792949099,
+      "loss_including_cp_clock_db": 0.5668166427002758
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9266339168042331,
+      "loss_including_cp_clock_db": 0.6552836698182636
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9141213791664887,
+      "loss_including_cp_clock_db": 0.7143269306075977
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 16.011,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.944675155514779,
+      "loss_including_cp_clock_db": 0.5715406547840741
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9213285097796514,
+      "loss_including_cp_clock_db": 0.6802204898784293
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.891568124304855,
+      "loss_including_cp_clock_db": 0.8228202623844232
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9037754526323896,
+      "loss_including_cp_clock_db": 0.7637601793646056
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.915707625046464,
+      "loss_including_cp_clock_db": 0.7067972870879646
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9223847805518054,
+      "loss_including_cp_clock_db": 0.6752443081658382
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9037872195722301,
+      "loss_including_cp_clock_db": 0.7637036356317628
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8915842694092172,
+      "loss_including_cp_clock_db": 0.8227416181837461
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 128.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.921401217011785,
+      "loss_including_cp_clock_db": 0.6798777771162985
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9213563996741797,
+      "loss_including_cp_clock_db": 0.6800890248923833
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8915662236558225,
+      "loss_including_cp_clock_db": 0.8228295207040534
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9037750222971765,
+      "loss_including_cp_clock_db": 0.7637622472704371
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9157074714812488,
+      "loss_including_cp_clock_db": 0.706798015404835
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9223842907878516,
+      "loss_including_cp_clock_db": 0.675246614164848
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9037626809120543,
+      "loss_including_cp_clock_db": 0.763821552207183
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8915576826350081,
+      "loss_including_cp_clock_db": 0.8228711254203207
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 384.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9213473173833912,
+      "loss_including_cp_clock_db": 0.680131835776586
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.921326407071745,
+      "loss_including_cp_clock_db": 0.6802304016034352
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.891551045297146,
+      "loss_including_cp_clock_db": 0.8229034572592366
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9037252957588454,
+      "loss_including_cp_clock_db": 0.7640012066884916
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9156794644036181,
+      "loss_including_cp_clock_db": 0.7069308471842022
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9223586685155363,
+      "loss_including_cp_clock_db": 0.6753672554869894
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9037605483298418,
+      "loss_including_cp_clock_db": 0.7638318001384086
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8915217431284177,
+      "loss_including_cp_clock_db": 0.8230461970315022
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 600.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9213351950791095,
+      "loss_including_cp_clock_db": 0.680188976926208
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9214061482541558,
+      "loss_including_cp_clock_db": 0.6798545341947546
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8916332612389674,
+      "loss_including_cp_clock_db": 0.8225029834579373
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9037596425303976,
+      "loss_including_cp_clock_db": 0.7638361528831499
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9157170076670302,
+      "loss_including_cp_clock_db": 0.706752788174223
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9224008024151931,
+      "loss_including_cp_clock_db": 0.6751688716823413
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9038274353271598,
+      "loss_including_cp_clock_db": 0.763510392227732
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8915266062252473,
+      "loss_including_cp_clock_db": 0.8230225070836799
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "white",
+      "delay_samples": 800.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9213270733709321,
+      "loss_including_cp_clock_db": 0.6802272608060649
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9450129580234373,
+      "loss_including_cp_clock_db": 0.5699879565795922
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9144812237883132,
+      "loss_including_cp_clock_db": 0.712617663264702
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9270086965065845,
+      "loss_including_cp_clock_db": 0.6535275086498742
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9392520304035317,
+      "loss_including_cp_clock_db": 0.5965441669544789
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9461037752887768,
+      "loss_including_cp_clock_db": 0.5649778378143581
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9270073178191398,
+      "loss_including_cp_clock_db": 0.6535339676701293
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9144807517796102,
+      "loss_including_cp_clock_db": 0.7126199048725415
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 16.011,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9450332815388237,
+      "loss_including_cp_clock_db": 0.569894557906049
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9371185303175733,
+      "loss_including_cp_clock_db": 0.606420336759874
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9068361032100304,
+      "loss_including_cp_clock_db": 0.7490775720579763
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9192557326503054,
+      "loss_including_cp_clock_db": 0.6900021236584744
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9313948721362154,
+      "loss_including_cp_clock_db": 0.6330271669392846
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9381892849229997,
+      "loss_including_cp_clock_db": 0.6014609070239721
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9192463117029973,
+      "loss_including_cp_clock_db": 0.6900466323436052
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9068266835144899,
+      "loss_including_cp_clock_db": 0.7491226843227746
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 128.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9371181526129928,
+      "loss_including_cp_clock_db": 0.6064220871793018
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9371219526335277,
+      "loss_including_cp_clock_db": 0.6064044765439855
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9068285676950307,
+      "loss_including_cp_clock_db": 0.7491136606760673
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9192473842337852,
+      "loss_including_cp_clock_db": 0.6900415652149676
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9313947719559997,
+      "loss_including_cp_clock_db": 0.6330276340635785
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9381889690402487,
+      "loss_including_cp_clock_db": 0.6014623692679028
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9192310996223739,
+      "loss_including_cp_clock_db": 0.6901185018442306
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9068065709615996,
+      "loss_including_cp_clock_db": 0.749219007774234
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 384.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9370935828367254,
+      "loss_including_cp_clock_db": 0.6065359539111477
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9370842784385377,
+      "loss_including_cp_clock_db": 0.606579075205811
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9068195466873374,
+      "loss_including_cp_clock_db": 0.7491568639174389
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9191826629041413,
+      "loss_including_cp_clock_db": 0.6903473491242454
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9313476553141778,
+      "loss_including_cp_clock_db": 0.6332473369838949
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9381445531706413,
+      "loss_including_cp_clock_db": 0.6016679784184586
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9192339899018016,
+      "loss_including_cp_clock_db": 0.6901048466226682
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9067508096649862,
+      "loss_including_cp_clock_db": 0.7494860720942194
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 600.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9370632470362471,
+      "loss_including_cp_clock_db": 0.6066765469559025
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9371714074837508,
+      "loss_including_cp_clock_db": 0.6061752918387813
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9068901132009408,
+      "loss_including_cp_clock_db": 0.7488189195577838
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9192240763630728,
+      "loss_including_cp_clock_db": 0.690151683645988
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9313832244553498,
+      "loss_including_cp_clock_db": 0.6330814785455485
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9381843219099083,
+      "loss_including_cp_clock_db": 0.6014838812247535
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9192816967144284,
+      "loss_including_cp_clock_db": 0.6898794603980255
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.9067540417546616,
+      "loss_including_cp_clock_db": 0.7494705918079667
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "smooth_20db",
+      "delay_samples": 800.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9370401820513644,
+      "loss_including_cp_clock_db": 0.6067834460256631
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9446336888285107,
+      "loss_including_cp_clock_db": 0.5717312933139886
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.9141118204681313,
+      "loss_including_cp_clock_db": 0.7143723437414544
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9266267587010932,
+      "loss_including_cp_clock_db": 0.6553172185222927
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.938861667756796,
+      "loss_including_cp_clock_db": 0.5983495139473242
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9457074083964252,
+      "loss_including_cp_clock_db": 0.5667976807052425
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9266377934171282,
+      "loss_including_cp_clock_db": 0.655265500959596
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.914125161787412,
+      "loss_including_cp_clock_db": 0.7143089596025136
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 16.011,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 16.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9446784552099307,
+      "loss_including_cp_clock_db": 0.571525485157931
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9213400721784964,
+      "loss_including_cp_clock_db": 0.680165987554298
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8915794714841269,
+      "loss_including_cp_clock_db": 0.8227649891433898
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9037867328519793,
+      "loss_including_cp_clock_db": 0.7637059744563388
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9157191595409495,
+      "loss_including_cp_clock_db": 0.7067425825554237
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9223963775737145,
+      "loss_including_cp_clock_db": 0.6751897052380111
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9037986832521582,
+      "loss_including_cp_clock_db": 0.7636485498631986
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8915954881815943,
+      "loss_including_cp_clock_db": 0.822686971411132
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 128.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 128.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9214128703818247,
+      "loss_including_cp_clock_db": 0.6798228503134428
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9213675968972523,
+      "loss_including_cp_clock_db": 0.6800362455048874
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8915776541377843,
+      "loss_including_cp_clock_db": 0.8227738415712205
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.9037860280788537,
+      "loss_including_cp_clock_db": 0.7637093610871408
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9157190131709347,
+      "loss_including_cp_clock_db": 0.7067432767387238
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9223959040442217,
+      "loss_including_cp_clock_db": 0.6751919347708186
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9037736634815957,
+      "loss_including_cp_clock_db": 0.7637687768440339
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8915691719943554,
+      "loss_including_cp_clock_db": 0.8228151589549821
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 384.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 384.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9213590076721297,
+      "loss_including_cp_clock_db": 0.6800767317394201
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.9213368037269684,
+      "loss_including_cp_clock_db": 0.6801813941671618
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8915612770491675,
+      "loss_including_cp_clock_db": 0.8228536163895671
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.903735645391551,
+      "loss_including_cp_clock_db": 0.7639514707492909
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9156903614708959,
+      "loss_including_cp_clock_db": 0.7068791641639749
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9223696501407321,
+      "loss_including_cp_clock_db": 0.6753155485860142
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.9037703073006373,
+      "loss_including_cp_clock_db": 0.7637849044834611
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.8915326292578764,
+      "loss_including_cp_clock_db": 0.8229931668376231
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 600.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 600.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9213461248045878,
+      "loss_including_cp_clock_db": 0.6801374572259458
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": -200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -200.01978656045753,
+      "observation_efficiency": 0.92141668561325,
+      "loss_including_cp_clock_db": 0.6798048678152809
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": -100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -100.04978553921569,
+      "observation_efficiency": 0.8916434681520415,
+      "loss_including_cp_clock_db": 0.822453268167513
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": -101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": -101.00719975490198,
+      "observation_efficiency": 0.903769864314731,
+      "loss_including_cp_clock_db": 0.7637870331922743
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": 1.17,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 1.1967677696078431,
+      "observation_efficiency": 0.9157274346236052,
+      "loss_including_cp_clock_db": 0.7067033368275262
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": 3.01,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 3.031811683006536,
+      "observation_efficiency": 0.9224113169285171,
+      "loss_including_cp_clock_db": 0.6751193664230395
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": 101.041,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 101.00719975490198,
+      "observation_efficiency": 0.903837171332108,
+      "loss_including_cp_clock_db": 0.7634636103943186
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": 100.00989328022877,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 100.04978553921569,
+      "observation_efficiency": 0.891536591917738,
+      "loss_including_cp_clock_db": 0.8229738634780995
+    },
+    {
+      "channel": "minimum_phase",
+      "noise": "strong_narrowband",
+      "delay_samples": 800.125,
+      "doppler_hz": 200.0,
+      "candidate_delay_samples": 800.0,
+      "candidate_doppler_hz": 200.01978656045753,
+      "observation_efficiency": 0.9213371523304121,
+      "loss_including_cp_clock_db": 0.680179750940464
+    }
+  ]
+}

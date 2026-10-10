@@ -1,0 +1,32 @@
+#version 450
+layout(local_size_x=64) in;
+layout(binding=1) readonly buffer Zero {vec2 zero[];};
+layout(binding=2) readonly buffer One {vec2 one[];};
+layout(binding=3) readonly buffer Phases {vec2 phases[];};
+layout(binding=4) readonly buffer Weights {float weights[];};
+layout(binding=5) writeonly buffer Focus {vec2 focused[];};
+layout(push_constant) uniform Parameters {uint rows,size,frequencies,first,count,ranges;int offset_bin;uint remove_dc;float interval,rf;} p;
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+shared vec2 tile[64];
+void main(){
+    uint group=gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x,lane=gl_LocalInvocationID.x;
+    uint first_k=(group%128)*8,first_row=(group/128)*8;
+    uint row=first_row+lane%8,k=first_k+lane/8;
+    int bin=int(p.first+row)-p.offset_bin,frequency_k=k<512 ? int(k) : int(k)-1024;
+    float coordinate=.5*float(bin)*(1+float(frequency_k)*(8000000.0/(1024*p.rf)));
+    int nearest=int(floor(coordinate));float fraction=coordinate-float(nearest);
+    uint lut=uint(clamp(round(fraction*4095),0,4095))*12;
+    vec2 a=vec2(0),b=vec2(0);
+    for(int j=0;j<12;++j){
+        int index=(nearest+j-5+int(p.size))%int(p.size);
+        vec2 phase=phases[index];float w=weights[lut+uint(j)];
+        a+=w*multiply(zero[k*p.size+index],phase);
+        b+=w*multiply(one[k*p.size+index],phase);
+    }
+    float f=float(bin)/(2*float(p.size)*p.interval),omega=6.283185307179586*f*.001024;
+    tile[(lane%8)*8+lane/8]=row<p.count ? a+omega*vec2(b.y,-b.x) : vec2(0);
+    barrier();
+    row=first_row+lane/8;k=first_k+lane%8;uint base=row*4096;
+    for(uint j=0;j<4;++j)focused[base+k+j*1024]=vec2(0);
+    focused[base+(k<512 ? k : k+3072)]=tile[lane];
+}

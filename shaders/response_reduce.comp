@@ -1,0 +1,23 @@
+#version 450
+layout(local_size_x=64) in;
+layout(set=0,binding=0,std430) readonly buffer Measured {vec2 measured[];};
+layout(set=0,binding=1,std430) readonly buffer Reference {vec2 reference[];};
+layout(set=0,binding=2,std430) readonly buffer Valid {uint valid[];};
+layout(set=0,binding=3,std430) readonly buffer Rotation {vec2 rotation[];};
+layout(set=0,binding=4,std430) writeonly buffer Statistics {vec4 stats[];};
+layout(push_constant) uniform Parameters {uint count;uint order;uint iterations;uint unused;} pc;
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+void main() {
+    uint k=gl_GlobalInvocationID.x;if(k>=6817)return;
+    // Adjacent lanes traverse adjacent carriers. Compensated sums preserve the
+    // small response/cancellation residual over a long reconstruction batch.
+    precise vec4 sum=vec4(0),lost=vec4(0);
+    for(uint s=0;s<pc.count;++s) {
+        uint at=s*6817+k;if(valid[at]==0)continue;
+        vec2 x=multiply(reference[at],rotation[k]),y=measured[at];
+        vec4 value=vec4(multiply(y,vec2(x.x,-x.y)),dot(x,x),dot(y,y));
+        vec4 corrected=value-lost,next=sum+corrected;
+        lost=(next-sum)-corrected;sum=next;
+    }
+    stats[k]=sum;
+}

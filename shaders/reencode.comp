@@ -1,0 +1,21 @@
+#version 450
+layout(local_size_x=64) in;
+layout(set=0,binding=0,std430) readonly buffer Packets {uint packets[];};
+layout(set=0,binding=2,std430) writeonly buffer Codes {uint codes[];};
+layout(push_constant) uniform Parameters {uint bits;uint count;uint packets;uint rate;} pc;
+uvec2 byte_at(uint at) {
+    // Inverse of the outer deinterleaver's exact receive-stream coordinates.
+    uint i=at+(11-at%12)*204;
+    if(i<2244 || i>=2244+pc.packets*204)return uvec2(0);
+    uint p=(i-2244)/204,j=i%204;
+    return uvec2(packets[p*208+j],uint(packets[p*208+204]==1));
+}
+void main() {
+    uint t=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
+    if(t>=pc.bits)return;
+    uint b=t%8,at=t/8;
+    uvec2 current=byte_at(at),previous=at==0 ? uvec2(0) : byte_at(at-1);
+    uint reg=(((previous.x<<8)|current.x)>>(7-b))&127;
+    uint good=current.y&uint(b>=6 || previous.y!=0);
+    codes[t]=(bitCount(reg&0x4fU)%2)|((bitCount(reg&0x6dU)%2)<<1)|(good<<2);
+}
