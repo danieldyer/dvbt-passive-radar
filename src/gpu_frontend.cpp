@@ -13,6 +13,7 @@
 namespace radar {
 namespace {
 constexpr double tau=2*std::numbers::pi;
+std::uint32_t grid_rate(std::uint32_t rate) {return (rate+7'999'999)/8'000'000*8'000'000;}
 constexpr std::uint32_t fold_spirv[] =
 #include "channel_fold.inc"
 ;
@@ -37,7 +38,7 @@ struct GpuChannelBank::Impl {
     static constexpr std::size_t inverse_size=512,batches=512;
     static constexpr std::size_t oscillator_size=256+batch_size/256;
     WaveReader* input=nullptr;
-    std::uint32_t input_rate;
+    std::uint32_t input_rate,source_rate;
     std::vector<double> offsets;
     std::vector<float> prototype;
     std::size_t fft_size,hop;
@@ -65,7 +66,8 @@ struct GpuChannelBank::Impl {
             if(result!=VKFFT_SUCCESS)throw std::runtime_error("Channel bank VkFFT dispatch failed: "+std::to_string(result));
         }
     } forward,inverse;
-    Impl(std::uint32_t rate,std::span<const double> centres) : input_rate(rate),offsets(centres.begin(),centres.end()),
+    Impl(std::uint32_t source,std::span<const double> centres) : Impl(source,grid_rate(source),centres) {}
+    Impl(std::uint32_t source,std::uint32_t rate,std::span<const double> centres) : input_rate(rate),source_rate(source),offsets(centres.begin(),centres.end()),
         prototype(GpuChannelBank::prototype(rate)),fft_size(inverse_size*(rate/8'000'000)),
         hop((fft_size-prototype.size()+1)/(rate/8'000'000)),
         kernel(fold_spirv,32,std::array<std::uint32_t,3>{rate/8'000'000,inverse_size,static_cast<std::uint32_t>(centres.size())}),
@@ -104,20 +106,20 @@ std::vector<float> GpuChannelBank::prototype(double rate) {
 }
 GpuChannelBank::GpuChannelBank(std::uint32_t input_rate,std::span<const double> offsets) {
     const double fs=input_rate;
-    if(input_rate%8'000'000 || fs<8e6 || fs>128e6 || offsets.empty() || offsets.size()>64)
-        throw std::runtime_error("Invalid GPU channel bank: use 1..64 channels, integer 8 MS/s input multiples up to 128 MS/s, and a positive interval");
+    if(fs<8e6 || fs>128e6 || offsets.empty() || offsets.size()>64)
+        throw std::runtime_error("Invalid GPU channel bank: use 1..64 channels and 8..128 MS/s input");
     for(double f:offsets) if(!std::isfinite(f) || std::abs(f)+3.5e6>fs/2)
         throw std::runtime_error("Channel extends beyond input Nyquist interval");
     impl_=std::make_unique<Impl>(input_rate,offsets);
     auto& p=*impl_; const auto half=p.prototype.size()/2;
-    decimation=input_rate/8'000'000;
+    decimation=p.input_rate/8'000'000;
     std::vector<C> coefficients(offsets.size()*(p.fft_size+p.oscillator_size+1)),response(p.fft_size);
     Fft fft(p.fft_size);
     for(std::size_t c=0;c<offsets.size();++c) {
         std::fill(response.begin(),response.end(),C{});
         for(std::size_t j=0;j<p.prototype.size();++j)
             response[j]=static_cast<C>(static_cast<double>(p.prototype[j])*
-                std::polar(1.0,tau*offsets[c]*(static_cast<double>(j)-half)/fs));
+                std::polar(1.0,tau*offsets[c]*(static_cast<double>(j)-half)/p.input_rate));
         fft.transform(response);
         for(std::size_t k=0;k<p.fft_size;++k)
             coefficients[c*p.fft_size+k]=response[k]*static_cast<C>(std::polar(1.0/decimation,
@@ -126,7 +128,7 @@ GpuChannelBank::GpuChannelBank(std::uint32_t input_rate,std::span<const double> 
         // Their product has no recurrence drift and stays in the GPU cache.
         for(std::size_t j=0;j<p.oscillator_size;++j)
             coefficients[offsets.size()*p.fft_size+c*p.oscillator_size+j]=
-                oscillator((j<256 ? j : (j-256)*256)*decimation,offsets[c],fs);
+                oscillator((j<256 ? j : (j-256)*256)*decimation,offsets[c],p.input_rate);
     }
     p.kernel.upload<C>(2,coefficients);
 }
@@ -134,22 +136,24 @@ GpuChannelBank::GpuChannelBank(WaveReader& wave,std::span<const double> offsets,
     : GpuChannelBank(wave.info.sample_rate,offsets) {
     if(!std::isfinite(start) || start<0 || !std::isfinite(seconds) || seconds<=0 || wave.info.samples>(std::uint64_t{1}<<53))
         throw std::runtime_error("Invalid channel bank input interval");
-    impl_->input=&wave;const auto half=taps()/2;const double fs=wave.info.sample_rate;
-    if(start*fs>=static_cast<double>(wave.info.samples))throw std::runtime_error("Start is beyond recording");
+    impl_->input=&wave;const auto half=taps()/2;const double fs=coordinate_rate();
+    const auto available=std::uint64_t(double(wave.info.samples)*fs/wave.info.sample_rate);
+    if(start*wave.info.sample_rate>=static_cast<double>(wave.info.samples))throw std::runtime_error("Start is beyond recording");
     origin=std::max<std::uint64_t>(half,static_cast<std::uint64_t>(start*fs));
     origin=(origin+decimation-1)/decimation*decimation;
-    if(origin+half>=wave.info.samples)throw std::runtime_error("Recording shorter than FIR support");
-    output_count=std::min<std::uint64_t>((wave.info.samples-half-1-origin)/decimation+1,
-        static_cast<std::uint64_t>(std::min(seconds*8e6,static_cast<double>(wave.info.samples))));
+    if(origin+half>=available)throw std::runtime_error("Recording shorter than FIR support");
+    output_count=std::min<std::uint64_t>((available-half-1-origin)/decimation+1,
+        static_cast<std::uint64_t>(std::min(seconds*8e6,static_cast<double>(available))));
 }
 GpuChannelBank::~GpuChannelBank()=default;
 std::size_t GpuChannelBank::taps() const {return impl_->prototype.size();}
+std::uint32_t GpuChannelBank::coordinate_rate() const {return impl_->input_rate;}
 std::size_t GpuChannelBank::capacity() const {return impl_->retiming ? impl_->retiming->capacity() : impl_->hop*impl_->batches;}
 unsigned GpuChannelBank::interpolation_taps() const {return impl_->retiming ? impl_->retiming->interpolation_taps() : 0;}
 void GpuChannelBank::set_clock(std::shared_ptr<SampleClock> clock) {
     auto& p=*impl_;
     if(produced || p.valid_count || p.clock || !clock)throw std::runtime_error("Attach the common clock before processing");
-    p.retiming=std::make_unique<SpectralClock>(p.input_rate,p.offsets,p.prototype,p.kernel.context());
+    p.retiming=std::make_unique<SpectralClock>(p.input_rate,p.offsets,p.prototype,p.kernel.context(),p.source_rate);
     p.clock=std::move(clock);
     if(p.input) {
         const auto old=origin;
@@ -174,7 +178,13 @@ std::vector<std::vector<C>> GpuChannelBank::next(FrontendTimings* timings) {
         const auto support=p.retiming->support();
         const auto first=centre-support;
         p.clock->update(centre+((support+63)/64)*64);
-        auto original=[&](std::uint64_t n) {const auto s=p.clock->at(double(n));return std::int64_t(n)+std::int64_t(std::floor(s.offset_at(double(n))));};
+        auto original=[&](std::uint64_t n) {
+            const auto s=p.clock->at(double(n));
+            const auto product=(n%p.input_rate)*std::uint64_t(p.source_rate);
+            const auto integer=n/p.input_rate*p.source_rate+product/p.input_rate;
+            return std::int64_t(integer)+std::int64_t(std::floor(double(product%p.input_rate)/p.input_rate+
+                s.offset_at(double(n))*(double(p.source_rate)/p.input_rate)));
+        };
         const auto begin=original(first)-p.retiming->raw_left();
         if(begin<0)throw std::runtime_error("Clock warp starts before available ADC support");
         std::int64_t end=0;
@@ -190,6 +200,7 @@ std::vector<std::vector<C>> GpuChannelBank::next(FrontendTimings* timings) {
         auto result=process_clocked({raw,std::size_t(end-begin)},begin,centre,count,timings);
         produced+=count;return result;
     }
+    if(p.source_rate!=p.input_rate)throw std::logic_error("Noninteger input rate requires the shared clock; call set_clock()");
     const auto required=(count-1)*decimation+p.prototype.size();
     auto* input=static_cast<C*>(p.kernel.storage(0,((batch_size-1)*decimation+p.prototype.size())*sizeof(C)));
     p.input->read(origin+produced*decimation-p.prototype.size()/2,{input,required});
@@ -217,6 +228,24 @@ ChannelBatch GpuChannelBank::process_clocked_device(std::span<const C> samples,s
 std::size_t GpuChannelBank::input_capacity() const {
     if(!impl_->retiming)throw std::logic_error("Attach the common clock before requesting resident input capacity");
     return impl_->retiming->input_capacity();
+}
+GpuChannelBank::InputSupport GpuChannelBank::input_support(std::uint64_t first,std::size_t count) const {
+    const auto& p=*impl_;
+    if(!p.clock || !count || count>capacity() || first<p.retiming->support())
+        throw std::invalid_argument("Invalid live channel interval");
+    auto original=[&](std::uint64_t n){
+        const auto product=(n%p.input_rate)*std::uint64_t(p.source_rate);
+        const auto integral=n/p.input_rate*p.source_rate+product/p.input_rate;
+        return std::int64_t(integral)+std::int64_t(std::floor(double(product%p.input_rate)/p.input_rate+
+            p.clock->at(double(n)).offset_at(double(n))*(double(p.source_rate)/p.input_rate)));
+    };
+    return {original(first-p.retiming->support())-p.retiming->raw_left(),
+        original(first+(count-1)*decimation+p.retiming->support())+p.retiming->raw_right()};
+}
+void GpuChannelBank::update_clock(std::uint64_t first) {
+    auto& p=*impl_;
+    if(!p.clock)throw std::logic_error("No common clock attached");
+    p.clock->update(first+((p.retiming->support()+63)/64)*64);
 }
 ChannelBatch GpuChannelBank::process_clocked_device(const gpu::BufferView& samples,std::size_t valid_samples,
     std::uint64_t input_start,std::uint64_t first_center,std::size_t count,FrontendTimings* timings) {
@@ -249,6 +278,7 @@ std::vector<std::vector<C>> GpuChannelBank::process_clocked(std::span<const C> s
 std::vector<std::vector<C>> GpuChannelBank::process(std::span<const C> samples,std::uint64_t first_center,std::size_t count,FrontendTimings* timings) {
     auto& p=*impl_;
     if(p.clock)throw std::runtime_error("Use process_clocked() with an attached sample clock");
+    if(p.source_rate!=p.input_rate)throw std::logic_error("Noninteger input rate requires process_clocked()");
     p.initialize();
     if(!count || count>capacity() || samples.size()<(count-1)*decimation+taps() || first_center<taps()/2 ||
        first_center>(std::uint64_t{1}<<53)-(count-1)*decimation)

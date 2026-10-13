@@ -1,0 +1,1599 @@
+{
+  "videos": [
+    {
+      "id": "seven",
+      "output": "/Users/danielrd/sources/dvbt_passive_radar/renders/live_b200mini_20261011_simulation-001/seven.mov",
+      "frames": 5904,
+      "maps": 2555,
+      "first_map_s": 47.40973575,
+      "last_map_s": 191.19546375,
+      "effective_integration_range_s": [
+        0.5018468218238186,
+        2.961730076265235
+      ],
+      "all_frames_independently_decodable": true,
+      "atoms": {
+        "ftyp": 0,
+        "moov": 20,
+        "wide": 38594,
+        "mdat": 38602
+      },
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "prores",
+            "profile": "Standard",
+            "width": 1920,
+            "height": 1080,
+            "color_space": "bt709",
+            "color_transfer": "bt709",
+            "color_primaries": "bt709",
+            "avg_frame_rate": "3125/102",
+            "nb_frames": "5904"
+          }
+        ],
+        "format": {
+          "duration": "192.706560",
+          "size": "2230467730"
+        }
+      },
+      "quicktime": {
+        "duration_s": 192.707,
+        "frame_duration_s": 0.03264,
+        "framework": "AVFoundation",
+        "seeks": [
+          {
+            "actual_s": 154.15872,
+            "elapsed_ms": 93.2668331079185,
+            "frame": 4723,
+            "height": 1080,
+            "requested_s": 154.15872,
+            "width": 1920
+          },
+          {
+            "actual_s": 19.2576,
+            "elapsed_ms": 6.438583601266146,
+            "frame": 590,
+            "height": 1080,
+            "requested_s": 19.2576,
+            "width": 1920
+          },
+          {
+            "actual_s": 183.04512,
+            "elapsed_ms": 6.221916992217302,
+            "frame": 5608,
+            "height": 1080,
+            "requested_s": 183.04512,
+            "width": 1920
+          },
+          {
+            "actual_s": 38.5152,
+            "elapsed_ms": 5.735666491091251,
+            "frame": 1180,
+            "height": 1080,
+            "requested_s": 38.5152,
+            "width": 1920
+          },
+          {
+            "actual_s": 134.86848,
+            "elapsed_ms": 5.731500219553709,
+            "frame": 4132,
+            "height": 1080,
+            "requested_s": 134.86848,
+            "width": 1920
+          },
+          {
+            "actual_s": 57.80544,
+            "elapsed_ms": 5.76533330604434,
+            "frame": 1771,
+            "height": 1080,
+            "requested_s": 57.80544,
+            "width": 1920
+          },
+          {
+            "actual_s": 173.41632,
+            "elapsed_ms": 5.597083363682032,
+            "frame": 5313,
+            "height": 1080,
+            "requested_s": 173.41632,
+            "width": 1920
+          },
+          {
+            "actual_s": 9.6288,
+            "elapsed_ms": 5.389874801039696,
+            "frame": 295,
+            "height": 1080,
+            "requested_s": 9.6288,
+            "width": 1920
+          },
+          {
+            "actual_s": 115.61088,
+            "elapsed_ms": 5.728083197027445,
+            "frame": 3542,
+            "height": 1080,
+            "requested_s": 115.61088,
+            "width": 1920
+          },
+          {
+            "actual_s": 77.06304,
+            "elapsed_ms": 5.596000235527754,
+            "frame": 2361,
+            "height": 1080,
+            "requested_s": 77.06304,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.35328,
+            "elapsed_ms": 5.645750090479851,
+            "frame": 2952,
+            "height": 1080,
+            "requested_s": 96.35328,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.38592,
+            "elapsed_ms": 5.567541811615229,
+            "frame": 2953,
+            "height": 1080,
+            "requested_s": 96.38592,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.41856,
+            "elapsed_ms": 5.768250208348036,
+            "frame": 2954,
+            "height": 1080,
+            "requested_s": 96.41856,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.4512,
+            "elapsed_ms": 5.634041503071785,
+            "frame": 2955,
+            "height": 1080,
+            "requested_s": 96.4512,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.48384,
+            "elapsed_ms": 5.680958274751902,
+            "frame": 2956,
+            "height": 1080,
+            "requested_s": 96.48384,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.51648,
+            "elapsed_ms": 6.029124837368727,
+            "frame": 2957,
+            "height": 1080,
+            "requested_s": 96.51648,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.54912,
+            "elapsed_ms": 5.865208338946104,
+            "frame": 2958,
+            "height": 1080,
+            "requested_s": 96.54912,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.58176,
+            "elapsed_ms": 5.809916649013758,
+            "frame": 2959,
+            "height": 1080,
+            "requested_s": 96.58176,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.6144,
+            "elapsed_ms": 5.578500218689442,
+            "frame": 2960,
+            "height": 1080,
+            "requested_s": 96.6144,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.64704,
+            "elapsed_ms": 5.580791737884283,
+            "frame": 2961,
+            "height": 1080,
+            "requested_s": 96.64704,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.67968,
+            "elapsed_ms": 5.730041768401861,
+            "frame": 2962,
+            "height": 1080,
+            "requested_s": 96.67968,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.71232,
+            "elapsed_ms": 5.969125311821699,
+            "frame": 2963,
+            "height": 1080,
+            "requested_s": 96.71232,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.71232,
+            "elapsed_ms": 5.937000270932913,
+            "frame": 2963,
+            "height": 1080,
+            "requested_s": 96.71232,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.67968,
+            "elapsed_ms": 5.989000201225281,
+            "frame": 2962,
+            "height": 1080,
+            "requested_s": 96.67968,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.64704,
+            "elapsed_ms": 6.017250008881092,
+            "frame": 2961,
+            "height": 1080,
+            "requested_s": 96.64704,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.6144,
+            "elapsed_ms": 5.7666669599711895,
+            "frame": 2960,
+            "height": 1080,
+            "requested_s": 96.6144,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.58176,
+            "elapsed_ms": 6.168125197291374,
+            "frame": 2959,
+            "height": 1080,
+            "requested_s": 96.58176,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.54912,
+            "elapsed_ms": 6.3055832870304585,
+            "frame": 2958,
+            "height": 1080,
+            "requested_s": 96.54912,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.51648,
+            "elapsed_ms": 6.217750255018473,
+            "frame": 2957,
+            "height": 1080,
+            "requested_s": 96.51648,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.48384,
+            "elapsed_ms": 5.948791746050119,
+            "frame": 2956,
+            "height": 1080,
+            "requested_s": 96.48384,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.4512,
+            "elapsed_ms": 5.911082960665226,
+            "frame": 2955,
+            "height": 1080,
+            "requested_s": 96.4512,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.41856,
+            "elapsed_ms": 5.69683313369751,
+            "frame": 2954,
+            "height": 1080,
+            "requested_s": 96.41856,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.38592,
+            "elapsed_ms": 5.768291652202606,
+            "frame": 2953,
+            "height": 1080,
+            "requested_s": 96.38592,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.35328,
+            "elapsed_ms": 5.680208560079336,
+            "frame": 2952,
+            "height": 1080,
+            "requested_s": 96.35328,
+            "width": 1920
+          }
+        ]
+      }
+    },
+    {
+      "id": "sbs",
+      "output": "/Users/danielrd/sources/dvbt_passive_radar/renders/live_b200mini_20261011_simulation-001/sbs.mov",
+      "frames": 5904,
+      "maps": 3954,
+      "first_map_s": 47.40540125,
+      "last_map_s": 192.66536925,
+      "effective_integration_range_s": [
+        0.4872805310044198,
+        2.993887290986868
+      ],
+      "all_frames_independently_decodable": true,
+      "atoms": {
+        "ftyp": 0,
+        "moov": 20,
+        "wide": 42228,
+        "mdat": 42236
+      },
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "prores",
+            "profile": "Standard",
+            "width": 1920,
+            "height": 1080,
+            "color_space": "bt709",
+            "color_transfer": "bt709",
+            "color_primaries": "bt709",
+            "avg_frame_rate": "3125/102",
+            "nb_frames": "5904"
+          }
+        ],
+        "format": {
+          "duration": "192.706560",
+          "size": "2695084724"
+        }
+      },
+      "quicktime": {
+        "duration_s": 192.707,
+        "frame_duration_s": 0.03264,
+        "framework": "AVFoundation",
+        "seeks": [
+          {
+            "actual_s": 154.15872,
+            "elapsed_ms": 58.7479998357594,
+            "frame": 4723,
+            "height": 1080,
+            "requested_s": 154.15872,
+            "width": 1920
+          },
+          {
+            "actual_s": 19.2576,
+            "elapsed_ms": 6.398708093911409,
+            "frame": 590,
+            "height": 1080,
+            "requested_s": 19.2576,
+            "width": 1920
+          },
+          {
+            "actual_s": 183.04512,
+            "elapsed_ms": 6.317333318293095,
+            "frame": 5608,
+            "height": 1080,
+            "requested_s": 183.04512,
+            "width": 1920
+          },
+          {
+            "actual_s": 38.5152,
+            "elapsed_ms": 5.908791907131672,
+            "frame": 1180,
+            "height": 1080,
+            "requested_s": 38.5152,
+            "width": 1920
+          },
+          {
+            "actual_s": 134.86848,
+            "elapsed_ms": 5.775166675448418,
+            "frame": 4132,
+            "height": 1080,
+            "requested_s": 134.86848,
+            "width": 1920
+          },
+          {
+            "actual_s": 57.80544,
+            "elapsed_ms": 5.882458295673132,
+            "frame": 1771,
+            "height": 1080,
+            "requested_s": 57.80544,
+            "width": 1920
+          },
+          {
+            "actual_s": 173.41632,
+            "elapsed_ms": 5.6914580054581165,
+            "frame": 5313,
+            "height": 1080,
+            "requested_s": 173.41632,
+            "width": 1920
+          },
+          {
+            "actual_s": 9.6288,
+            "elapsed_ms": 5.670083686709404,
+            "frame": 295,
+            "height": 1080,
+            "requested_s": 9.6288,
+            "width": 1920
+          },
+          {
+            "actual_s": 115.61088,
+            "elapsed_ms": 5.706166382879019,
+            "frame": 3542,
+            "height": 1080,
+            "requested_s": 115.61088,
+            "width": 1920
+          },
+          {
+            "actual_s": 77.06304,
+            "elapsed_ms": 6.167666520923376,
+            "frame": 2361,
+            "height": 1080,
+            "requested_s": 77.06304,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.35328,
+            "elapsed_ms": 5.877417046576738,
+            "frame": 2952,
+            "height": 1080,
+            "requested_s": 96.35328,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.38592,
+            "elapsed_ms": 6.09383312985301,
+            "frame": 2953,
+            "height": 1080,
+            "requested_s": 96.38592,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.41856,
+            "elapsed_ms": 5.9675415977835655,
+            "frame": 2954,
+            "height": 1080,
+            "requested_s": 96.41856,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.4512,
+            "elapsed_ms": 6.039708387106657,
+            "frame": 2955,
+            "height": 1080,
+            "requested_s": 96.4512,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.48384,
+            "elapsed_ms": 5.959874950349331,
+            "frame": 2956,
+            "height": 1080,
+            "requested_s": 96.48384,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.51648,
+            "elapsed_ms": 5.988916382193565,
+            "frame": 2957,
+            "height": 1080,
+            "requested_s": 96.51648,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.54912,
+            "elapsed_ms": 5.778708029538393,
+            "frame": 2958,
+            "height": 1080,
+            "requested_s": 96.54912,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.58176,
+            "elapsed_ms": 5.867958068847656,
+            "frame": 2959,
+            "height": 1080,
+            "requested_s": 96.58176,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.6144,
+            "elapsed_ms": 5.972875282168388,
+            "frame": 2960,
+            "height": 1080,
+            "requested_s": 96.6144,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.64704,
+            "elapsed_ms": 5.780291743576527,
+            "frame": 2961,
+            "height": 1080,
+            "requested_s": 96.64704,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.67968,
+            "elapsed_ms": 5.831458140164614,
+            "frame": 2962,
+            "height": 1080,
+            "requested_s": 96.67968,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.71232,
+            "elapsed_ms": 5.724124610424042,
+            "frame": 2963,
+            "height": 1080,
+            "requested_s": 96.71232,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.71232,
+            "elapsed_ms": 5.851541645824909,
+            "frame": 2963,
+            "height": 1080,
+            "requested_s": 96.71232,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.67968,
+            "elapsed_ms": 5.631583277136087,
+            "frame": 2962,
+            "height": 1080,
+            "requested_s": 96.67968,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.64704,
+            "elapsed_ms": 5.8305831626057625,
+            "frame": 2961,
+            "height": 1080,
+            "requested_s": 96.64704,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.6144,
+            "elapsed_ms": 5.691875237971544,
+            "frame": 2960,
+            "height": 1080,
+            "requested_s": 96.6144,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.58176,
+            "elapsed_ms": 5.684583447873592,
+            "frame": 2959,
+            "height": 1080,
+            "requested_s": 96.58176,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.54912,
+            "elapsed_ms": 5.719916429370642,
+            "frame": 2958,
+            "height": 1080,
+            "requested_s": 96.54912,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.51648,
+            "elapsed_ms": 6.158541887998581,
+            "frame": 2957,
+            "height": 1080,
+            "requested_s": 96.51648,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.48384,
+            "elapsed_ms": 5.527125205844641,
+            "frame": 2956,
+            "height": 1080,
+            "requested_s": 96.48384,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.4512,
+            "elapsed_ms": 5.6555001065135,
+            "frame": 2955,
+            "height": 1080,
+            "requested_s": 96.4512,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.41856,
+            "elapsed_ms": 5.641750060021877,
+            "frame": 2954,
+            "height": 1080,
+            "requested_s": 96.41856,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.38592,
+            "elapsed_ms": 5.5773332715034485,
+            "frame": 2953,
+            "height": 1080,
+            "requested_s": 96.38592,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.35328,
+            "elapsed_ms": 5.539458245038986,
+            "frame": 2952,
+            "height": 1080,
+            "requested_s": 96.35328,
+            "width": 1920
+          }
+        ]
+      }
+    },
+    {
+      "id": "nine",
+      "output": "/Users/danielrd/sources/dvbt_passive_radar/renders/live_b200mini_20261011_simulation-001/nine.mov",
+      "frames": 5904,
+      "maps": 4451,
+      "first_map_s": 47.37413275,
+      "last_map_s": 192.62213275,
+      "effective_integration_range_s": [
+        0.351119199812963,
+        2.9802335537769618
+      ],
+      "all_frames_independently_decodable": true,
+      "atoms": {
+        "ftyp": 0,
+        "moov": 20,
+        "wide": 43487,
+        "mdat": 43495
+      },
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "prores",
+            "profile": "Standard",
+            "width": 1920,
+            "height": 1080,
+            "color_space": "bt709",
+            "color_transfer": "bt709",
+            "color_primaries": "bt709",
+            "avg_frame_rate": "3125/102",
+            "nb_frames": "5904"
+          }
+        ],
+        "format": {
+          "duration": "192.706560",
+          "size": "2909559695"
+        }
+      },
+      "quicktime": {
+        "duration_s": 192.707,
+        "frame_duration_s": 0.03264,
+        "framework": "AVFoundation",
+        "seeks": [
+          {
+            "actual_s": 154.15872,
+            "elapsed_ms": 58.335624635219574,
+            "frame": 4723,
+            "height": 1080,
+            "requested_s": 154.15872,
+            "width": 1920
+          },
+          {
+            "actual_s": 19.2576,
+            "elapsed_ms": 6.6087497398257256,
+            "frame": 590,
+            "height": 1080,
+            "requested_s": 19.2576,
+            "width": 1920
+          },
+          {
+            "actual_s": 183.04512,
+            "elapsed_ms": 6.231624633073807,
+            "frame": 5608,
+            "height": 1080,
+            "requested_s": 183.04512,
+            "width": 1920
+          },
+          {
+            "actual_s": 38.5152,
+            "elapsed_ms": 5.682291928678751,
+            "frame": 1180,
+            "height": 1080,
+            "requested_s": 38.5152,
+            "width": 1920
+          },
+          {
+            "actual_s": 134.86848,
+            "elapsed_ms": 5.947999656200409,
+            "frame": 4132,
+            "height": 1080,
+            "requested_s": 134.86848,
+            "width": 1920
+          },
+          {
+            "actual_s": 57.80544,
+            "elapsed_ms": 5.643708165735006,
+            "frame": 1771,
+            "height": 1080,
+            "requested_s": 57.80544,
+            "width": 1920
+          },
+          {
+            "actual_s": 173.41632,
+            "elapsed_ms": 5.552874878048897,
+            "frame": 5313,
+            "height": 1080,
+            "requested_s": 173.41632,
+            "width": 1920
+          },
+          {
+            "actual_s": 9.6288,
+            "elapsed_ms": 5.594541784375906,
+            "frame": 295,
+            "height": 1080,
+            "requested_s": 9.6288,
+            "width": 1920
+          },
+          {
+            "actual_s": 115.61088,
+            "elapsed_ms": 6.054500117897987,
+            "frame": 3542,
+            "height": 1080,
+            "requested_s": 115.61088,
+            "width": 1920
+          },
+          {
+            "actual_s": 77.06304,
+            "elapsed_ms": 5.804458167403936,
+            "frame": 2361,
+            "height": 1080,
+            "requested_s": 77.06304,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.35328,
+            "elapsed_ms": 5.789041519165039,
+            "frame": 2952,
+            "height": 1080,
+            "requested_s": 96.35328,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.38592,
+            "elapsed_ms": 5.687166936695576,
+            "frame": 2953,
+            "height": 1080,
+            "requested_s": 96.38592,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.41856,
+            "elapsed_ms": 5.877749994397163,
+            "frame": 2954,
+            "height": 1080,
+            "requested_s": 96.41856,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.4512,
+            "elapsed_ms": 5.79266669228673,
+            "frame": 2955,
+            "height": 1080,
+            "requested_s": 96.4512,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.48384,
+            "elapsed_ms": 5.763625260442495,
+            "frame": 2956,
+            "height": 1080,
+            "requested_s": 96.48384,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.51648,
+            "elapsed_ms": 5.943875294178724,
+            "frame": 2957,
+            "height": 1080,
+            "requested_s": 96.51648,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.54912,
+            "elapsed_ms": 5.7792081497609615,
+            "frame": 2958,
+            "height": 1080,
+            "requested_s": 96.54912,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.58176,
+            "elapsed_ms": 5.565708503127098,
+            "frame": 2959,
+            "height": 1080,
+            "requested_s": 96.58176,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.6144,
+            "elapsed_ms": 5.651416722685099,
+            "frame": 2960,
+            "height": 1080,
+            "requested_s": 96.6144,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.64704,
+            "elapsed_ms": 5.8496249839663506,
+            "frame": 2961,
+            "height": 1080,
+            "requested_s": 96.64704,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.67968,
+            "elapsed_ms": 5.832499824464321,
+            "frame": 2962,
+            "height": 1080,
+            "requested_s": 96.67968,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.71232,
+            "elapsed_ms": 5.598749965429306,
+            "frame": 2963,
+            "height": 1080,
+            "requested_s": 96.71232,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.71232,
+            "elapsed_ms": 5.58600015938282,
+            "frame": 2963,
+            "height": 1080,
+            "requested_s": 96.71232,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.67968,
+            "elapsed_ms": 5.474916659295559,
+            "frame": 2962,
+            "height": 1080,
+            "requested_s": 96.67968,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.64704,
+            "elapsed_ms": 5.591083317995071,
+            "frame": 2961,
+            "height": 1080,
+            "requested_s": 96.64704,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.6144,
+            "elapsed_ms": 5.993166472762823,
+            "frame": 2960,
+            "height": 1080,
+            "requested_s": 96.6144,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.58176,
+            "elapsed_ms": 5.63374999910593,
+            "frame": 2959,
+            "height": 1080,
+            "requested_s": 96.58176,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.54912,
+            "elapsed_ms": 5.7326252572238445,
+            "frame": 2958,
+            "height": 1080,
+            "requested_s": 96.54912,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.51648,
+            "elapsed_ms": 5.834124982357025,
+            "frame": 2957,
+            "height": 1080,
+            "requested_s": 96.51648,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.48384,
+            "elapsed_ms": 5.9074582532048225,
+            "frame": 2956,
+            "height": 1080,
+            "requested_s": 96.48384,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.4512,
+            "elapsed_ms": 5.967333447188139,
+            "frame": 2955,
+            "height": 1080,
+            "requested_s": 96.4512,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.41856,
+            "elapsed_ms": 5.910541862249374,
+            "frame": 2954,
+            "height": 1080,
+            "requested_s": 96.41856,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.38592,
+            "elapsed_ms": 5.67824998870492,
+            "frame": 2953,
+            "height": 1080,
+            "requested_s": 96.38592,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.35328,
+            "elapsed_ms": 5.652457941323519,
+            "frame": 2952,
+            "height": 1080,
+            "requested_s": 96.35328,
+            "width": 1920
+          }
+        ]
+      }
+    },
+    {
+      "id": "ten",
+      "output": "/Users/danielrd/sources/dvbt_passive_radar/renders/live_b200mini_20261011_simulation-001/ten.mov",
+      "frames": 5904,
+      "maps": 3539,
+      "first_map_s": 47.414823125000005,
+      "last_map_s": 192.663911125,
+      "effective_integration_range_s": [
+        0.40421106763220604,
+        2.986465169065371
+      ],
+      "all_frames_independently_decodable": true,
+      "atoms": {
+        "ftyp": 0,
+        "moov": 20,
+        "wide": 41196,
+        "mdat": 41204
+      },
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "prores",
+            "profile": "Standard",
+            "width": 1920,
+            "height": 1080,
+            "color_space": "bt709",
+            "color_transfer": "bt709",
+            "color_primaries": "bt709",
+            "avg_frame_rate": "3125/102",
+            "nb_frames": "5904"
+          }
+        ],
+        "format": {
+          "duration": "192.706560",
+          "size": "2569044156"
+        }
+      },
+      "quicktime": {
+        "duration_s": 192.707,
+        "frame_duration_s": 0.03264,
+        "framework": "AVFoundation",
+        "seeks": [
+          {
+            "actual_s": 154.15872,
+            "elapsed_ms": 60.51112478598952,
+            "frame": 4723,
+            "height": 1080,
+            "requested_s": 154.15872,
+            "width": 1920
+          },
+          {
+            "actual_s": 19.2576,
+            "elapsed_ms": 6.128791254013777,
+            "frame": 590,
+            "height": 1080,
+            "requested_s": 19.2576,
+            "width": 1920
+          },
+          {
+            "actual_s": 183.04512,
+            "elapsed_ms": 6.244708318263292,
+            "frame": 5608,
+            "height": 1080,
+            "requested_s": 183.04512,
+            "width": 1920
+          },
+          {
+            "actual_s": 38.5152,
+            "elapsed_ms": 5.790375173091888,
+            "frame": 1180,
+            "height": 1080,
+            "requested_s": 38.5152,
+            "width": 1920
+          },
+          {
+            "actual_s": 134.86848,
+            "elapsed_ms": 5.904166959226131,
+            "frame": 4132,
+            "height": 1080,
+            "requested_s": 134.86848,
+            "width": 1920
+          },
+          {
+            "actual_s": 57.80544,
+            "elapsed_ms": 5.613416433334351,
+            "frame": 1771,
+            "height": 1080,
+            "requested_s": 57.80544,
+            "width": 1920
+          },
+          {
+            "actual_s": 173.41632,
+            "elapsed_ms": 5.79308345913887,
+            "frame": 5313,
+            "height": 1080,
+            "requested_s": 173.41632,
+            "width": 1920
+          },
+          {
+            "actual_s": 9.6288,
+            "elapsed_ms": 5.715041887015104,
+            "frame": 295,
+            "height": 1080,
+            "requested_s": 9.6288,
+            "width": 1920
+          },
+          {
+            "actual_s": 115.61088,
+            "elapsed_ms": 5.481458269059658,
+            "frame": 3542,
+            "height": 1080,
+            "requested_s": 115.61088,
+            "width": 1920
+          },
+          {
+            "actual_s": 77.06304,
+            "elapsed_ms": 5.696375388652086,
+            "frame": 2361,
+            "height": 1080,
+            "requested_s": 77.06304,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.35328,
+            "elapsed_ms": 5.897791590541601,
+            "frame": 2952,
+            "height": 1080,
+            "requested_s": 96.35328,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.38592,
+            "elapsed_ms": 5.968874786049128,
+            "frame": 2953,
+            "height": 1080,
+            "requested_s": 96.38592,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.41856,
+            "elapsed_ms": 5.847124848514795,
+            "frame": 2954,
+            "height": 1080,
+            "requested_s": 96.41856,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.4512,
+            "elapsed_ms": 5.720625165849924,
+            "frame": 2955,
+            "height": 1080,
+            "requested_s": 96.4512,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.48384,
+            "elapsed_ms": 5.609666928648949,
+            "frame": 2956,
+            "height": 1080,
+            "requested_s": 96.48384,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.51648,
+            "elapsed_ms": 5.603875033557415,
+            "frame": 2957,
+            "height": 1080,
+            "requested_s": 96.51648,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.54912,
+            "elapsed_ms": 5.581666715443134,
+            "frame": 2958,
+            "height": 1080,
+            "requested_s": 96.54912,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.58176,
+            "elapsed_ms": 5.773333366960287,
+            "frame": 2959,
+            "height": 1080,
+            "requested_s": 96.58176,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.6144,
+            "elapsed_ms": 5.619166884571314,
+            "frame": 2960,
+            "height": 1080,
+            "requested_s": 96.6144,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.64704,
+            "elapsed_ms": 5.487666465342045,
+            "frame": 2961,
+            "height": 1080,
+            "requested_s": 96.64704,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.67968,
+            "elapsed_ms": 5.577125120908022,
+            "frame": 2962,
+            "height": 1080,
+            "requested_s": 96.67968,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.71232,
+            "elapsed_ms": 5.745041649788618,
+            "frame": 2963,
+            "height": 1080,
+            "requested_s": 96.71232,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.71232,
+            "elapsed_ms": 5.777500104159117,
+            "frame": 2963,
+            "height": 1080,
+            "requested_s": 96.71232,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.67968,
+            "elapsed_ms": 5.784083157777786,
+            "frame": 2962,
+            "height": 1080,
+            "requested_s": 96.67968,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.64704,
+            "elapsed_ms": 5.510833114385605,
+            "frame": 2961,
+            "height": 1080,
+            "requested_s": 96.64704,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.6144,
+            "elapsed_ms": 5.506874993443489,
+            "frame": 2960,
+            "height": 1080,
+            "requested_s": 96.6144,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.58176,
+            "elapsed_ms": 5.605666432529688,
+            "frame": 2959,
+            "height": 1080,
+            "requested_s": 96.58176,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.54912,
+            "elapsed_ms": 5.81025006249547,
+            "frame": 2958,
+            "height": 1080,
+            "requested_s": 96.54912,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.51648,
+            "elapsed_ms": 5.582000128924847,
+            "frame": 2957,
+            "height": 1080,
+            "requested_s": 96.51648,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.48384,
+            "elapsed_ms": 5.425124894827604,
+            "frame": 2956,
+            "height": 1080,
+            "requested_s": 96.48384,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.4512,
+            "elapsed_ms": 5.613083019852638,
+            "frame": 2955,
+            "height": 1080,
+            "requested_s": 96.4512,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.41856,
+            "elapsed_ms": 5.460666958242655,
+            "frame": 2954,
+            "height": 1080,
+            "requested_s": 96.41856,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.38592,
+            "elapsed_ms": 5.6947083212435246,
+            "frame": 2953,
+            "height": 1080,
+            "requested_s": 96.38592,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.35328,
+            "elapsed_ms": 5.683958530426025,
+            "frame": 2952,
+            "height": 1080,
+            "requested_s": 96.35328,
+            "width": 1920
+          }
+        ]
+      }
+    },
+    {
+      "id": "abc",
+      "output": "/Users/danielrd/sources/dvbt_passive_radar/renders/live_b200mini_20261011_simulation-001/abc.mov",
+      "frames": 5904,
+      "maps": 2561,
+      "first_map_s": 47.413070375,
+      "last_map_s": 191.180302375,
+      "effective_integration_range_s": [
+        0.4393427862568141,
+        2.987719756497365
+      ],
+      "all_frames_independently_decodable": true,
+      "atoms": {
+        "ftyp": 0,
+        "moov": 20,
+        "wide": 38608,
+        "mdat": 38616
+      },
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "prores",
+            "profile": "Standard",
+            "width": 1920,
+            "height": 1080,
+            "color_space": "bt709",
+            "color_transfer": "bt709",
+            "color_primaries": "bt709",
+            "avg_frame_rate": "3125/102",
+            "nb_frames": "5904"
+          }
+        ],
+        "format": {
+          "duration": "192.706560",
+          "size": "2260985312"
+        }
+      },
+      "quicktime": {
+        "duration_s": 192.707,
+        "frame_duration_s": 0.03264,
+        "framework": "AVFoundation",
+        "seeks": [
+          {
+            "actual_s": 154.15872,
+            "elapsed_ms": 60.401749797165394,
+            "frame": 4723,
+            "height": 1080,
+            "requested_s": 154.15872,
+            "width": 1920
+          },
+          {
+            "actual_s": 19.2576,
+            "elapsed_ms": 6.60758325830102,
+            "frame": 590,
+            "height": 1080,
+            "requested_s": 19.2576,
+            "width": 1920
+          },
+          {
+            "actual_s": 183.04512,
+            "elapsed_ms": 6.238958332687616,
+            "frame": 5608,
+            "height": 1080,
+            "requested_s": 183.04512,
+            "width": 1920
+          },
+          {
+            "actual_s": 38.5152,
+            "elapsed_ms": 5.91029180213809,
+            "frame": 1180,
+            "height": 1080,
+            "requested_s": 38.5152,
+            "width": 1920
+          },
+          {
+            "actual_s": 134.86848,
+            "elapsed_ms": 5.936166737228632,
+            "frame": 4132,
+            "height": 1080,
+            "requested_s": 134.86848,
+            "width": 1920
+          },
+          {
+            "actual_s": 57.80544,
+            "elapsed_ms": 6.073333323001862,
+            "frame": 1771,
+            "height": 1080,
+            "requested_s": 57.80544,
+            "width": 1920
+          },
+          {
+            "actual_s": 173.41632,
+            "elapsed_ms": 6.203416734933853,
+            "frame": 5313,
+            "height": 1080,
+            "requested_s": 173.41632,
+            "width": 1920
+          },
+          {
+            "actual_s": 9.6288,
+            "elapsed_ms": 5.761374719440937,
+            "frame": 295,
+            "height": 1080,
+            "requested_s": 9.6288,
+            "width": 1920
+          },
+          {
+            "actual_s": 115.61088,
+            "elapsed_ms": 5.866666324436665,
+            "frame": 3542,
+            "height": 1080,
+            "requested_s": 115.61088,
+            "width": 1920
+          },
+          {
+            "actual_s": 77.06304,
+            "elapsed_ms": 5.728499963879585,
+            "frame": 2361,
+            "height": 1080,
+            "requested_s": 77.06304,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.35328,
+            "elapsed_ms": 5.810083355754614,
+            "frame": 2952,
+            "height": 1080,
+            "requested_s": 96.35328,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.38592,
+            "elapsed_ms": 5.976916756480932,
+            "frame": 2953,
+            "height": 1080,
+            "requested_s": 96.38592,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.41856,
+            "elapsed_ms": 6.351666525006294,
+            "frame": 2954,
+            "height": 1080,
+            "requested_s": 96.41856,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.4512,
+            "elapsed_ms": 6.00716657936573,
+            "frame": 2955,
+            "height": 1080,
+            "requested_s": 96.4512,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.48384,
+            "elapsed_ms": 5.808041896671057,
+            "frame": 2956,
+            "height": 1080,
+            "requested_s": 96.48384,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.51648,
+            "elapsed_ms": 6.108750123530626,
+            "frame": 2957,
+            "height": 1080,
+            "requested_s": 96.51648,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.54912,
+            "elapsed_ms": 6.0922084376215935,
+            "frame": 2958,
+            "height": 1080,
+            "requested_s": 96.54912,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.58176,
+            "elapsed_ms": 5.864458158612251,
+            "frame": 2959,
+            "height": 1080,
+            "requested_s": 96.58176,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.6144,
+            "elapsed_ms": 5.907791666686535,
+            "frame": 2960,
+            "height": 1080,
+            "requested_s": 96.6144,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.64704,
+            "elapsed_ms": 5.794916767627001,
+            "frame": 2961,
+            "height": 1080,
+            "requested_s": 96.64704,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.67968,
+            "elapsed_ms": 5.718958098441362,
+            "frame": 2962,
+            "height": 1080,
+            "requested_s": 96.67968,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.71232,
+            "elapsed_ms": 5.8659580536186695,
+            "frame": 2963,
+            "height": 1080,
+            "requested_s": 96.71232,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.71232,
+            "elapsed_ms": 6.041374988853931,
+            "frame": 2963,
+            "height": 1080,
+            "requested_s": 96.71232,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.67968,
+            "elapsed_ms": 5.984041374176741,
+            "frame": 2962,
+            "height": 1080,
+            "requested_s": 96.67968,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.64704,
+            "elapsed_ms": 5.824458319693804,
+            "frame": 2961,
+            "height": 1080,
+            "requested_s": 96.64704,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.6144,
+            "elapsed_ms": 5.851208232343197,
+            "frame": 2960,
+            "height": 1080,
+            "requested_s": 96.6144,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.58176,
+            "elapsed_ms": 5.855250172317028,
+            "frame": 2959,
+            "height": 1080,
+            "requested_s": 96.58176,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.54912,
+            "elapsed_ms": 5.945541430264711,
+            "frame": 2958,
+            "height": 1080,
+            "requested_s": 96.54912,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.51648,
+            "elapsed_ms": 5.739291664212942,
+            "frame": 2957,
+            "height": 1080,
+            "requested_s": 96.51648,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.48384,
+            "elapsed_ms": 5.754916928708553,
+            "frame": 2956,
+            "height": 1080,
+            "requested_s": 96.48384,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.4512,
+            "elapsed_ms": 5.52345858886838,
+            "frame": 2955,
+            "height": 1080,
+            "requested_s": 96.4512,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.41856,
+            "elapsed_ms": 5.995749961584806,
+            "frame": 2954,
+            "height": 1080,
+            "requested_s": 96.41856,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.38592,
+            "elapsed_ms": 5.770541727542877,
+            "frame": 2953,
+            "height": 1080,
+            "requested_s": 96.38592,
+            "width": 1920
+          },
+          {
+            "actual_s": 96.35328,
+            "elapsed_ms": 5.644791759550571,
+            "frame": 2952,
+            "height": 1080,
+            "requested_s": 96.35328,
+            "width": 1920
+          }
+        ]
+      }
+    }
+  ]
+}

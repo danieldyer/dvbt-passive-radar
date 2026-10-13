@@ -1,3 +1,6 @@
+#include "map_calibration.hpp"
+using radar::validation::estimate_map_noise;
+using radar::validation::standardize_map;
 #include "matched_detector.hpp"
 #include "gpu_compute.hpp"
 #include "stationary_background.hpp"
@@ -27,55 +30,44 @@ int main(int argc,char** argv){try {
     const double capture=argc>5 ? std::stod(argv[5]) : 10;
     const bool stationary=cancel && (argc<7 || std::stoi(argv[6]));
     std::ifstream file(argv[1],std::ios::binary);char magic[8];read(file,magic,8);
-    if(std::string_view(magic,8)!="DVBTSAR1")throw std::runtime_error("Not a SAR archive");
+    const bool source_clock=std::string_view(magic,8)=="DVBTSAR2";
+    if(!source_clock && std::string_view(magic,8)!="DVBTSAR1")throw std::runtime_error("Not a SAR archive");
     const auto rate=get<std::uint32_t>(file),decimation=get<std::uint32_t>(file),channels=get<std::uint32_t>(file);
     get<std::uint32_t>(file);const auto origin=get<std::uint64_t>(file);get<double>(file);get<double>(file);
     if(channels!=1 || rate!=decimation*8'000'000)throw std::runtime_error("Expected one 8 MS/s channel");
     const auto rf=get<double>(file);get<double>(file);const auto guard=get<std::uint32_t>(file);get<std::uint32_t>(file);
     auto context=std::make_shared<gpu::Context>();GpuNoise estimator(context);GpuMatchedProfiles correlator(context);GpuFocus focus(context);StationaryBackground background;
     Plane y(context,1020*6817*sizeof(C)),s(context,1020*6817*sizeof(C)),x(context,1020*6817*sizeof(C)),
-        v(context,1020*6817*sizeof(std::uint32_t)),h(context,6817*sizeof(C));
+        v(context,1020*6817*sizeof(std::uint32_t)),h(context,6817*sizeof(C)),offsets(context,1020*sizeof(float));
     std::vector<std::array<C,2048>> history;std::vector<double> times,information;ComputeTimings noise,profiles,focused;
     const double dt=(8192.0+8192.0/guard)/8e6;const auto count=std::size_t(std::ceil(cpi/dt));focus.prepare(count);
     double begin_time=-1,wall=0,active=0,background_end=-1;std::uint64_t used=0;
-    std::vector<ResponseStatistics> statistics(6817);
     while(file.peek()!=EOF){
         char tag[4];read(file,tag,4);const auto bytes=get<std::uint64_t>(file);const auto next=file.tellg()+std::streamoff(bytes);
         if(std::string_view(tag,4)!="SPEC"){file.seekg(next);continue;}
         const auto channel=get<std::uint32_t>(file),segment=get<std::uint32_t>(file),rows=get<std::uint32_t>(file),
             first=get<std::uint32_t>(file),last=get<std::uint32_t>(file),frames=get<std::uint32_t>(file);
         const auto reference_origin=get<double>(file),error=get<double>(file);
-        if(rows>1020 || first>=last || last>rows || bytes!=40+32ULL*rows+92ULL*frames+8ULL*6817+20ULL*rows*6817)
+        if(rows>1020 || first>=last || last>rows || bytes!=40+(source_clock ? 48ULL : 32ULL)*rows+92ULL*frames+8ULL*6817+20ULL*rows*6817)
             throw std::runtime_error("Invalid SPEC shape");
         FrameBatch frame;frame.channel=channel;frame.segment=segment;frame.first=first;frame.last=last;frame.symbols.resize(rows);
         for(auto& symbol:frame.symbols){symbol.window.sample=get<std::uint64_t>(file);symbol.window.phase=get<double>(file);
-            symbol.window.frequency_hz=get<double>(file);symbol.modulo4=get<std::uint32_t>(file);symbol.discontinuity=get<std::uint32_t>(file);}
+            symbol.window.frequency_hz=get<double>(file);symbol.modulo4=get<std::uint32_t>(file);symbol.discontinuity=get<std::uint32_t>(file);
+            if(source_clock){symbol.source_offset_samples=get<double>(file);symbol.source_rate_error=get<double>(file);}}
+        for(unsigned r=0;r<rows;++r)offsets.data<float>()[r]=float(frame.symbols[r].source_offset_samples);
         file.seekg(frames*92,std::ios::cur);read(file,h.data<C>(),6817);read(file,y.data<C>(),rows*6817);
         read(file,s.data<C>(),rows*6817);read(file,v.data<std::uint32_t>(),rows*6817);
         for(unsigned r=0;r<rows;++r)for(unsigned k=0;k<6817;++k)x.data<C>()[r*6817+k]=s.data<C>()[r*6817+k]*
-            static_cast<C>(std::polar(1.0,-2*std::numbers::pi*(int(k)-3408)*reference_origin/8192));
+            static_cast<C>(std::polar(1.0,-2*std::numbers::pi*(int(k)-3408)*(reference_origin-frame.symbols[r].source_offset_samples)/8192));
         frame.carriers.measured=y.view;frame.carriers.count=rows;
-        SpectralBatch batch{frame,{}, {s.view,v.view,rows},{h.view,{},rows,reference_origin,error},
+        SpectralBatch batch{frame,{}, {s.view,v.view,rows},{h.view,{},rows,reference_origin,error,offsets.view},
                              {x.view,{},{},h.view,v.view,rows,reference_origin}};
         const auto time_at=[&](std::size_t row){return double(origin+frame.symbols[row].window.sample*decimation)/rate;};
         if(begin_time<0)begin_time=time_at(first);
-        // Archive adaptation is outside measured numerical work. Production
-        // borrows these sufficient statistics from the existing GPU response fit.
-        if(stationary && !background.ready()){
-            for(unsigned k=0;k<6817;++k){
-                std::complex<double> cross{};double power=0,measured=0;
-                for(unsigned r=0;r<rows;++r){const auto at=r*6817+k;if(!v.data<std::uint32_t>()[at])continue;
-                    const auto xx=std::complex<double>(x.data<C>()[at]),yy=std::complex<double>(y.data<C>()[at]);
-                    cross+=yy*std::conj(xx);power+=std::norm(xx);measured+=std::norm(yy);
-                }
-                statistics[k]={static_cast<C>(cross),float(power),float(measured)};
-            }
-            batch.estimate.statistics={context,{},statistics.size()*sizeof(ResponseStatistics),statistics.data()};
-        }
         const auto mark=std::chrono::steady_clock::now();const double cm=cpu();
         const auto d=estimator.estimate(batch,&noise);
         if(stationary && !background.ready()){
-            background.observe(batch,dt);background_end=time_at(rows-1);continue;
+            background.observe(batch,dt,estimator.training());background_end=time_at(rows-1);continue;
         }
         const auto result=correlator.calculate(batch,d,guard,&profiles,cancel,background.response());
         wall+=std::chrono::duration<double>(std::chrono::steady_clock::now()-mark).count();active+=cpu()-cm;

@@ -1,0 +1,9 @@
+fit_order=1 iterations=16 relative_response_power_error=8.91839021237e-14 relative_amplitude_square_error=4.90176222085e-14 phase_rms_degrees=1.17367599511e-05
+fit_order=1 iterations=32 relative_response_power_error=9.19365533508e-13 relative_amplitude_square_error=5.08474565324e-14 phase_rms_degrees=5.58197268522e-05
+fit_order=1 iterations=64 relative_response_power_error=5.82078216338e-12 relative_amplitude_square_error=5.1825934831e-14 phase_rms_degrees=0.00014271499253
+fit_order=1 iterations=128 relative_response_power_error=2.86289834109e-11 relative_amplitude_square_error=4.93619419661e-14 phase_rms_degrees=0.000316984441792
+fit_order=8 iterations=16 relative_response_power_error=0.000144384239546 relative_amplitude_square_error=8.36246564131e-07 phase_rms_degrees=0.804995443645
+fit_order=8 iterations=32 relative_response_power_error=0.000131672359198 relative_amplitude_square_error=7.59375575046e-07 phase_rms_degrees=0.768445409937
+fit_order=8 iterations=64 relative_response_power_error=0.000109145982188 relative_amplitude_square_error=6.2958161765e-07 phase_rms_degrees=0.699530380067
+fit_order=8 iterations=128 relative_response_power_error=7.48659126331e-05 relative_amplitude_square_error=4.32684021492e-07 phase_rms_degrees=0.579364879956
+Response-fit rows: 408; baseline relative response power error: 0.000144384239546

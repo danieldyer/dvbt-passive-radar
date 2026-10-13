@@ -1,0 +1,36 @@
+{
+  "sources": {
+    "src/pilot_phase.hpp": "b5ef8cda139e38bcc4a97338e4c5f79dcb1e2f13784e7e7c5af4e20aa6b8bb2b",
+    "src/gpu_frames.cpp": "d1b006aa8ba04f97d97eb5c94365ea5c4997af73b67b57e596dcdccecb768592",
+    "src/gpu_receiver.cpp": "63b28c3b6114ee7326e642771cda1475f6d53a726f23b7378203f05875e37170",
+    "shaders/carrier_copy.comp": "8def4b2a83add34ab5ee32f2b6bc2271b8ce7115059bacb98ecaadab181f1e96",
+    "src/matched_profiles.cpp": "3a980c2c2b3a063a097dabb52ba8f01be20b40fd20d921c2bc2fc27b64f9edc8",
+    "shaders/matched_pack.comp": "b59e6217893cc932d9e5f3c122bea457a18a5771a992c7b10a1a7aa76c9123e8",
+    "shaders/matched_product.comp": "3f55eb496c353201258faf84c495e92eccd0986db0e3716b5e01e71c072e25a2",
+    "src/matched_detector.cpp": "7efecc05571ce52394fbddd482ec8acb667e20ef1c38760c6e2f30cdd8df3348",
+    "src/matched_detector.hpp": "daf4b96cf1d358b6d4a7ab0ec443fb47282c82c291902cf44c527794b8b0a7f8",
+    "src/live_capture.cpp": "d5584e7be83885aac478371ce79fae645404d368e739aea2dd366bccec5243be",
+    "src/live_archive.cpp": "d657034a678647accea4b8f477be0fa87d1e174997005e5682f9ccb143a0fc02",
+    "src/live_input.cpp": "fec9f4f25a7c973fd467bb7d3fc9eff6975ad663a5c66682b0797c7a1b1da20b",
+    "src/live_input.hpp": "9c97ee0694b8a9bdc42012cac6eefc9ec9a4171c17d1d2f11f734013c7d974a7",
+    "src/recording_metadata.hpp": "2c904626f383d0e6abd48f6946357c4c9db17c42df88336d0030f204668c0afc",
+    "recordings/live_mt_dandenong.json": "4e9292100aa74e79801c633b7d72b91a13a6ab6af806b52e099dbe6103ef4ada",
+    "tests/live_input_tests.cpp": "351db67b936f515f2336f6cf5829d936ca6468e56d127f60906298c420237f99",
+    "tests/matched_tests.cpp": "09ff4d6b7ecfadc7ad6eecfcabb0afa73d660f96388996fd2673e43e8ee1bf1b",
+    "support/validation/live_pipeline_benchmark.cpp": "b5db250eb7638b33d138b4f4511e8b36aa939caf615ff8b9459c319519d59701",
+    "support/validation/CMakeLists.txt": "4f28f829d0d73d9abe86419933f325dc5a57398ba5444423e0c2aaef773cd0a7"
+  },
+  "binaries": {
+    "build/optimisation-20261013/dvbt_capture_baseline": "9315de5b1b3e6f689f72507f65b52cebc28ee5e4154861b4573501a718201778",
+    "build/optimisation-20261013/live_pipeline_baseline": "b6c9cccc6835f4a2687530bfc94671b22540115e4e9c59846286e315b5df4da0",
+    "build/release/dvbt_capture": "1b169395940cb36d079944b4b242f2b3e6cdff22d03e62cccb6f382500376f4e",
+    "build/release/support/validation/live_pipeline_benchmark": "03c17e1bccaf0e0604a6eef4e73eadf45c68f1bfc34c716f9e0827bbb9979520"
+  },
+  "notes": [
+    "Initial workspace already contained extensive changes; baseline executables were preserved before production edits.",
+    "No hardware capture was performed. Paced and injected-loss validation used the complete simulated capture transport path.",
+    "Real replay timing pairs ran sequentially and alternate order; concurrent external machine load was uncontrolled.",
+    "profile-kernel-comparison.txt and optimised-live-one-map-1.log include an experimental cache that was removed.",
+    "final-real-capture001-profiles.log is a correctness cross-check; not part of the paired performance comparison."
+  ]
+}

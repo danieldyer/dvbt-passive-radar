@@ -24,11 +24,13 @@ def shifted(source,previous,origin,delay,balance=False):
                     time[:len(source)][np.arange(len(source))[:,None],index])
 
 
-def interpolated(source,previous,origin,delay):
+def interpolated(source,previous,origin,delay,balance=False):
     rows=len(source);fraction=origin-np.floor(origin);integer=np.floor(origin).astype(int)
-    balance=lambda v:v*np.where(abs(abs(v)**2-16/9)<1e-5,9/16,1)
+    if balance:
+        source=source*np.where(abs(abs(source)**2-16/9)<1e-5,9/16,1)
+        previous=previous*np.where(abs(abs(previous)**2-16/9)<1e-5,9/16,1)
     spectra=np.zeros((2*rows,NFFT),complex);phase=np.exp(-2j*np.pi*K*fraction[:,None]/NFFT)
-    spectra[:rows,K%NFFT]=balance(source)*phase;spectra[rows:,K%NFFT]=balance(previous)*phase
+    spectra[:rows,K%NFFT]=source*phase;spectra[rows:,K%NFFT]=previous*phase
     time=np.fft.ifft(spectra,axis=1)
     j=np.arange(9184)[None,:]-928-integer[:,None];old=j < -512
     index=np.where(old,j+8704,j)%NFFT

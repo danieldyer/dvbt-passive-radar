@@ -1,0 +1,16 @@
+model,receiver,qam,rate,esn0_db,blocks,packets,rejected,wrong_accepted,corrected_bytes,edge_packets,edge_rejected,payload_bit_errors,payload_bits
+awgn,known_channel,4,0,100,2,1490,0,0,0,64,0,0,2240960
+awgn,known_channel,4,1,100,2,1994,0,0,0,64,0,0,2998976
+awgn,known_channel,4,2,100,2,2246,0,0,0,64,0,0,3377984
+awgn,known_channel,4,3,100,2,2498,0,0,0,64,0,0,3756992
+awgn,known_channel,4,4,100,2,2624,0,0,0,64,0,0,3946496
+awgn,known_channel,16,0,100,2,3002,0,0,0,64,0,0,4515008
+awgn,known_channel,16,1,100,2,4010,0,0,0,64,0,0,6031040
+awgn,known_channel,16,2,100,2,4514,0,0,0,64,0,0,6789056
+awgn,known_channel,16,3,100,2,5018,0,0,0,64,0,0,7547072
+awgn,known_channel,16,4,100,2,5270,0,0,0,64,0,0,7926080
+awgn,known_channel,64,0,100,2,4514,0,0,0,64,0,0,6789056
+awgn,known_channel,64,1,100,2,6026,0,0,0,64,0,0,9063104
+awgn,known_channel,64,2,100,2,6782,0,0,0,64,0,0,10200128
+awgn,known_channel,64,3,100,2,7538,0,0,0,64,0,0,11337152
+awgn,known_channel,64,4,100,2,7916,0,0,0,64,0,0,11905664

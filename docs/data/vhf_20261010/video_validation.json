@@ -1,0 +1,87 @@
+[
+  {
+    "channel": "seven",
+    "rf_hz": 177500000,
+    "maps": 15086,
+    "video_frames": 32183,
+    "duration_s": 1050.4531200000001,
+    "fps": "3125/102",
+    "bytes": 12532528650,
+    "power_limits_db": [
+      -0.06131023168563843,
+      48.920448303222656
+    ],
+    "upper_clipped_maps": 0,
+    "encode_elapsed_s": 459.41357066715136,
+    "seeks": 34,
+    "median_seek_ms": 16.23574993573129
+  },
+  {
+    "channel": "sbs",
+    "rf_hz": 184500000,
+    "maps": 15092,
+    "video_frames": 32183,
+    "duration_s": 1050.4531200000001,
+    "fps": "3125/102",
+    "bytes": 12398155244,
+    "power_limits_db": [
+      -0.342761754989624,
+      44.554161071777344
+    ],
+    "upper_clipped_maps": 0,
+    "encode_elapsed_s": 459.28427483327687,
+    "seeks": 34,
+    "median_seek_ms": 13.589896028861403
+  },
+  {
+    "channel": "nine",
+    "rf_hz": 191625000,
+    "maps": 14987,
+    "video_frames": 32183,
+    "duration_s": 1050.4531200000001,
+    "fps": "3125/102",
+    "bytes": 12475990991,
+    "power_limits_db": [
+      -0.26665234565734863,
+      52.04405975341797
+    ],
+    "upper_clipped_maps": 0,
+    "encode_elapsed_s": 451.3180552497506,
+    "seeks": 34,
+    "median_seek_ms": 12.970604002475739
+  },
+  {
+    "channel": "ten",
+    "rf_hz": 219500000,
+    "maps": 15083,
+    "video_frames": 32183,
+    "duration_s": 1050.4531200000001,
+    "fps": "3125/102",
+    "bytes": 12505530428,
+    "power_limits_db": [
+      -0.11288225650787354,
+      48.616180419921875
+    ],
+    "upper_clipped_maps": 0,
+    "encode_elapsed_s": 384.2770901671611,
+    "seeks": 34,
+    "median_seek_ms": 30.488625168800354
+  },
+  {
+    "channel": "abc",
+    "rf_hz": 226500000,
+    "maps": 15089,
+    "video_frames": 32183,
+    "duration_s": 1050.4531200000001,
+    "fps": "3125/102",
+    "bytes": 12554755244,
+    "power_limits_db": [
+      -0.030568480491638184,
+      50.44563674926758
+    ],
+    "upper_clipped_maps": 0,
+    "encode_elapsed_s": 383.7883057920262,
+    "seeks": 34,
+    "median_seek_ms": 30.463729053735733
+  }
+]

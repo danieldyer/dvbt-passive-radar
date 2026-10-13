@@ -1,0 +1,2 @@
+Fading pilot regression: old timing RMS=1.52569 samples, branch slips=357; circular RMS=0.000824563, maximum=0.00321799; combined comparison CPU=0.0335123 s
+Pilot timing branch, traversal invariance and analytic phase: PASS

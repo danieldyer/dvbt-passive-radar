@@ -5,13 +5,41 @@ import tempfile
 import unittest
 
 import numpy as np
-from sensitivity import BINS, DT, FS, K, NFFT, ROW, blocks, map_at, summarize, window
+from sensitivity import BINS, DT, FS, K, NFFT, ROW, ROW2, blocks, map_at, summarize, window
 from matched_filter_probe import efficiency
 from covariance_bound import bound
 from doppler_bound import white_local_bound, white_local_model
 
 
 class SensitivityTests(unittest.TestCase):
+    def test_source_clock_archive_coordinates(self):
+        rows, origin = 16, 128.375
+        coordinates = np.zeros(rows, dtype=ROW2)
+        coordinates['sample'] = np.arange(rows)*8704
+        coordinates['source_offset'] = np.remainder(.37+.02*np.arange(rows)+.5, 1)-.5
+        coordinates['source_rate'] = .04e-6
+        s = np.ones((rows, BINS), dtype='<c8')
+        x = s*np.exp(-2j*np.pi*K*(origin-coordinates['source_offset'][:, None])/NFFT)
+        h = np.full(BINS, .7+.4j, dtype='<c8')
+        q = .01*np.exp(.73j-2j*np.pi*K*37.25/NFFT)
+        y = (x*(h+q)).astype('<c8')
+        ratio = float(np.sum(abs(y-x*h)**2)/np.sum(abs(y)**2))
+        body = struct.pack('<6Idd', 0, 0, rows, 0, rows, 0, origin, ratio)
+        body += coordinates.tobytes()+h.tobytes()+y.tobytes()+s.tobytes()
+        body += np.ones((rows, BINS), dtype='<u4').tobytes()
+        archive = b'DVBTSAR2'+struct.pack('<4IQdd', 56000000, 7, 1, 0, 56000000, 553e6, 3.)
+        archive += struct.pack('<ddII', 557625000., 4625000., 16, 0)
+        archive += struct.pack('<4sQ', b'SPEC', len(body))+body+struct.pack('<4sQQ', b'DONE', 8, 1)
+        with tempfile.TemporaryDirectory() as directory:
+            path, cache = Path(directory)/'clock.sar', Path(directory)/'clock.npz'
+            path.write_bytes(archive)
+            decoded = list(blocks(path))[0]
+            np.testing.assert_array_equal(decoded['source_offsets'], coordinates['source_offset'])
+            summarize(path, cache)
+            result = np.load(cache)['after']
+            expected = np.array([q @ np.exp(2j*np.pi*K*r/NFFT)/NFFT for r in range(801)])
+            np.testing.assert_allclose(result, np.broadcast_to(expected, result.shape), atol=5e-8)
+
     def test_hann_local_doppler_information_bound(self):
         # Analytic tridiagonal signal and pentadiagonal noise covariance.
         for radius in (0,1,2,4,8,16):

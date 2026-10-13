@@ -34,6 +34,17 @@ class VideoTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'Truncated'):
             list(video.read_frames(io.BytesIO(packet()[:-1])))
 
+    def test_interleaved_channel_sequences(self):
+        def channel_packet(channel,sequence,end):
+            values=np.ones((2,2),dtype='<c8')
+            meta=dict(channel=channel,sequence=sequence,time_end_s=end,ranges=2,frequencies=2,format='cf32le',order='range,doppler')
+            header=json.dumps(meta).encode()
+            return struct.pack('<4sIQ',b'RDM1',len(header),values.nbytes)+header+values.tobytes()
+        data=channel_packet(0,1,1)+channel_packet(1,1,.9)+channel_packet(0,2,1.2)+channel_packet(1,2,1.1)
+        self.assertEqual(len(list(video.read_frames(io.BytesIO(data)))),4)
+        with self.assertRaisesRegex(ValueError,'Missing'):
+            list(video.read_frames(io.BytesIO(data+channel_packet(1,4,1.3))))
+
     def test_doppler_orientation_and_peak_pool(self):
         values=np.full((4,8),.001+0j,dtype=np.complex64)
         values[2,7]=2  # positive Doppler must be at the top, range to the right
@@ -58,6 +69,12 @@ class VideoTest(unittest.TestCase):
                     f.write(struct.pack('<4sI4s4sIHHIIHH4sI',b'RIFF',(length+36)&0xffffffff,b'WAVE',b'fmt ',16,3,2,8000000,64000000,8,32,b'data',length&0xffffffff))
                     f.truncate(44+length)  # sparse file: no gigabytes of sample allocation
                 self.assertAlmostEqual(video.recording_duration(p),samples/8000000)
+            for samples in (5,2**30+100):
+                length=samples*4
+                with p.open('wb') as f:
+                    f.write(struct.pack('<4sI4s4sIHHIIHH4sI',b'RIFF',(length+36)&0xffffffff,b'WAVE',b'fmt ',16,1,2,61000000,244000000,4,16,b'data',length&0xffffffff))
+                    f.truncate(44+length)
+                self.assertAlmostEqual(video.recording_duration(p),samples/61000000)
 
     def test_clock_and_cli_limits(self):
         self.assertEqual(video.clock_label(301.84),'05:01.840')

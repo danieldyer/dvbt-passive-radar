@@ -1,0 +1,19 @@
+{"signal_seconds":2E1,"channels":5,"map_channels":1,"profiled":true,"wall_ms_per_s":5.841814144E2,"read_ms_per_s":1.0524412529999998E2,"main_cpu_ms_per_s":2.172891518999998E2,"process_cpu_ms_per_s":9.473170372999995E2,"viterbi_worker_ms_per_s":6.742775191000003E2,"rs_worker_ms_per_s":3.1331051499999983E1,"rows":93024,"rs_good":2324307,"rs_bad":0,"maps":80,"packet_checksum":10666376928177342932,"map_checksum":3.815884982216744E-6,"profile_checksum":5.350938089138807E-5,"receiver_gpu_ms_per_s":5.08298469E1,"frames_gpu_ms_per_s":7.828666054999995E1,"reconstruction_gpu_ms_per_s":2.6117581650000005E1,"response_gpu_ms_per_s":5.674205804999994E1,"noise_gpu_ms_per_s":1.3172573550000005E1,"profiles_gpu_ms_per_s":8.823282695E1,"focus_gpu_ms_per_s":5.008326679999999E1}
+       21.39 real        30.71 user         3.02 sys
+          1113948160  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               68428  page reclaims
+                 374  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 969  voluntary context switches
+               48881  involuntary context switches
+        494790161845  instructions retired
+        133016273562  cycles elapsed
+          4122658640  peak memory footprint

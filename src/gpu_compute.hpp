@@ -13,7 +13,7 @@ namespace radar::gpu {
 // Persistent unified-memory buffers and one readiness fence per command group.
 // Resolve pending use before changing descriptors, uploads or command storage.
 class Kernel {
-    static constexpr unsigned storage_bindings=10;
+    static constexpr unsigned storage_bindings=12;
     std::shared_ptr<Context> context_;
     const gpu::ComputeDevice& gpu_;
     vk::Device device_=*gpu_.device;
@@ -86,14 +86,14 @@ public:
         group_=group;
         timings_=timings;
         timestamp_count_=timestamp_count;
-        if(timings && !timestamps_ && gpu_.physical.getQueueFamilyProperties()[gpu_.family].timestampValidBits)
+        if(timings && timings->timestamp_queries && !timestamps_ && gpu_.physical.getQueueFamilyProperties()[gpu_.family].timestampValidBits)
             timestamps_=device_.createQueryPoolUnique({{},vk::QueryType::eTimestamp,6});
         auto cmd=*commands_.front();cmd.reset();cmd.begin({vk::CommandBufferUsageFlagBits::eOneTimeSubmit});
-        if(timings_ && timestamps_) {cmd.resetQueryPool(*timestamps_,0,timestamp_count_);cmd.writeTimestamp(vk::PipelineStageFlagBits::eTopOfPipe,*timestamps_,0);}
+        if(timings_ && timings_->timestamp_queries && timestamps_) {cmd.resetQueryPool(*timestamps_,0,timestamp_count_);cmd.writeTimestamp(vk::PipelineStageFlagBits::eTopOfPipe,*timestamps_,0);}
         return cmd;
     }
     void stamp(vk::CommandBuffer cmd,unsigned index) {
-        if(timings_ && timestamps_ && (timestamp_count_==6 || index==timestamp_count_-1))
+        if(timings_ && timings_->timestamp_queries && timestamps_ && (timestamp_count_==6 || index==timestamp_count_-1))
             cmd.writeTimestamp(vk::PipelineStageFlagBits::eBottomOfPipe,*timestamps_,index);
     }
     void* storage(unsigned binding,std::size_t bytes) {
@@ -161,7 +161,7 @@ public:
     void collect() {
         if(timings_) {
             ++timings_->batches;
-            if(timestamps_) {
+            if(timings_->timestamp_queries && timestamps_) {
                 std::array<std::uint64_t,6> ticks{};
                 const auto result=device_.getQueryPoolResults(*timestamps_,0,timestamp_count_,sizeof(ticks),ticks.data(),sizeof(ticks[0]),vk::QueryResultFlagBits::e64|vk::QueryResultFlagBits::eWait);
                 if(result!=vk::Result::eSuccess)throw std::runtime_error("GPU timestamp query failed");

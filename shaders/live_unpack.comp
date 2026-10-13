@@ -1,0 +1,12 @@
+#version 450
+layout(local_size_x=64) in;
+layout(set=0,binding=0,std430) readonly buffer Input {uint iq[];};
+layout(set=0,binding=1,std430) writeonly buffer Output {vec2 samples[];};
+layout(push_constant) uniform Parameters {uint first;uint count;uint capacity;uint mask;} pc;
+void main(){
+    uint n=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
+    if(n>=pc.capacity)return;
+    if(n>=pc.count){samples[n]=vec2(0);return;}
+    uint v=iq[(pc.first+n)&pc.mask];
+    samples[n]=vec2(float(int(v<<16)>>16),float(int(v)>>16))*(1.0/32768.0);
+}

@@ -23,6 +23,12 @@ ClockSegment SampleClock::at_unlocked(double n) const {
 }
 ClockSegment SampleClock::at(double n) const {std::lock_guard lock(mutex_);return at_unlocked(n);}
 std::vector<ClockSegment> SampleClock::segments() const {std::lock_guard lock(mutex_);return segments_;}
+std::vector<ClockObserverStatus> SampleClock::status(double n) const {
+    std::lock_guard lock(mutex_);std::vector<ClockObserverStatus> result;
+    for(const auto& o:observers_)result.push_back({o.rate_time>=0 && n-o.rate_time<fs_*.5,o.anchored,o.points.size(),
+        (o.rate-1)*1e6,o.points.empty() ? 0 : (o.points.back().n-o.points.front().n)/fs_,o.fit_rms});
+    return result;
+}
 void SampleClock::schedule_unlocked(std::uint64_t start,double rate) {
     if(start<segments_.back().start+64 || !std::isfinite(rate) || rate<.999 || rate>1.001)
         throw std::runtime_error("Invalid or retroactive sample-clock segment");
@@ -61,14 +67,15 @@ void SampleClock::update(std::uint64_t start) {
     if(start<=segments_.back().start)return;
     const double n=double(start),current=segments_.back().offset_at(n);
     double rate_sum=0,weights=0;
+    double acquisition_sum=0,acquisition_count=0;
     double position_sum=0,velocity_sum=0,acceleration_sum=0,reference_weights=0;
-    for(const auto& o:observers_) {
+    for(auto& o:observers_) {
         if(o.rate_time<0 || n-o.rate_time>fs_*.5)continue;
         // Quadratic clock-offset fit, centred on the newest measurement. This
         // separates each transmitter's constant delay from a shared clock rate.
         // Fall back to differential acquisition until a useful baseline exists.
         if(o.points.size()<32 || o.points.back().n-o.points.front().n<fs_*.08) {
-            rate_sum+=o.rate;weights+=1;continue;
+            acquisition_sum+=o.rate;acquisition_count+=1;continue;
         }
         const double epoch=o.points.back().n;
         std::array<std::array<double,4>,3> a{};
@@ -85,6 +92,7 @@ void SampleClock::update(std::uint64_t start) {
         double residual=0;
         for(auto p:o.points) {const double t=(p.n-epoch)/fs_,e=p.y-(c+t*(v+t*acc));residual+=e*e;}
         const double sigma=std::sqrt(residual/std::max<std::size_t>(1,o.points.size()-3));
+        o.fit_rms=sigma;
         // A linear map approximating a quadratic has peak error |a|T^2/4.
         // Reserve half the phase budget for this extrapolation and cap updates
         // at 0.1 s; processing batches may update more frequently.
@@ -93,7 +101,11 @@ void SampleClock::update(std::uint64_t start) {
         const double target=c+t*(v+t*acc);
         const double rate=1+(target-current)/(fs_*horizon);
         if(!std::isfinite(rate) || std::abs(rate-1)>.001)continue;
-        const double w=1/std::max(budget_*budget_,sigma*sigma);
+        // This reference is the arithmetic ensemble of transmitter clocks.
+        // Time-varying precision weights would redefine its phase origin when
+        // real transmitter rates differ, converting SNR changes into ADC warp.
+        // Fit precision remains telemetry, not a change to the clock standard.
+        constexpr double w=1;
         rate_sum+=w*rate;weights+=w;
         const double now=(n-epoch)/fs_;
         position_sum+=w*(c+now*(v+now*acc));velocity_sum+=w*(v+2*now*acc);
@@ -103,6 +115,9 @@ void SampleClock::update(std::uint64_t start) {
         reference_ready_=true;reference_epoch_=n;reference_offset_=position_sum/reference_weights;
         reference_velocity_=velocity_sum/reference_weights;reference_acceleration_=acceleration_sum/reference_weights;
     }
+    // Differential acquisition supplies a clock only until anchored fits are
+    // available. It has no phase reference and cannot join a phase servo.
     if(weights) schedule_unlocked(start,rate_sum/weights);
+    else if(acquisition_count) schedule_unlocked(start,acquisition_sum/acquisition_count);
 }
 }

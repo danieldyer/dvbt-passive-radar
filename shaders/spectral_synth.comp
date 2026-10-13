@@ -35,11 +35,11 @@ void main() {
     for(uint ordinal=0;ordinal<8;++ordinal) {
         int frequency=int(lane)+128*int(ordinal)-512;
         uint k=uint(frequency<0 ? frequency+1024 : frequency);
-        int raw_bin=floatBitsToInt(c.x)+frequency;
+        bool prewarped=floatBitsToUint(b.w)!=0xffffffffu;
+        int raw_bin=floatBitsToInt(prewarped ? c.z : c.x)+frequency;
         vec2 value=vec2(0);
         // Prewarped windows live on the original discrete ADC grid. A channel
         // whose transition crosses Nyquist retains the wrapped spectral bins.
-        bool prewarped=floatBitsToUint(b.w)!=0xffffffffu;
         if(prewarped || (raw_bin>=-int(fft_size/2) && raw_bin<int(fft_size/2))) {
             float position=abs((1.0+b.z)*float(raw_bin)-c.y)*(65536.0/float(fft_size));
             if(position<32768) {

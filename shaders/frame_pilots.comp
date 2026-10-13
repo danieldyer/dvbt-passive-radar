@@ -1,0 +1,26 @@
+#version 450
+layout(local_size_x=64) in;
+layout(set=0,binding=0,std430) readonly buffer SourceRaw {vec2 source_raw[];};
+layout(set=0,binding=2,std430) readonly buffer SourcePilots {vec2 source_pilots[];};
+layout(set=0,binding=6,std430) readonly buffer Rows {uint rows[];};
+layout(set=0,binding=7,std430) readonly buffer Tables {vec2 table[];};
+layout(set=0,binding=8,std430) readonly buffer SourceOffsets {float offsets[];};
+layout(set=0,binding=9,std430) writeonly buffer Channel {vec2 channel[];};
+layout(push_constant) uniform Parameters {uint count;uint stride;uint destination;uint capacity;} pc;
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+vec2 rotation(uint k,float offset){float angle=6.283185307179586*(float(k)-3408)*offset/8192;return vec2(cos(angle),sin(angle));}
+void main(){
+    uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
+    if(i>=pc.count*2273)return;
+    uint s=i/2273,k=3*(i%2273);
+    uint mod=floatBitsToUint(source_pilots[rows[s]*pc.stride].x);
+    // Four scattered-pilot phases sample every third carrier. Interpolate
+    // between bracketing symbols on a common source-time coordinate.
+    int a=int(s)-int((mod+4-(k/3)%4)%4),b=a+4;
+    if(table[2*6817+192+k].x!=0){a=int(s);b=a;}
+    if(a<0)a=b;if(b>=int(pc.count))b=a;
+    float mu=a==b ? 0 : float(int(s)-a)/float(b-a);
+    vec2 left=multiply(source_raw[rows[a]*6817+k],rotation(k,-offsets[a]));
+    vec2 right=multiply(source_raw[rows[b]*6817+k],rotation(k,-offsets[b]));
+    channel[i]=multiply(mix(left,right,mu),table[k]);
+}

@@ -1,0 +1,29 @@
+{
+    "programs": [
+
+    ],
+    "stream_groups": [
+
+    ],
+    "streams": [
+        {
+            "codec_name": "prores",
+            "profile": "Standard",
+            "width": 1920,
+            "height": 1080,
+            "pix_fmt": "yuv422p10le",
+            "color_range": "tv",
+            "color_space": "bt709",
+            "color_transfer": "bt709",
+            "color_primaries": "bt709",
+            "r_frame_rate": "3125/102",
+            "avg_frame_rate": "3125/102",
+            "duration": "1050.453120",
+            "nb_frames": "32183"
+        }
+    ],
+    "format": {
+        "duration": "1050.453120",
+        "size": "12505530428"
+    }
+}

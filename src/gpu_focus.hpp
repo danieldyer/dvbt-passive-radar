@@ -14,12 +14,18 @@ class GpuFocus {
     struct Impl;
     std::unique_ptr<Impl> impl_;
 public:
+    struct Result {DopplerMap map;gpu::BufferView values;};
     explicit GpuFocus(std::shared_ptr<gpu::Context>);
     ~GpuFocus();
     void prepare(std::size_t rows);
     // Positive information weights undo per-batch amplitude normalization.
     // An empty span gives equal weights; no temporal taper is imposed.
     DopplerMap calculate(std::span<const C> moments,std::size_t rows,double interval,
+                         double rf_hz,double first_window_time,FocusOptions={},ComputeTimings* =nullptr,
+                         std::span<const double> information={});
+    // Ready borrowed GPU output, valid until the next calculation or destruction.
+    // Metadata has no host values; consumers can reduce or archive on the device.
+    Result calculate_device(std::span<const C> moments,std::size_t rows,double interval,
                          double rf_hz,double first_window_time,FocusOptions={},ComputeTimings* =nullptr,
                          std::span<const double> information={});
 };

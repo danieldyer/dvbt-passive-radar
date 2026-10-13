@@ -1,0 +1,10 @@
+#version 450
+layout(local_size_x=64) in;
+layout(binding=11) buffer Prefix {vec2 prefix[];};
+layout(push_constant) uniform Parameters {uint start,count,total,capacity,guard;int origin;float fraction,gain;uint cancel_direct,output_count,output_first,size;} p;
+void main(){
+    uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
+    uint stride=p.capacity*p.size;if(i>=2*stride)return;
+    vec2 a=prefix[i],b=prefix[2*stride+i%stride];
+    prefix[i]=vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);
+}

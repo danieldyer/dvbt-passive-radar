@@ -1,5 +1,29 @@
 # Video export
 
+Saved live captures can be rendered without recovering raw I/Q:
+
+```sh
+cmake --build --preset release --target live_profiles_preview -j 6
+build/web-venv/bin/python support/video/render_capture.py captures/session-001 \
+  --output renders/session-001 --integration 3 --doppler-hz 100
+```
+
+This requires `--archive profiles` or `--archive both` at capture time. It reuses the production
+Vulkan focus, range-migration correction, noise calibration and GPU preview.
+The saved complex moments, common-clock coordinates and information weights
+are preserved; they are not resampled or phase-corrected a second time. Only
+full consecutive valid CPIs are admitted. Initial training and later FEC gaps
+appear as unavailable intervals. Existing carrier whitening and stationary
+subtraction are already part of the profiles and cannot be replaced exactly
+by this exporter.
+
+Defaults are a three-second CPI, ±100 Hz, 0–30 km, a symbol-aligned rate above
+30 fps, whole-recording fixed noise-floor/maximum colour bounds and hardware
+ProRes for QuickTime seeking. It accepts the capture directory or its
+`capture.dvblive`. `--collect-only` and `--resume` work as for recorded-I/Q
+exports. Video sidecars retain the nominal CPI and the equivalent window
+duration `1/enbw_hz`; unequal information weights can make the latter shorter.
+
 This optional tool turns the recording CLI's lossless `RDM1` map stream into an
 unpaced 1920×1080 video. Rendering, encoding, Python dependencies and renderer tests
 are contained here; the C++ pipeline has no dependency on them. The renderer
@@ -53,6 +77,70 @@ interval recomputes the maps from I/Q.
 The JSON sidecar records the exact processor and encoder commands.
 See the [Apple ProRes white paper](https://www.apple.com/final-cut-pro/docs/Apple_ProRes.pdf)
 for the codec's independent-frame design and editing performance.
+
+For a metadata-defined multichannel recording, build the optional GPU display sink
+and render every signal through one production channel bank:
+
+```sh
+cmake --build build/release --target dvbt_preview -j 8
+build/video-venv/bin/python support/video/render_recording.py INPUT.wav \
+  --metadata recordings/baseband_202000000Hz_20-55-20_10-10-2026.json \
+  --output renders/mt_dandenong_vhf_20261010
+```
+
+This uses three-second coherent windows, ±100 Hz, 0–30 km and at least 30 fps,
+with stationary suppression and hardware ProRes encoding. All channels share
+the same ADC clock correction. The Vulkan preview kernel pools calibrated power
+as the CPU display reference, checks finite samples, and preserves scientific
+map/phase metadata. Display reduction is separate from the numerical pipeline
+and does not change its maps.
+
+The first pass caches only pooled display images in float16 dB. It measures the
+whole-recording median displayed background, excluding the DC notch and ranges
+below 0.6 km, and the true maximum for each channel. The lower bound is 1.5 dB
+below that median and the upper is 0.25 dB above the maximum. Both stay fixed for
+the entire channel's video. `processing/manifest.json` records the fit and source
+identity. Float16 affects only this display cache, with errors below 0.016 dB
+for typical peak values; scientific complex data is never quantized by the tool.
+
+The cache needs substantial temporary disk space (roughly 2.3 MB per map/channel
+at the default settings). `--cache-compression 1` trades extra CPU time for less
+disk space; the default zero is fastest. Each channel's cache is removed once
+its video finishes. `--collect-only` prepares caches and scales; `--resume` encodes
+an already collected recording after checking source identity and settings.
+Completed videos are not overwritten. This also accepts stereo int16 WAVs.
+
+Build `dvbt_preview` for the default GPU display path. It borrows the ready
+complex focus buffer, estimates exactly the same robust noise calibration, then
+uses a Vulkan kernel to standardize and peak-pool power without copying or
+serializing the full complex map. Only compact `RDP1` display pixels cross the
+pipe. Scientific `RDM1` output remains available through `dvbt_detect`.
+`--preview-backend cpu` uses `dvbt_detect` followed by `rdm_preview` as a reference.
+The device buffer is borrowed only inside the focus worker, and all preview
+framing and shaders remain in this support directory.
+
+`--encode-workers 3` exports three independent channels concurrently; use one
+for serial comparisons. ProRes uses Apple's hardware VideoToolbox encoder in
+either mode. This does not change map cadence, coherent integration or the
+whole-recording fixed colour bounds. A 31-map/s video requests substantially
+more focusing work than the one-map/s production benchmark.
+
+```sh
+cmake --build build/release --target dvbt_preview preview_tests
+build/release/preview_tests
+```
+
+The optional GPU test compares power and noise scaling against the CPU reference,
+checks odd edge cells, unchanged scientific samples, reused buffers, nonfinite
+input rejection, and device-versus-host focusing and calibration. Add `--benchmark`
+to measure per-map GPU focus, CPU calibration and GPU preview costs.
+
+For a complete recording comparison without encoding, build `dvbt_detect`,
+`rdm_preview` and `dvbt_preview`, then run `benchmark_preview.py INPUT.wav
+--metadata RECORDING.json --output build/preview-benchmark`. This includes
+initialization and acquisition and consumes the preview pipe without writing
+large map files. Use `--map-rate 1` to distinguish production publication cadence
+from the default video cadence. Run without competing GPU jobs.
 
 Run the stream, coordinate, WAV-duration and CLI checks with the same environment:
 

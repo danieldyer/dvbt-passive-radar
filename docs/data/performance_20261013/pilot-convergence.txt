@@ -1,0 +1,5 @@
+max_timing_difference_samples=1.34294e-08 max_phase_difference_degrees=8.12466e-08
+legacy_seconds=0.125674 optimised_seconds=0.0740703 speedup=1.69669 checksum_difference=2.01581e-10
+legacy_seconds=0.116926 optimised_seconds=0.0744144 speedup=1.57128 checksum_difference=2.01581e-10
+legacy_seconds=0.11666 optimised_seconds=0.074451 speedup=1.56694 checksum_difference=2.01581e-10
+legacy_seconds=0.116988 optimised_seconds=0.0745203 speedup=1.56988 checksum_difference=2.01581e-10

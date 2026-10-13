@@ -1,38 +1,97 @@
 #include "gpu_frames.hpp"
 #include "gpu_compute.hpp"
+#include <cmath>
 #include <deque>
+#include <numbers>
 
 namespace radar {
 namespace {
 constexpr std::uint32_t copy_code[] =
 #include "carrier_copy.inc"
 ;
-constexpr unsigned capacity=1020+2*68;
+constexpr std::uint32_t equalize_code[] =
+#include "frame_equalize.inc"
+;
+constexpr std::uint32_t pilot_code[] =
+#include "frame_pilots.inc"
+;
+constexpr std::uint32_t demap_code[] =
+#include "frame_demap.inc"
+;
 OfdmBatch copy_rows(gpu::Kernel& kernel,const OfdmBatch& source,std::span<const std::uint32_t> rows,
-                   unsigned destination,unsigned size,ComputeTimings* timings,gpu::Commands* commands=nullptr) {
+                   unsigned destination,unsigned size,ComputeTimings* timings,gpu::Commands* commands=nullptr,
+                   vk::Pipeline pipeline={},vk::Pipeline pilots={},vk::Pipeline demap={},unsigned bits=0) {
     if(rows.empty() || rows.size()>size || source.pilot_stride<2 || source.pilot_stride>6817 ||
-       source.measured.bytes<source.count*6817*sizeof(C) || source.equalized.bytes<source.count*6817*sizeof(C) ||
+       source.measured.bytes<source.count*6817*sizeof(C) ||
        source.pilots.bytes<source.count*source.pilot_stride*sizeof(C))throw std::invalid_argument("Invalid carrier gather dimensions");
     for(auto row:rows)if(row>=source.count)throw std::invalid_argument("Carrier gather row outside source");
-    kernel.bind(0,source.measured);kernel.bind(1,source.equalized);kernel.bind(2,source.pilots);
-    kernel.storage(3,size*6817*sizeof(C));kernel.storage(4,size*6817*sizeof(C));
+    kernel.bind(0,source.measured);kernel.bind(2,source.pilots);
+    kernel.storage(3,size*6817*sizeof(C));
+    if(pipeline)kernel.storage(4,size*6817*sizeof(C));
     kernel.storage(5,size*source.pilot_stride*sizeof(C));kernel.upload(6,rows);
     const auto cmd=kernel.begin(timings,2,commands);
-    kernel.dispatch(cmd,kernel.primary(),std::array{static_cast<unsigned>(rows.size()),static_cast<unsigned>(source.pilot_stride),destination,size},rows.size()*6817);
+    const std::array push{static_cast<unsigned>(rows.size()),static_cast<unsigned>(source.pilot_stride),demap ? bits : destination,size};
+    if(pilots){kernel.dispatch(cmd,pilots,push,rows.size()*2273);kernel.barrier(cmd);}
+    kernel.dispatch(cmd,pipeline ? pipeline : kernel.primary(),push,rows.size()*6817);
+    if(demap){kernel.barrier(cmd);kernel.dispatch(cmd,demap,push,rows.size()*6048*bits/4);}
     kernel.finish(cmd);
-    return {kernel.view(3),kernel.view(4),kernel.view(5),rows.size(),source.pilot_stride};
+    return {kernel.view(3),pipeline ? kernel.view(4) : gpu::BufferView{},kernel.view(5),rows.size(),source.pilot_stride,demap ? kernel.view(11) : gpu::BufferView{}};
 }
 }
 struct GpuFrameStorage::Impl {
     gpu::Kernel kernel;
-    explicit Impl(std::shared_ptr<gpu::Context> context):kernel(copy_code,16,{},std::move(context)){}
+    vk::UniquePipeline equalize,pilots,demap;
+    int guard=-1,constellation=-1;
+    explicit Impl(std::shared_ptr<gpu::Context> context):kernel(copy_code,16,{},std::move(context)),
+        equalize(kernel.pipeline(equalize_code)),pilots(kernel.pipeline(pilot_code)),demap(kernel.pipeline(demap_code)){}
+    void tables(const Tps& mode) {
+        if(constellation!=mode.constellation){
+            const auto indices=Modem{}.payload_bit_indices(mode);
+            kernel.upload(10,std::span<const std::uint32_t>{indices});constellation=mode.constellation;
+        }
+        const int value=mode.guard;
+        if(guard==value)return;
+        if(value<0 || value>3)throw std::invalid_argument("Invalid frame equaliser guard interval");
+        const auto pattern=Modem{}.pilot_pattern();
+        std::vector<C> table(3*6817+192);
+        // Shift the channel's causal GI support about zero before frequency
+        // interpolation. This is a decoder coordinate, not a receive retiming
+        // or an alteration of the measured carrier phase.
+        const double centre=(8192/(32U>>value))*.5;
+        for(unsigned k=0;k<6817;++k){
+            const double angle=2*std::numbers::pi*(int(k)-3408)*(fft_window_margin+centre)/8192;
+            table[k]=static_cast<C>(std::polar(1.,angle))/pattern.values[k];
+            table[6817+k]=static_cast<C>(std::polar(1.,-angle));
+        }
+        // Eighth-order accuracy in carrier spacing: seven-degree Lagrange
+        // interpolation on the dense, temporally reconstructed pilot grid.
+        for(unsigned phase=0;phase<24;++phase)for(unsigned j=0;j<8;++j){
+            double weight=1;for(unsigned l=0;l<8;++l)if(l!=j)weight*=(double(phase)/3-l)/(int(j)-int(l));
+            table[2*6817+phase*8+j]={static_cast<float>(weight),0};
+        }
+        for(auto k:pattern.continual)table[2*6817+192+k]={1,0};
+        kernel.upload(7,std::span<const C>{table});guard=value;
+    }
 };
 GpuFrameStorage::GpuFrameStorage(std::shared_ptr<gpu::Context> context):impl_(std::make_unique<Impl>(std::move(context))){}
 GpuFrameStorage::~GpuFrameStorage()=default;
 void GpuFrameStorage::wait(){impl_->kernel.wait();}
 FrameBatch GpuFrameStorage::capture(const FrameSelection& selection,ComputeTimings* timings,gpu::Commands* commands) {
     auto frame=selection.frame;
-    frame.carriers=copy_rows(impl_->kernel,frame.carriers,selection.rows,0,1020,timings,commands);
+    if(frame.frames.empty() || selection.rows.size()<8)throw std::invalid_argument("Incomplete frame equalisation context");
+    if(!frame.symbols.empty() && frame.symbols.size()!=selection.rows.size())throw std::invalid_argument("Incomplete source timing coordinates");
+    impl_->tables(frame.frames.front());
+    std::vector<float> offsets(selection.rows.size());
+    for(std::size_t row=0;row<frame.symbols.size();++row){
+        const auto offset=frame.symbols[row].source_offset_samples;
+        if(!std::isfinite(offset))throw std::invalid_argument("Nonfinite source timing coordinate");
+        offsets[row]=static_cast<float>(offset);
+    }
+    impl_->kernel.upload(8,std::span<const float>{offsets});
+    impl_->kernel.storage(9,selection.rows.size()*2273*sizeof(C));
+    const auto bits=qam_bits(frame.frames.front());
+    impl_->kernel.storage(11,selection.rows.size()*6048*bits);
+    frame.carriers=copy_rows(impl_->kernel,frame.carriers,selection.rows,0,unsigned(selection.rows.size()),timings,commands,*impl_->equalize,*impl_->pilots,*impl_->demap,bits);
     return frame;
 }
 struct GpuFrames::Impl {
@@ -50,8 +109,10 @@ struct GpuFrames::Impl {
     std::shared_ptr<gpu::Context> context;
     GpuFrameStorage staging;
     std::vector<Channel> channels;
-    Impl(std::span<const unsigned> guards,std::shared_ptr<gpu::Context> context):context(std::move(context)),staging(this->context) {
+    unsigned frames_per_batch,capacity;
+    Impl(std::span<const unsigned> guards,std::shared_ptr<gpu::Context> context,unsigned batch):context(std::move(context)),staging(this->context),frames_per_batch(batch),capacity((batch+2)*68) {
         if(guards.empty() || guards.size()>64)throw std::invalid_argument("Invalid frame-buffer channel count");
+        if(batch<3 || batch>15)throw std::invalid_argument("FEC batch requires 3..15 TPS frames");
         for(unsigned guard:guards) {
             if(guard!=4 && guard!=8 && guard!=16 && guard!=32)throw std::invalid_argument("Invalid frame-buffer guard interval");
             Channel c;c.guard=guard;c.ring=std::make_unique<gpu::Kernel>(copy_code,16,std::span<const std::uint32_t>{},this->context);
@@ -100,7 +161,7 @@ struct GpuFrames::Impl {
         if(c.frames.empty())c.pending.front().symbol.discontinuity=true;
         for(auto& row:c.pending){row.symbol.segment=c.segment;c.aligned.push_back(std::move(row));}
         c.pending.clear();c.frames.push_back(frame);
-        if(c.frames.size()==15)emit(channel,false,consume);
+        if(c.frames.size()==frames_per_batch)emit(channel,false,consume);
     }
     void append(const ReceiverBatch& input,const Select& consume,ComputeTimings* timings,gpu::Commands* commands) {
         if(input.symbols.empty())return;
@@ -126,9 +187,10 @@ struct GpuFrames::Impl {
         }
     }
 };
-GpuFrames::GpuFrames(std::span<const unsigned> guards,std::shared_ptr<gpu::Context> context):impl_(std::make_unique<Impl>(guards,std::move(context))){}
+GpuFrames::GpuFrames(std::span<const unsigned> guards,std::shared_ptr<gpu::Context> context,unsigned frames_per_batch):impl_(std::make_unique<Impl>(guards,std::move(context),frames_per_batch)){}
 GpuFrames::~GpuFrames()=default;
 void GpuFrames::wait(){for(auto& channel:impl_->channels)channel.ring->wait();impl_->staging.wait();}
+void GpuFrames::reset(){wait();for(auto& c:impl_->channels){c.pending.clear();c.aligned.clear();c.frames.clear();c.written=0;c.segment=0;c.history=false;}}
 void GpuFrames::select(const ReceiverBatch& input,const Select& consume,ComputeTimings* timings,gpu::Commands* commands) {
     impl_->append(input,consume,timings,commands);
 }

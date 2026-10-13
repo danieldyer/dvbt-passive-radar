@@ -1,6 +1,6 @@
 # DVB-T passive radar
 
-C++23 recorded-IQ processing with Vulkan channelization, shared clock resampling,
+C++23 recorded-IQ and direct UHD capture with Vulkan channelization, shared clock resampling,
 CPU FEC and residual cross-spectrum kernels. The file
 pipeline decodes and reconstructs non-hierarchical **8K, 7 MHz DVB-T**: QPSK,
 16-QAM, 64-QAM, all five code rates and all four guard intervals. TPS determines
@@ -32,8 +32,8 @@ Optional legacy visualization consumer:
   → native complex map stream → separate ImGui/WebAssembly viewer
 
 Production matched detection consumer:
-     regularized carrier noise → finite waveform CAF with two Doppler moments
-  → information-weighted constant-path-rate focus → reversible noise calibration
+     previous-batch carrier variance → finite waveform CAF with two Doppler moments
+  → information-weighted constant-path-rate focus
   → complex detection map → separate support/video exporter
 ```
 
@@ -57,10 +57,51 @@ build/release/dvbt_detect /path/to/C31-recording.wav --output build/detections \
   --recording-rf-hz 553000000 --channel 557625000,4625000,16
 ```
 
-This runs unpaced. `--keep-dc` retains stationary returns; `--physical-units`
-retains physical complex amplitudes instead of detection-noise units. Output
-includes reversible calibration and explicit phase epochs. Frozen stationary
-training precedes the first complete map and does not change the raw SAR handoff.
+This runs unpaced and outputs physical complex amplitudes. `--keep-dc` retains
+stationary returns; `--physical-units` remains an accepted compatibility flag.
+Output includes physical-unit, weighting-method and explicit phase-epoch metadata;
+these do not reverse discarded observations or make a compact map a sufficient
+statistic for every later scene model. Frozen stationary training precedes the
+first complete map and does not change the spectral SAR handoff. See the
+[information-preservation review](docs/information_preservation_review_20261011.md)
+for measured numerical accuracy, cancellation limitations and archive boundaries.
+
+Recording JSON can configure all channels and retain transmitter geometry:
+
+```sh
+build/release/dvbt_detect INPUT.wav --output build/vhf-maps \
+  --metadata recordings/baseband_202000000Hz_20-55-20_10-10-2026.json
+```
+
+Both `dvbt_detect` and `dvbt_sar` accept `--metadata` and optional
+`--select-channel nine`. Without `--metadata`, a JSON file with the WAV's basename
+beside the WAV is loaded if present. See [recording metadata](docs/recording_metadata.md).
+Stereo signed int16 and float32 are supported, including wrapped RIFF lengths.
+The 61 MS/s VHF capture is converted to the common 8 MS/s channel grid inside
+the existing spectral synthesis; every channel shares the nominal rate conversion
+and subsequent timing correction. Metadata validates the WAV rate and format.
+
+To export one fixed-scale QuickTime video per multiplex using a single shared
+channel bank, see [support/video](support/video/README.md).
+
+For live B200mini reception, the [UHD capture front end](docs/live_capture.md)
+uses mapped int16 receive storage, reports timestamped losses and shows per-channel
+timing/FEC telemetry in an interactive terminal UI. It saves complex range histories
+or channelised I/Q. Press `1`–`5` to select a channel and `v` for its native ImPlot map:
+
+```sh
+build/release/dvbt_capture --metadata recordings/live_mt_dandenong.json \
+  --output captures/session-001
+```
+
+[Current live performance and gap validation](docs/performance_20261013.md)
+records the measured optimisations, complete warmup and bounded capture/display
+backpressure.
+
+The main interface stays in the terminal; `t` shows timing plots, `?` shows help,
+`s` drains and retains results, and `q` exits. Default detection settings are 3 s,
+±100 Hz and 0–30 km. [Simulation launcher](support/live/simulate.command) loops
+until stopped. No raw ADC I/Q or display images are saved.
 
 ## Build
 
@@ -222,6 +263,12 @@ With `--auto-scale`, the top follows each map's peak after optional DC removal,
 and the difference between those limits sets the displayed dynamic range (60 dB
 by default). The colour bar and JSON metadata report each frame's actual limits.
 Neither the movie nor the viewer draws a grid over the data.
+
+The production detector and current video previews use physical complex-map power.
+Empirical per-map range/Doppler normalization is confined to historical diagnostic
+replay under `support/validation`. See the
+[scientific pipeline review](docs/pipeline_review_20261011.md) for assumptions,
+phase regressions and real SDR validation.
 
 The matched backend defaults to a full trailing three-second coherent window,
 0–30 km, ±200 Hz and stationary suppression. The frame interval is a whole number

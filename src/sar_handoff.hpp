@@ -16,6 +16,7 @@ struct SarCapture {
     std::uint64_t origin{};
     double recording_rf_hz{},clock_phase_degrees=3;
     std::vector<SarChannel> channels;
+    std::uint32_t source_rate{}; // Zero means input_rate; input_rate is the corrected coordinate grid.
     void validate() const;
 };
 // Synchronous, borrowed device handoff. No waveform copies or SAR processing.

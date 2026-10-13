@@ -1,6 +1,6 @@
 #include "gpu_ofdm.hpp"
 #include "gpu_compute.hpp"
-#include <vkFFT.h>
+#include "gpu_fft_config.hpp"
 #include <bit>
 #include <cmath>
 #include <numbers>
@@ -68,6 +68,7 @@ struct GpuOfdm::Impl {
         VkFFTConfiguration config{};config.FFTdim=1;config.size[0]=8192;config.numberBatches=cap;
         config.device=&device;config.physicalDevice=&physical;config.queue=&queue;config.commandPool=&pool;config.fence=&fence;
         config.buffer=&fft_buffer;config.bufferSize=&fft_bytes;config.makeForwardPlanOnly=1;config.useLUT=1;
+        gpu::configure_fft(config);
         const auto result=initializeVkFFT(&fft,config);
         if(result!=VKFFT_SUCCESS)throw std::runtime_error("OFDM VkFFT initialization failed: "+std::to_string(result));
         ready=true;

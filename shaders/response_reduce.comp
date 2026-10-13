@@ -5,6 +5,8 @@ layout(set=0,binding=1,std430) readonly buffer Reference {vec2 reference[];};
 layout(set=0,binding=2,std430) readonly buffer Valid {uint valid[];};
 layout(set=0,binding=3,std430) readonly buffer Rotation {vec2 rotation[];};
 layout(set=0,binding=4,std430) writeonly buffer Statistics {vec4 stats[];};
+layout(set=0,binding=7,std430) readonly buffer SourceOffsets {float offsets[];};
+layout(set=0,binding=8,std430) writeonly buffer InnovationVariance {float variance[];};
 layout(push_constant) uniform Parameters {uint count;uint order;uint iterations;uint unused;} pc;
 vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
 void main() {
@@ -12,12 +14,20 @@ void main() {
     // Adjacent lanes traverse adjacent carriers. Compensated sums preserve the
     // small response/cancellation residual over a long reconstruction batch.
     precise vec4 sum=vec4(0),lost=vec4(0);
+    vec2 mean=vec2(0);float energy=0,scatter=0,count=0;
     for(uint s=0;s<pc.count;++s) {
         uint at=s*6817+k;if(valid[at]==0)continue;
-        vec2 x=multiply(reference[at],rotation[k]),y=measured[at];
+        float angle=6.283185307179586*(float(k)-3408)*offsets[s]/8192;
+        vec2 x=multiply(multiply(reference[at],rotation[k]),vec2(cos(angle),sin(angle))),y=measured[at];
         vec4 value=vec4(multiply(y,vec2(x.x,-x.y)),dot(x,x),dot(y,y));
         vec4 corrected=value-lost,next=sum+corrected;
         lost=(next-sum)-corrected;sum=next;
+        if(value.z>0){
+            vec2 ratio=value.xy/value.z,delta=ratio-mean;float total=energy+value.z;
+            mean+=delta*(value.z/total);scatter+=dot(delta,delta)*value.z*(energy/total);
+            energy=total;count+=1;
+        }
     }
     stats[k]=sum;
+    variance[k]=count>1 ? max(scatter/(count-1),1e-30) : 0;
 }

@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "recording": {
+    "file": "/Users/danielrd/data/dvbt_passive_radar/baseband_202000000Hz_20-55-20_10-10-2026.wav",
+    "centre_hz": 202000000,
+    "sample_rate_hz": 61000000,
+    "sample_format": "ci16_le",
+    "iq_order": "I,Q",
+    "device": "USRP B200",
+    "start_local": "2026-10-10T20:55:20+11:00",
+    "time_reference": "Filename only; not a calibrated UTC or RF phase reference"
+  },
+  "transmitters": [
+    {
+      "id": "ornata",
+      "name": "TXA Ornata Road",
+      "address": "12 Ornata Road, Mount Dandenong",
+      "location": {
+        "latitude_deg": -37.837500000000006,
+        "longitude_deg": 145.34666666666666
+      },
+      "position_reference": "ACMA July 2026 licensed site coordinates, whole arcsecond resolution. Not a surveyed antenna phase centre."
+    },
+    {
+      "id": "eyre",
+      "name": "TXA Eyre Road",
+      "address": "8 Eyre Road, Mount Dandenong",
+      "location": {
+        "latitude_deg": -37.83555555555556,
+        "longitude_deg": 145.3477777777778
+      },
+      "position_reference": "ACMA July 2026 licensed site coordinates, whole arcsecond resolution. Not a surveyed antenna phase centre."
+    },
+    {
+      "id": "ridge",
+      "name": "BAI Ridge Road",
+      "address": "116\u2013118 Ridge Road, Mount Dandenong",
+      "location": {
+        "latitude_deg": -37.835,
+        "longitude_deg": 145.34861111111113
+      },
+      "position_reference": "ACMA July 2026 licensed site coordinates, whole arcsecond resolution. Not a surveyed antenna phase centre."
+    }
+  ],
+  "signals": [
+    {
+      "id": "seven",
+      "name": "Seven",
+      "callsign": "HSV6",
+      "rf_channel": 6,
+      "frequency_hz": 177500000,
+      "bandwidth_hz": 7000000,
+      "fft_size": 8192,
+      "guard_denominator": 16,
+      "transmitter_id": "ornata",
+      "licensed_site_ids": [
+        "ornata",
+        "eyre"
+      ],
+      "transmitter_assignment": "Nominal mast from Oz Digital TV listing; active antenna for this capture not independently confirmed. ACMA also licenses alternative sites."
+    },
+    {
+      "id": "sbs",
+      "name": "SBS",
+      "callsign": "SBS7",
+      "rf_channel": 7,
+      "frequency_hz": 184500000,
+      "bandwidth_hz": 7000000,
+      "fft_size": 8192,
+      "guard_denominator": 16,
+      "transmitter_id": "ridge",
+      "licensed_site_ids": [
+        "ridge",
+        "ornata"
+      ],
+      "transmitter_assignment": "Nominal mast from Oz Digital TV listing; active antenna for this capture not independently confirmed. ACMA also licenses alternative sites."
+    },
+    {
+      "id": "nine",
+      "name": "Nine",
+      "callsign": "GTV8",
+      "rf_channel": 8,
+      "frequency_hz": 191625000,
+      "bandwidth_hz": 7000000,
+      "fft_size": 8192,
+      "guard_denominator": 16,
+      "transmitter_id": "eyre",
+      "licensed_site_ids": [
+        "eyre",
+        "ornata"
+      ],
+      "transmitter_assignment": "Nominal mast from Oz Digital TV listing; active antenna for this capture not independently confirmed. ACMA also licenses alternative sites."
+    },
+    {
+      "id": "ten",
+      "name": "Ten",
+      "callsign": "ATV11",
+      "rf_channel": 11,
+      "frequency_hz": 219500000,
+      "bandwidth_hz": 7000000,
+      "fft_size": 8192,
+      "guard_denominator": 16,
+      "transmitter_id": "ridge",
+      "licensed_site_ids": [
+        "ridge",
+        "eyre",
+        "ornata"
+      ],
+      "transmitter_assignment": "Nominal mast from Oz Digital TV listing; active antenna for this capture not independently confirmed. ACMA also licenses alternative sites."
+    },
+    {
+      "id": "abc",
+      "name": "ABC",
+      "callsign": "ABC12",
+      "rf_channel": 12,
+      "frequency_hz": 226500000,
+      "bandwidth_hz": 7000000,
+      "fft_size": 8192,
+      "guard_denominator": 16,
+      "transmitter_id": "ornata",
+      "licensed_site_ids": [
+        "ornata",
+        "ridge"
+      ],
+      "transmitter_assignment": "Nominal mast from Oz Digital TV listing; active antenna for this capture not independently confirmed. ACMA also licenses alternative sites."
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://www.ozdigitaltv.com/transmitters/VIC/326-Mount-Dandenong",
+      "used_for": "Multiplex centre frequencies and nominal mast assignments",
+      "accessed": "2026-10-10"
+    },
+    {
+      "url": "https://www.acma.gov.au/sites/default/files/2026-07/9%20Televison%20by%20Area%20Served.pdf",
+      "used_for": "Licensed site coordinates and alternate locations; page 371",
+      "accessed": "2026-10-10"
+    }
+  ]
+}

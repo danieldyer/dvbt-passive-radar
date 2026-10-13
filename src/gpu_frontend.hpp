@@ -38,8 +38,14 @@ public:
     ChannelBatch process_clocked_device(const gpu::BufferView& input,std::size_t valid_samples,
         std::uint64_t input_start,std::uint64_t first_center,std::size_t count,FrontendTimings* timings=nullptr);
     std::size_t input_capacity() const;
+    // Exact ORIGINAL ADC support needed by a corrected output interval.
+    // Live sources retain this halo until the consuming GPU work completes.
+    struct InputSupport {std::int64_t first,last;};
+    InputSupport input_support(std::uint64_t first_center,std::size_t count) const;
+    void update_clock(std::uint64_t first_center);
     unsigned interpolation_taps() const;
     std::size_t capacity() const;
+    std::uint32_t coordinate_rate() const; // Common grid; ceil(source rate / 8 MHz) * 8 MHz.
     std::uint64_t origin{}, output_count{}, produced{};
     std::uint32_t decimation{};
     std::size_t taps() const;

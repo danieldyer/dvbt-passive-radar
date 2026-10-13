@@ -1,10 +1,8 @@
 #version 450
 layout(local_size_x=64) in;
 layout(set=0,binding=0,std430) readonly buffer SourceRaw {vec2 source_raw[];};
-layout(set=0,binding=1,std430) readonly buffer SourceEqualized {vec2 source_equalized[];};
 layout(set=0,binding=2,std430) readonly buffer SourcePilots {vec2 source_pilots[];};
 layout(set=0,binding=3,std430) writeonly buffer Raw {vec2 raw[];};
-layout(set=0,binding=4,std430) writeonly buffer Equalized {vec2 equalized[];};
 layout(set=0,binding=5,std430) writeonly buffer Pilots {vec2 pilots[];};
 layout(set=0,binding=6,std430) readonly buffer Rows {uint rows[];};
 layout(push_constant) uniform Parameters {uint count;uint stride;uint destination;uint capacity;} pc;
@@ -13,6 +11,5 @@ void main() {
     if(i>=pc.count*6817)return;
     uint s=i/6817,k=i%6817,source=rows[s],destination=(pc.destination+s)%pc.capacity;
     raw[destination*6817+k]=source_raw[source*6817+k];
-    equalized[destination*6817+k]=source_equalized[source*6817+k];
     if(k<pc.stride)pilots[destination*pc.stride+k]=source_pilots[source*pc.stride+k];
 }

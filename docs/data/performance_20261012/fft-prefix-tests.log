@@ -1,0 +1,12 @@
+Test project /Users/danielrd/sources/dvbt_passive_radar/build/release
+    Start  7: matched_profiles_gpu
+1/2 Test  #7: matched_profiles_gpu .............   Passed   11.15 sec
+    Start 16: remodulation_gpu
+2/2 Test #16: remodulation_gpu .................   Passed    1.21 sec
+
+100% tests passed out of 2
+
+Label Time Summary:
+gpu    =  12.36 sec*proc (2 tests)
+
+Total Test time (real) =  12.37 sec

@@ -73,7 +73,7 @@ void GpuFocus::prepare(std::size_t rows){
     if(rows<8 || rows>10000)throw std::invalid_argument("Invalid CPI FFT plan shape");
     impl_->shape(rows);
 }
-DopplerMap GpuFocus::calculate(std::span<const C> values,std::size_t rows,double interval,double rf,double first_time,
+GpuFocus::Result GpuFocus::calculate_device(std::span<const C> values,std::size_t rows,double interval,double rf,double first_time,
                               FocusOptions options,ComputeTimings* timing,std::span<const double> information) {
     if(rows<8 || rows>10000 || values.size()!=2*rows*1024 || !std::isfinite(interval) || interval<=0 ||
        !std::isfinite(rf) || rf<100e6 || !std::isfinite(first_time) || !std::isfinite(options.doppler_hz) ||
@@ -87,8 +87,8 @@ DopplerMap GpuFocus::calculate(std::span<const C> values,std::size_t rows,double
     std::vector<float> weights(rows,1);
     if(!information.empty()){
         double total=0;
-        for(double value:information){if(!std::isfinite(value) || value<=0)throw std::invalid_argument("Invalid focusing information weight");total+=value;}
-        if(!std::isfinite(total))throw std::invalid_argument("Focusing information overflow");
+        for(double value:information){if(!std::isfinite(value) || value<0)throw std::invalid_argument("Invalid focusing information weight");total+=value;}
+        if(!std::isfinite(total) || total<=0)throw std::invalid_argument("No finite focusing information");
         for(std::size_t n=0;n<rows;++n)weights[n]=float(information[n]/total*rows);
     }
     auto& p=*impl_;p.shape(rows);p.kernel.upload<C>(0,values);p.kernel.upload<float>(9,weights);
@@ -127,7 +127,13 @@ DopplerMap GpuFocus::calculate(std::span<const C> values,std::size_t rows,double
         p.inverse->append(cmd,true);p.kernel.dispatch(cmd,*p.extract,push,((map.ranges+7)/8)*((push.count+7)/8)*64);p.kernel.barrier(cmd);
     }
     p.kernel.finish(cmd);
-    const auto* result=static_cast<const C*>(p.kernel.view(6).mapped);
-    map.values.assign(result,result+map.ranges*map.frequencies);return map;
+    return {std::move(map),p.kernel.view(6)};
+}
+DopplerMap GpuFocus::calculate(std::span<const C> values,std::size_t rows,double interval,double rf,double first_time,
+                              FocusOptions options,ComputeTimings* timing,std::span<const double> information) {
+    auto result=calculate_device(values,rows,interval,rf,first_time,options,timing,information);
+    const auto* data=static_cast<const C*>(result.values.mapped);
+    result.map.values.assign(data,data+result.map.ranges*result.map.frequencies);
+    return std::move(result.map);
 }
 }

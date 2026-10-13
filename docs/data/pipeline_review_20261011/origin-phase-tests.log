@@ -1,0 +1,16 @@
+Test project /Users/danielrd/sources/dvbt_passive_radar/build/release
+    Start 14: response_gpu
+1/4 Test #14: response_gpu .....................   Passed    0.67 sec
+    Start 28: phase_coordinates_gpu
+2/4 Test #28: phase_coordinates_gpu ............   Passed    0.84 sec
+    Start 29: receiver_phase_gpu
+3/4 Test #29: receiver_phase_gpu ...............   Passed    0.99 sec
+    Start 30: pipeline_phase_gpu
+4/4 Test #30: pipeline_phase_gpu ...............   Passed    1.00 sec
+
+100% tests passed out of 4
+
+Label Time Summary:
+gpu    =   3.50 sec*proc (4 tests)
+
+Total Test time (real) =   3.50 sec

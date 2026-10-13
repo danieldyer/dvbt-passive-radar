@@ -1,0 +1,7 @@
+Faded-carrier conditional direct origin error=3.84206e-05 samples
+Faded-carrier conditional direct origin error=6.28736e-05 samples
+Order 0: CPU/GPU max relative response error=0
+Order 1: CPU/GPU max relative response error=6.83152e-07
+Order 8: CPU/GPU max relative response error=1.07736e-05
+Order 32: CPU/GPU max relative response error=0.494026
+FAIL: GPU minimum-phase response differs from double-precision reference

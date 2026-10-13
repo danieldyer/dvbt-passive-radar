@@ -1,0 +1,10 @@
+Channel-grid interpolation: complex error=3.09194e-07, maximum full-band gain=1
+Small residual interpolation: complex error=4.87122e-06
+Five distinct channels, rate=1.00001: RMS error=4.29912e-06, max=3.36778e-07, relative phase=0.00107103 degrees, chunk error=1.75384e-07
+Five distinct channels, rate=1.00003: RMS error=4.17122e-06, max=8.85147e-07, relative phase=0.00115914 degrees, chunk error=6.16645e-08
+Five distinct channels, rate=1.001: RMS error=4.18968e-06, max=3.28113e-07, relative phase=0.000779811 degrees, chunk error=8.34041e-08
+Five distinct channels, rate=0.999: RMS error=4.16315e-06, max=3.23437e-07, relative phase=0.000785672 degrees, chunk error=7.64366e-08
+Clocked full-scale blocker maximum=-105.671 dBFS
+Supported-rate spectral synthesis: maximum complex error=8.58868e-07
+61 MS/s, five VHF channels, late seek and clock boundaries: max=1.1903e-06, chunk=1.42541e-07, differential phase=0.00359745 degrees
+61.44 MS/s, five VHF channels, late seek and clock boundaries: max=1.47659e-06, chunk=1.4491e-07, differential phase=0.00395219 degrees

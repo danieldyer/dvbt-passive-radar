@@ -1,0 +1,12 @@
+Faded-carrier conditional direct origin error=3.84206e-05 samples
+Faded-carrier conditional direct origin error=6.28736e-05 samples
+Order 0: CPU/GPU max relative response error=8.26568e-08
+Order 1: CPU/GPU max relative response error=2.90872e-07
+Order 8: CPU/GPU max relative response error=2.99432e-07
+Convergence gain=0.01 noise=0 relative response error=6.03296e-07
+Convergence gain=0.01 noise=0.003 relative response error=7.63145e-07
+Convergence gain=1 noise=0 relative response error=2.32614e-07
+Convergence gain=1 noise=0.003 relative response error=4.74271e-07
+Convergence gain=100 noise=0 relative response error=6.21967e-07
+Convergence gain=100 noise=0.003 relative response error=7.23717e-07
+Masks, all-pass rejection, explicit origin, independent gain phase and moving echo PASS; echo max error=4.61721e-07

@@ -95,9 +95,12 @@ WaveReader::WaveReader(const std::filesystem::path& path) : file_buffer_(64*1024
             const auto byte_rate = read_le<std::uint32_t>(file_);
             const auto align = read_le<std::uint16_t>(file_);
             const auto bits = read_le<std::uint16_t>(file_);
-            if (format != 3 || channels != 2 || align != 8 || bits != 32 ||
-                byte_rate != std::uint64_t(info.sample_rate)*8 || info.sample_rate == 0)
-                throw std::runtime_error("WAV must contain little-endian float32 stereo I,Q");
+            const bool floating=format==3 && align==8 && bits==32;
+            const bool integer=format==1 && align==4 && bits==16;
+            if ((!floating && !integer) || channels != 2 ||
+                byte_rate != std::uint64_t(info.sample_rate)*align || info.sample_rate == 0)
+                throw std::runtime_error("WAV must contain little-endian float32 or signed int16 stereo I,Q");
+            info.sample_bytes=align;
             format_seen = true;
         } else if (id == 0x61746164) {
             if (!format_seen) throw std::runtime_error("WAV data precedes format");
@@ -113,8 +116,8 @@ WaveReader::WaveReader(const std::filesystem::path& path) : file_buffer_(64*1024
                 bytes = length-pos;
                 info.wrapped_size = true;
             }
-            if (bytes > length-pos || bytes % 8) throw std::runtime_error("Invalid WAV data length");
-            info.samples = bytes/8;
+            if (bytes > length-pos || bytes % info.sample_bytes) throw std::runtime_error("Invalid WAV data length");
+            info.samples = bytes/info.sample_bytes;
             return;
         }
         file_.seekg(static_cast<std::streamoff>(pos + size + (size & 1)));
@@ -125,7 +128,17 @@ void WaveReader::read(std::uint64_t first, std::span<C> output) {
     if (first > info.samples || output.size() > info.samples-first)
         throw std::runtime_error("Read beyond WAV samples");
     file_.clear();
-    file_.seekg(static_cast<std::streamoff>(info.data_offset + first*8));
+    file_.seekg(static_cast<std::streamoff>(info.data_offset + first*info.sample_bytes));
+    if(info.sample_bytes==4) {
+        integer_samples_.resize(2*output.size());
+        if(!file_.read(reinterpret_cast<char*>(integer_samples_.data()),static_cast<std::streamsize>(output.size()*4)))
+            throw std::runtime_error("Short WAV sample read");
+        // Every int16 value is represented exactly in float32; power-of-two
+        // normalization preserves all ADC bits and introduces no quantization.
+        for(std::size_t i=0;i<output.size();++i)
+            output[i]={integer_samples_[2*i]*(1.f/32768),integer_samples_[2*i+1]*(1.f/32768)};
+        return;
+    }
     if (!file_.read(reinterpret_cast<char*>(output.data()),static_cast<std::streamsize>(output.size_bytes())))
         throw std::runtime_error("Short WAV sample read");
     // Integer reduction allows SIMD validation, including a partial final vector.
@@ -214,6 +227,37 @@ std::vector<C> Channelizer::next(ChannelizerTimings* timings) {
     return out;
 }
 
+std::vector<std::complex<double>> minimum_phase_basis(std::size_t bins,unsigned order) {
+    if(!bins || bins>8192 || order>32)throw std::invalid_argument("Invalid minimum-phase basis dimensions");
+    std::vector<std::complex<double>> basis((2*order+1)*bins);
+    for(unsigned d=0;d<=2*order;++d) {
+        auto column=std::span{basis}.subspan(d*bins,bins);
+        for(std::size_t k=0;k<bins;++k)column[k]=std::polar(1.,-tau*((d+1)/2)*(double(k)-double(bins/2))/8192)*
+            (d && !(d&1) ? std::complex<double>{0,1} : std::complex<double>{1,0});
+        // Reorthogonalised modified Gram-Schmidt on the occupied carriers.
+        // Fourier coordinates are not orthogonal on this partial band. Their
+        // conditioning, not lack of iterations, caused the cancellation floor.
+        for(unsigned pass=0;pass<2;++pass)for(unsigned previous=0;previous<d;++previous) {
+            const auto other=std::span{basis}.subspan(previous*bins,bins);
+            double projection=0;for(std::size_t k=0;k<bins;++k)projection+=column[k].real()*other[k].real();
+            projection/=bins;
+            for(std::size_t k=0;k<bins;++k)column[k]-=projection*other[k];
+        }
+        double norm=0;for(auto z:column)norm+=z.real()*z.real();
+        norm=std::sqrt(norm/bins);
+        if(!(norm>1e-12))throw std::invalid_argument("Rank-deficient minimum-phase basis");
+        for(auto& z:column)z/=norm;
+        double amplification=0;for(auto z:column)amplification+=std::norm(z);
+        // Phase continuation outside a partially observed Fourier band can be
+        // numerically unidentifiable even when the real columns are orthogonal.
+        // Reject models that lose half the float significand to that inversion;
+        // do not hide the problem by fitting a spurious phase or adding a ridge.
+        if(amplification/bins>1/std::numeric_limits<float>::epsilon())
+            throw std::invalid_argument("Minimum-phase order is numerically unidentifiable on the occupied band; reduce the order");
+    }
+    return basis;
+}
+
 ResponseFit fit_minimum_phase(std::span<const C> y, std::span<const C> x,
                              std::size_t bins, unsigned order, unsigned iterations) {
     if (y.size()!=x.size() || y.empty() || !bins || y.size()%bins || order>32 || !iterations)
@@ -239,18 +283,14 @@ ResponseFit fit_minimum_phase(std::span<const C> y, std::span<const C> x,
     struct Basis {std::size_t bins=0;unsigned order=99;std::vector<double> real,imag;};
     thread_local Basis basis;
     if(basis.bins!=bins || basis.order!=order) {
+        const auto orthogonal=minimum_phase_basis(bins,order);
         basis.bins=bins;basis.order=order;basis.real.resize(dimensions*bins);basis.imag.resize(dimensions*bins);
-        for(unsigned d=0;d<dimensions;++d)for(std::size_t k=0;k<bins;++k) {
-            const unsigned q=(d+1)/2;
-            const auto z=std::polar(1.0,-tau*q*(static_cast<double>(k)-static_cast<double>(bins/2))/8192.0)
-                * (d && !(d&1) ? std::complex<double>{0,1} : std::complex<double>{1,0});
-            basis.real[d*bins+k]=z.real();basis.imag[d*bins+k]=z.imag();
-        }
+        for(std::size_t i=0;i<orthogonal.size();++i){basis.real[i]=orthogonal[i].real();basis.imag[i]=orthogonal[i].imag();}
     }
     std::vector<double> coefficient(dimensions),target(bins),amplitude(bins,gain);
     coefficient[0]=std::log(gain);
     for(std::size_t k=0;k<bins;++k) target[k]=power[k]>1e-12 ? std::abs(cross[k])/power[k] : 0;
-    for(unsigned it=0;it<iterations;++it)for(unsigned d=0;d<dimensions;++d) {
+    for(unsigned it=0;it<iterations;++it){for(unsigned d=0;d<dimensions;++d) {
         const auto* real=basis.real.data()+d*bins;
         double numerator=0,denominator=1e-12;
         for(std::size_t k=0;k<bins;++k) {
@@ -261,6 +301,11 @@ ResponseFit fit_minimum_phase(std::span<const C> y, std::span<const C> x,
         const double update=std::clamp(numerator/denominator,-0.25,0.25);
         coefficient[d]+=update;
         for(std::size_t k=0;k<bins;++k)amplitude[k]*=std::exp(update*real[k]);
+    }
+        for(std::size_t k=0;k<bins;++k){double magnitude=0;
+            for(unsigned d=0;d<dimensions;++d)magnitude+=coefficient[d]*basis.real[d*bins+k];
+            amplitude[k]=std::exp(magnitude);
+        }
     }
     std::vector<std::complex<double>> h(bins);
     for(std::size_t k=0;k<bins;++k) {

@@ -27,6 +27,7 @@ void coordinates() {
     frame.carriers.count=2;
     for(unsigned i=0;i<2;++i) {
         auto& s=frame.symbols[i];s.window.sample=7000+i*length;s.window.phase=.7+i*.03;s.window.frequency_hz=-784.625;
+        s.source_offset_samples=.125+i*.001;s.source_rate_error=-.04e-6;
         s.channel=1;s.segment=4;s.modulo4=i;
     }
     std::vector<C> y(2*bins,C{.4f,-.7f}),x(2*bins,C{1,-1}),h(bins,C{.8f,.3f});
@@ -51,7 +52,7 @@ void coordinates() {
     rejects([&]{SarWriter duplicate(file.path,capture);},"Overwrote an existing archive");
     // Parse independently with byte counts specified in docs, not C++ structs.
     std::ifstream input(file.path,std::ios::binary);char magic[8];input.read(magic,8);
-    check(std::memcmp(magic,"DVBTSAR1",8)==0,"Wrong archive magic");
+    check(std::memcmp(magic,"DVBTSAR2",8)==0,"Wrong archive magic");
     check(read<std::uint32_t>(input)==24'000'000,"Wrong archived sample rate");
     input.seekg(48+2*24);char tag[4];input.read(tag,4);
     check(std::memcmp(tag,"CLCK",4)==0 && read<std::uint64_t>(input)==52,"Wrong clock record layout");
@@ -61,14 +62,23 @@ void coordinates() {
     input.read(tag,4);check(std::memcmp(tag,"SPEC",4)==0,"Missing spectra");
     const auto size=read<std::uint64_t>(input),begin=std::uint64_t(input.tellg());
     check(read<std::uint32_t>(input)==1 && read<std::uint32_t>(input)==4 && read<std::uint32_t>(input)==2,"Wrong batch identity");
-    input.seekg(begin+40+2*32+92);
+    input.seekg(begin+40+32);check(read<double>(input)==.125 && read<double>(input)==-.04e-6,"Archive lost source-clock coordinates");
+    input.seekg(begin+40+2*48+92);
     const auto response=read<C>(input);check(response==h[0],"Response serialization changed complex order");
-    input.seekg(begin+40+2*32+92+8*bins);
+    input.seekg(begin+40+2*48+92+8*bins);
     check(read<C>(input)==y[0],"Measurement serialization changed complex order");
-    input.seekg(begin+40+2*32+92+8*bins+16*2*bins+4*17);
+    input.seekg(begin+40+2*48+92+8*bins+16*2*bins+4*17);
     check(read<std::uint32_t>(input)==0,"Invalid reference became valid");
     input.seekg(begin+size);input.read(tag,4);
     check(std::memcmp(tag,"DONE",4)==0 && read<std::uint64_t>(input)==8 && read<std::uint64_t>(input)==1,"Archive framing/termination failed");
+    auto rational=capture;rational.input_rate=64'000'000;rational.source_rate=61'000'000;rational.decimation=8;
+    const std::vector<ClockSegment> nominal{{}};
+    const SarBatch converted(rational,spectra,nominal);
+    check(converted.seconds(0)==double(rational.origin+56000)/64'000'000,"Nominal rate conversion changed capture time");
+    check(converted.original_adc(0,100)==double(rational.origin+56800)*61/64,"SAR handoff lost original 61 MS/s ADC coordinates");
+    Temporary rate_file;SarWriter rate_writer(rate_file.path,rational);rate_writer.write(converted);rate_writer.finish();
+    std::ifstream rate_input(rate_file.path,std::ios::binary);rate_input.seekg(48+2*24);rate_input.read(tag,4);
+    check(std::memcmp(tag,"SRAT",4)==0 && read<std::uint64_t>(rate_input)==4 && read<std::uint32_t>(rate_input)==61'000'000,"Archive lost rational source rate");
     std::cout<<"Physical coordinates, large epoch, in-window warp, RF/CFO distinction, archive: PASS\n";
 }
 struct ConsumerFailure : std::runtime_error {ConsumerFailure():std::runtime_error("injected consumer failure") {}};

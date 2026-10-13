@@ -1,6 +1,7 @@
 #include "cpu_fec.hpp"
 #include "modem.hpp"
 #include "gpu_ofdm.hpp"
+#include <bit>
 #include <chrono>
 #include <cmath>
 namespace radar {
@@ -31,9 +32,9 @@ void CpuFec::demap(std::span<const C> carriers,unsigned mod,unsigned bits,std::s
         const auto index=gather[i];const auto label=labels[index/8];out[i]=label==255 ? 2 : (label>>(index%8))&1;
     }
 }
-FecBatch CpuFec::finish(const Tps& mode,FecTimings* timing) {
+FecBatch CpuFec::finish(std::span<const std::uint8_t> bits,const Tps& mode,FecTimings* timing) {
     auto start=timing ? Clock::now() : Clock::time_point{};
-    const auto bytes=viterbi_.decode(bits_,mode.rate);
+    const auto bytes=viterbi_.decode(bits,mode.rate);
     if(timing){timing->viterbi+=seconds(start);start=Clock::now();}
     packets_.resize(bytes.size()/204>11 ? bytes.size()/204-11 : 0);
     for(std::size_t p=0;p<packets_.size();++p) {
@@ -45,15 +46,22 @@ FecBatch CpuFec::finish(const Tps& mode,FecTimings* timing) {
     }
     if(timing)timing->reed_solomon+=seconds(start);
     const auto pattern=fec::puncture_pattern(mode.rate);
-    return {packets_,packets_.size(),bits_.size()/std::count(pattern.begin(),pattern.end(),1U)*(pattern.size()/2)};
+    return {packets_,packets_.size(),bits.size()/std::count(pattern.begin(),pattern.end(),1U)*(pattern.size()/2)};
 }
 FecBatch CpuFec::decode(std::span<const Symbol> symbols,const Tps& mode,const Modem& tables,FecTimings* timing) {
     const auto start=timing ? Clock::now() : Clock::time_point{};configure(symbols.size(),mode,tables);
     for(std::size_t s=0;s<symbols.size();++s)demap(symbols[s].equalized,symbols[s].modulo4,2+2*mode.constellation,s);
     if(timing)timing->demap+=seconds(start);
-    return finish(mode,timing);
+    return finish(bits_,mode,timing);
 }
 FecBatch CpuFec::decode(const OfdmBatch& batch,const Tps& mode,const Modem& tables,FecTimings* timing) {
+    if(batch.coded_bits.bytes){
+        const auto count=batch.count*6048*qam_bits(mode);
+        if(batch.count>1020 || !batch.coded_bits.mapped || batch.coded_bits.bytes<count)
+            throw std::invalid_argument("Invalid resident hard-decision batch");
+        static_assert(std::endian::native==std::endian::little);
+        return finish({static_cast<const std::uint8_t*>(batch.coded_bits.mapped),count},mode,timing);
+    }
     const auto start=timing ? Clock::now() : Clock::time_point{};configure(batch.count,mode,tables);
     if(batch.count && (!batch.equalized.mapped || !batch.pilots.mapped || batch.pilot_stride<2 ||
         batch.equalized.bytes<batch.count*6817*sizeof(C) || batch.pilots.bytes<batch.count*batch.pilot_stride*sizeof(C)))
@@ -62,6 +70,6 @@ FecBatch CpuFec::decode(const OfdmBatch& batch,const Tps& mode,const Modem& tabl
     const auto* carriers=static_cast<const C*>(batch.equalized.mapped);
     for(std::size_t s=0;s<batch.count;++s)demap({carriers+s*6817,6817},std::bit_cast<std::uint32_t>(stats[s*batch.pilot_stride].real()),2+2*mode.constellation,s);
     if(timing)timing->demap+=seconds(start);
-    return finish(mode,timing);
+    return finish(bits_,mode,timing);
 }
 }

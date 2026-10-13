@@ -1,0 +1,38 @@
+[
+  {
+    "path": "build/live-fix-hardware-20261011/capture/summary.json",
+    "received_samples": 2452619264,
+    "overflows": 0,
+    "missing_samples": 0,
+    "processing_speed": 1.2953828203492443,
+    "rs_bad": 0,
+    "maps": 135
+  },
+  {
+    "path": "build/live-fix-hardware-clock-20261011/capture/summary.json",
+    "received_samples": 2344353792,
+    "overflows": 161,
+    "missing_samples": 110530808,
+    "processing_speed": 1.20862187402712,
+    "rs_bad": 0,
+    "maps": 0
+  },
+  {
+    "path": "build/live-fix-hardware-final-20261011/capture/summary.json",
+    "received_samples": 2453405696,
+    "overflows": 0,
+    "missing_samples": 0,
+    "processing_speed": 1.322515175359307,
+    "rs_bad": 0,
+    "maps": 135
+  },
+  {
+    "path": "build/live-fix-hardware-gls-20261011/capture/summary.json",
+    "received_samples": 2448687104,
+    "overflows": 8,
+    "missing_samples": 4801373,
+    "processing_speed": 1.3013299107600158,
+    "rs_bad": 0,
+    "maps": 123
+  }
+]

@@ -3,44 +3,28 @@ layout(local_size_x=64) in;
 layout(set=0,binding=0,std430) readonly buffer Measured {vec2 y[];};
 layout(set=0,binding=1,std430) readonly buffer Reference {vec2 x[];};
 layout(set=0,binding=2,std430) readonly buffer Valid {uint valid[];};
-layout(set=0,binding=3,std430) readonly buffer Response {vec2 h[];};
-layout(set=0,binding=4,std430) readonly buffer Modes {vec2 modes[];};
 layout(set=0,binding=5,std430) writeonly buffer Applied {float applied[];};
 layout(set=0,binding=6,std430) buffer History {float history[];};
-layout(set=0,binding=7,std430) writeonly buffer Current {float current[];};
+layout(set=0,binding=7,std430) writeonly buffer Training {vec4 training[];};
 layout(push_constant) uniform Parameters {uint first;uint last;uint ready;uint unused;} pc;
 vec2 mul(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
 void main() {
     uint k=gl_GlobalInvocationID.x;if(k>=6817)return;
-    float sums[8],weights[8];for(uint j=0;j<8;++j){sums[j]=0;weights[j]=0;}
-    vec2 previous=vec2(0);float previous_power=0;bool available=false;
-    vec2 mean=vec2(0);float count=0,spread=0,inverse_power=0;
+    vec2 mean=vec2(0);float power=0,count=0,scatter=0;
     for(uint row=pc.first;row<pc.last;++row) {
         uint i=row*6817+k;float p=dot(x[i],x[i]);
-        if(valid[i]==0 || p<=0){available=false;continue;}
-        float u=(int(k)-3408)/8192.0;vec2 b=modes[row*2+1];
-        vec2 nuisance=mul(h[k],modes[row*2]+u*vec2(-b.y,b.x));
-        vec2 r=mul(y[i],vec2(x[i].x,-x[i].y))/p-nuisance;
-        // Stable whole-batch variance catches slow interference on a fixed
-        // pilot, where an adjacent difference alone can severely undercount it.
-        count+=1;vec2 delta=r-mean;mean+=delta/count;
-        spread+=dot(delta,delta)*(1-1/count);inverse_power+=1/p;
-        if(available) {
-            uint bucket=min(7,(row-pc.first)*8/(pc.last-pc.first));vec2 d=r-previous;
-            sums[bucket]+=dot(d,d);weights[bucket]+=1/p+1/previous_power;
-        }
-        previous=r;previous_power=p;available=true;
+        if(valid[i]==0 || p<=0)continue;
+        vec2 r=mul(y[i],vec2(x[i].x,-x[i].y))/p;
+        float total=power+p;vec2 delta=r-mean;
+        mean+=delta*(p/total);scatter+=dot(delta,delta)*p*(power/total);
+        power=total;count+=1;
     }
-    // Median of eight block estimates limits the influence of transient bursts.
-    float v[8];for(uint j=0;j<8;++j)v[j]=sums[j]/max(weights[j],1e-30);
-    for(uint j=1;j<8;++j){float value=v[j];int at=int(j)-1;while(at>=0 && v[at]>value){v[at+1]=v[at];--at;}v[at+1]=value;}
-    float estimate=max(.5*(v[3]+v[4]),1e-30);
-    float temporal=count>1 ? spread*count/((count-1)*inverse_power) : estimate;
-    if(temporal>2*estimate)estimate=temporal;
-    current[k]=estimate;
-    float prior=pc.ready!=0 ? history[k] : estimate;
-    // Host regularization retains this earlier spectral shape, tracks the
-    // robust current level, and conservatively raises newly noisy carriers.
-    applied[k]=prior;
-    history[k]=pc.ready!=0 ? .5*prior+.5*estimate : estimate;
+    float prior=pc.ready!=0 ? history[k] : 1e-30;
+    // Source-conditioned WLS removes one complex, stationary carrier transfer.
+    // E[sum(p*|r-mean|^2)] = (count-1)*D for independent innovations D/p.
+    // Other phase/gain/timing variation remains in the estimate: it must not be
+    // silently projected away while still present in the primary observations.
+    float estimate=count>1 ? max(scatter/(count-1),1e-30) : prior;
+    applied[k]=pc.ready!=0 ? prior : estimate;history[k]=estimate;
+    training[k]=vec4(mean,count>1 ? power : 0,estimate);
 }

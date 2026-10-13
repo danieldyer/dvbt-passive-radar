@@ -1,0 +1,27 @@
+#version 450
+layout(local_size_x=64) in;
+layout(binding=5) readonly buffer Samples {vec2 samples[];};
+layout(binding=10) readonly buffer SourceClock {vec4 coordinate[];};
+layout(binding=11) writeonly buffer Prefix {vec2 prefix[];};
+layout(push_constant) uniform Parameters {uint start,count,total,capacity,guard;int origin;float fraction,gain;uint cancel_direct,output_count,output_first,size;} p;
+void main(){
+    uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
+    uint stride=p.capacity*p.size;if(i>=3*stride)return;
+    uint plane=i/stride,row=(i%stride)/p.size,j=i%p.size;
+    vec2 value=vec2(0);
+    if(row<p.count){
+        int cp=int(8192/p.guard),end=max(0,int(coordinate[p.start+row].x)+928-cp);
+        if(plane<2 && j<uint(end)){
+            value=samples[(p.capacity+row+2)*8192+j];
+            if(plane==1)value*=((float(j)-4095.5)/8192);
+        }else if(plane==2 && j>0 && j<=uint(end)){
+            float delta=coordinate[p.start+row-1].y-coordinate[p.start+row].y;
+            int shift=int(floor(delta));float fraction=delta-float(shift);
+            uint previous=uint((8192-int(j)+shift+8192)%8192);
+            vec2 reference=mix(samples[row*8192+previous],samples[row*8192+(previous+1)%8192],fraction);
+            vec2 difference=reference-samples[(row+1)*8192+8192-uint(cp)-j];
+            value=vec2(difference.x,-difference.y);
+        }
+    }
+    prefix[i]=value;
+}

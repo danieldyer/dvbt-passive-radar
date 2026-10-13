@@ -1,0 +1,13 @@
+{
+  "rate_hz": 64000000,
+  "samples": 640057344,
+  "seconds": 10.000896,
+  "format": "stereo int16 I/Q WAV",
+  "channels": 5,
+  "mode": "7 MHz DVB-T, 8K, 64-QAM, 3/4, GI 1/16",
+  "independent_synthesis": "support/live/simulate_capture.cpp",
+  "echoes": false,
+  "requested_capture_rate_hz": 61440000,
+  "applied_simulated_rate_hz": 64000000,
+  "hardware_tested": false
+}

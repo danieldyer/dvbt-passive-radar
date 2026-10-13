@@ -1,0 +1,155 @@
+{
+  "awgn-detail.csv": {
+    "conditions": 39,
+    "packets": 1056276,
+    "rejected": 390001,
+    "wrong_accepted": 2,
+    "coded_bits": 2309658624,
+    "coded_errors": 54823147,
+    "radius_violation": 0
+  },
+  "awgn.csv": {
+    "conditions": 195,
+    "packets": 3402984,
+    "rejected": 1268662,
+    "wrong_accepted": 2
+  },
+  "burst-tail.csv": {
+    "conditions": 5,
+    "packets": 203460,
+    "rejected": 2268,
+    "wrong_accepted": 0,
+    "coded_bits": 444165120,
+    "coded_errors": 339254,
+    "radius_violation": 0
+  },
+  "burst.csv": {
+    "conditions": 39,
+    "packets": 1056276,
+    "rejected": 409345,
+    "wrong_accepted": 2,
+    "coded_bits": 2309658624,
+    "coded_errors": 66617323,
+    "radius_violation": 0
+  },
+  "clean-all-modes.csv": {
+    "conditions": 15,
+    "packets": 65442,
+    "rejected": 0,
+    "wrong_accepted": 0
+  },
+  "f1.csv": {
+    "conditions": 39,
+    "packets": 1056276,
+    "rejected": 463080,
+    "wrong_accepted": 0,
+    "coded_bits": 2309658624,
+    "coded_errors": 69204137,
+    "radius_violation": 0
+  },
+  "frame-echo-all-modes.csv": {
+    "conditions": 15,
+    "packets": 261768,
+    "rejected": 0,
+    "wrong_accepted": 0,
+    "coded_bits": 592220160,
+    "coded_errors": 0,
+    "radius_violation": 0
+  },
+  "frame-echo-clean.csv": {
+    "conditions": 1,
+    "packets": 13564,
+    "rejected": 0,
+    "wrong_accepted": 0,
+    "coded_bits": 29611008,
+    "coded_errors": 0,
+    "radius_violation": 0
+  },
+  "frame-echo-final.csv": {
+    "conditions": 15,
+    "packets": 261768,
+    "rejected": 0,
+    "wrong_accepted": 0,
+    "coded_bits": 592220160,
+    "coded_errors": 0,
+    "radius_violation": 0
+  },
+  "frame-f1.csv": {
+    "conditions": 8,
+    "packets": 434048,
+    "rejected": 145423,
+    "wrong_accepted": 1,
+    "coded_bits": 947552256,
+    "coded_errors": 15645713,
+    "radius_violation": 0
+  },
+  "frame-p1.csv": {
+    "conditions": 7,
+    "packets": 379792,
+    "rejected": 87552,
+    "wrong_accepted": 0,
+    "coded_bits": 829108224,
+    "coded_errors": 11321437,
+    "radius_violation": 0
+  },
+  "gpu-clean.csv": {
+    "conditions": 15,
+    "packets": 65442,
+    "rejected": 0,
+    "wrong_accepted": 0
+  },
+  "gpu-echo-clean.csv": {
+    "conditions": 1,
+    "packets": 6782,
+    "rejected": 6782,
+    "wrong_accepted": 0,
+    "coded_bits": 14805504,
+    "coded_errors": 931876,
+    "radius_violation": 0
+  },
+  "gpu-f1.csv": {
+    "conditions": 8,
+    "packets": 434048,
+    "rejected": 152703,
+    "wrong_accepted": 1,
+    "coded_bits": 947552256,
+    "coded_errors": 16242834,
+    "radius_violation": 0
+  },
+  "gpu-p1-clean.csv": {
+    "conditions": 15,
+    "packets": 65442,
+    "rejected": 0,
+    "wrong_accepted": 0,
+    "coded_bits": 148055040,
+    "coded_errors": 13318,
+    "radius_violation": 0
+  },
+  "high-snr-all-modes.csv": {
+    "conditions": 15,
+    "packets": 2094144,
+    "rejected": 0,
+    "wrong_accepted": 0,
+    "coded_bits": 0,
+    "coded_errors": 0,
+    "radius_violation": 0
+  },
+  "known-echo-clean.csv": {
+    "conditions": 1,
+    "packets": 54256,
+    "rejected": 0,
+    "wrong_accepted": 0,
+    "coded_bits": 118444032,
+    "coded_errors": 0,
+    "radius_violation": 0
+  },
+  "p1.csv": {
+    "conditions": 39,
+    "packets": 1056276,
+    "rejected": 413028,
+    "wrong_accepted": 2,
+    "coded_bits": 2309658624,
+    "coded_errors": 48805302,
+    "radius_violation": 0
+  }
+}

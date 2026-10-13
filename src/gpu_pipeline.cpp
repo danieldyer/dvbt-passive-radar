@@ -30,7 +30,7 @@ struct GpuPipeline::Impl {
     std::unique_ptr<FrameDecoder> decoder;
     Impl(const GpuPipelineConfig& c,std::shared_ptr<gpu::Context> ctx,std::shared_ptr<SampleClock> shared_clock):config(c),context(std::move(ctx)),clock(std::move(shared_clock)),
         receiver(tables.pilot_pattern(),c.guards,c.max_samples,context),
-        frames(c.guards,context),reconstruction(context),response(context),origins(c.guards.size()) {
+        frames(c.guards,context,c.frames_per_batch),reconstruction(context),response(context),origins(c.guards.size()) {
         if(c.response_order>32 || !std::isfinite(c.reference_delay))throw std::invalid_argument("Invalid GPU response configuration");
         const unsigned count=c.fec_workers ? c.fec_workers : std::min<unsigned>(c.guards.size(),std::max(1U,std::thread::hardware_concurrency()));
         const unsigned slots=c.frame_slots ? c.frame_slots : count+2;
@@ -44,15 +44,19 @@ struct GpuPipeline::Impl {
         const auto reference=reconstruction.reconstruct(decoded,frame.frames,tables,measured ? &timing.reconstruction : nullptr,&commands);
         auto& origin=origins[frame.channel];
         if(origin.segment!=frame.segment)origin={frame.segment,fft_window_margin+config.reference_delay,!config.automatic_origin};
+        std::vector<double> offsets;offsets.reserve(frame.symbols.size());
+        for(const auto& symbol:frame.symbols)offsets.push_back(symbol.source_offset_samples);
         auto fit=[&]{return response.fit(frame.carriers.measured,reference,origin.value,config.response_order,16,
-                                        measured ? &timing.response : nullptr,&commands);};
+                                        measured ? &timing.response : nullptr,&commands,offsets);};
         auto estimate=fit();
         if(!origin.ready) {
             commands.wait();GpuResponse::read_diagnostics(estimate);
             origin.value+=GpuResponse::direct_origin_adjustment(estimate);origin.ready=true;estimate=fit();
         }
-        const auto residual=response.apply(frame.carriers.measured,reference,estimate,measured ? &timing.response : nullptr,&commands);
+        const auto residual=response.apply(frame.carriers.measured,reference,estimate,measured ? &timing.response : nullptr,&commands,config.residual_spectra);
         commands.wait();GpuResponse::read_diagnostics(estimate);
+        receiver.pilot_variance(frame.channel,frame.symbols.back().window.sample,
+            {static_cast<const float*>(estimate.innovation_variance.mapped),6817});
         consume({frame,decoded,reference,estimate,residual});
     }
     void collect_one(const Consume& consume,bool measured) {
@@ -79,11 +83,20 @@ struct GpuPipeline::Impl {
         if(!output)return;
         timing.receiver.detailed=output->receiver.detailed;timing.frames.detailed=output->frames.detailed;
         timing.reconstruction.detailed=output->reconstruction.detailed;timing.response.detailed=output->response.detailed;
+        timing.receiver.timestamp_queries=output->receiver.timestamp_queries;timing.frames.timestamp_queries=output->frames.timestamp_queries;
+        timing.reconstruction.timestamp_queries=output->reconstruction.timestamp_queries;timing.response.timestamp_queries=output->response.timestamp_queries;
     }
 };
 GpuPipeline::GpuPipeline(const GpuPipelineConfig& config,std::shared_ptr<gpu::Context> context,std::shared_ptr<SampleClock> clock):
     impl_(std::make_unique<Impl>(config,std::move(context),std::move(clock))){}
 GpuPipeline::~GpuPipeline()=default;
+std::vector<ReceiverStatus> GpuPipeline::status() const {return impl_->receiver.status();}
+void GpuPipeline::reset(){
+    auto& p=*impl_;if(!p.decoder->empty())throw std::logic_error("Drain the pipeline before resetting");
+    p.receiver.reset();p.frames.reset();p.origins.assign(p.origins.size(),Impl::Origin{});
+    if(p.clock)for(std::size_t c=0;c<p.config.guards.size();++c)p.clock->reset_observer(c);
+    p.timing={};p.reported={};
+}
 void GpuPipeline::process(const ChannelBatch& input,const Consume& consume,GpuPipelineTimings* timing) {
     auto& p=*impl_;p.detail(timing);
     p.collect(consume,false,timing!=nullptr);

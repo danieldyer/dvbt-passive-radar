@@ -37,7 +37,7 @@ class CpuFec {
     int constellation_=-1;
     void configure(std::size_t count,const Tps&,const Modem&);
     void demap(std::span<const std::complex<float>>,unsigned modulo4,unsigned bits,std::size_t symbol);
-    FecBatch finish(const Tps&,FecTimings*);
+    FecBatch finish(std::span<const std::uint8_t>,const Tps&,FecTimings*);
 public:
     FecBatch decode(std::span<const Symbol>,const Tps&,const Modem&,FecTimings* =nullptr);
     // OFDM submissions must have completed and the buffers must be host coherent.

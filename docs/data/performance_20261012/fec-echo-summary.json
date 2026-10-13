@@ -1,0 +1,13 @@
+{
+  "conditions": 15,
+  "totals": {
+    "packets": 261768,
+    "rejected": 0,
+    "wrong_accepted": 0,
+    "coded_bits": 592220160,
+    "coded_errors": 0,
+    "trellis_errors": 0,
+    "radius_violation": 0
+  },
+  "identical_to_pre_optimization": true
+}

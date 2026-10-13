@@ -1,0 +1,73 @@
+Warming OFDM, FEC and reconstruction before starting the receive stream...
+DVB-T live capture  |  SIMULATION  |  1.01 s  |  Ctrl-C stops
+RX 64.00 MS/s  center 202.00 MHz  gain 30.00 dB  BW 56.00 MHz  RX2
+Received 64225280  missing 0  host discarded 0  unquantified 0
+Overflows 0  sequence errors 0  timeouts 0  timestamp gaps 0  segments 1
+Capture queue 11.28 / 524.29 ms  |  DSP 4.18 x realtime  |  backlog age 11.28 ms
+Shared clock 0.00 ppm  segments 33  phase budget 3.00 deg
+Archive channels  307.21 MB  queued 10.24 MB
+CHANNEL    LOCK     CFO Hz   drift ppm  timing ns  RMS ns  phase RMS deg  pilots  RS pass   rows / resets / maps
+seven    TRACK         0.00       -0.00       0.00    0.00           0.01    1.00    0.00%  0 / 0 / 0
+           ADC estimate -0.00 ppm  fit RMS 0.00 ns  750 observations / 0.81 s  contributor yes  pilot SNR 60.00 dB
+           TPS/FEC pending  valid rows 0  corrected RS bytes 0  invalid words 0  response error 0.00  last map 0.00 s
+sbs      TRACK         0.00       -0.00       0.00    0.00           0.00    1.00    0.00%  0 / 0 / 0
+           ADC estimate 0.00 ppm  fit RMS 0.00 ns  750 observations / 0.81 s  contributor yes  pilot SNR 60.00 dB
+           TPS/FEC pending  valid rows 0  corrected RS bytes 0  invalid words 0  response error 0.00  last map 0.00 s
+nine     TRACK        -0.00        0.00       0.00    0.00           0.01    1.00    0.00%  0 / 0 / 0
+           ADC estimate -0.00 ppm  fit RMS 0.00 ns  750 observations / 0.81 s  contributor yes  pilot SNR 60.00 dB
+           TPS/FEC pending  valid rows 0  corrected RS bytes 0  invalid words 0  response error 0.00  last map 0.00 s
+ten      TRACK         0.00        0.00       0.00    0.00           0.01    1.00    0.00%  0 / 0 / 0
+           ADC estimate -0.00 ppm  fit RMS 0.00 ns  750 observations / 0.81 s  contributor yes  pilot SNR 60.00 dB
+           TPS/FEC pending  valid rows 0  corrected RS bytes 0  invalid words 0  response error 0.00  last map 0.00 s
+abc      TRACK        -0.00        0.00       0.00    0.00           0.00    1.00    0.00%  0 / 0 / 0
+           ADC estimate -0.00 ppm  fit RMS 0.00 ns  750 observations / 0.81 s  contributor yes  pilot SNR 60.00 dB
+           TPS/FEC pending  valid rows 0  corrected RS bytes 0  invalid words 0  response error 0.00  last map 0.00 s
+CPU FEC workers summed 0.00 ms/input-s
+DVB-T live capture  |  SIMULATION  |  2.01 s  |  Ctrl-C stops
+RX 64.00 MS/s  center 202.00 MHz  gain 30.00 dB  BW 56.00 MHz  RX2
+Received 128450560  missing 0  host discarded 0  unquantified 0
+Overflows 0  sequence errors 0  timeouts 0  timestamp gaps 0  segments 1
+Capture queue 22.80 / 524.29 ms  |  DSP 3.20 x realtime  |  backlog age 22.80 ms
+Shared clock -0.00 ppm  segments 64  phase budget 3.00 deg
+Archive channels  634.89 MB  queued 0.00 MB
+CHANNEL    LOCK     CFO Hz   drift ppm  timing ns  RMS ns  phase RMS deg  pilots  RS pass   rows / resets / maps
+seven    TRACK         0.00        0.00       0.00    0.00           0.00    1.00  100.00%  952 / 0 / 0
+           ADC estimate -0.00 ppm  fit RMS 0.00 ns  920 observations / 1.00 s  contributor yes  pilot SNR 60.00 dB
+           QAM 64 rate 3/4  valid rows 951  corrected RS bytes 0  invalid words 0  response error 0.00  last map 0.00 s
+sbs      TRACK         0.00        0.00       0.00    0.00           0.00    1.00  100.00%  952 / 0 / 0
+           ADC estimate -0.00 ppm  fit RMS 0.00 ns  920 observations / 1.00 s  contributor yes  pilot SNR 60.00 dB
+           QAM 64 rate 3/4  valid rows 951  corrected RS bytes 0  invalid words 0  response error 0.00  last map 0.00 s
+nine     TRACK         0.00       -0.00       0.00    0.00           0.00    1.00  100.00%  952 / 0 / 0
+           ADC estimate 0.00 ppm  fit RMS 0.00 ns  920 observations / 1.00 s  contributor yes  pilot SNR 60.00 dB
+           QAM 64 rate 3/4  valid rows 951  corrected RS bytes 0  invalid words 0  response error 0.00  last map 0.00 s
+ten      TRACK        -0.00       -0.00      -0.00    0.00           0.00    1.00  100.00%  952 / 0 / 0
+           ADC estimate 0.00 ppm  fit RMS 0.00 ns  920 observations / 1.00 s  contributor yes  pilot SNR 60.00 dB
+           QAM 64 rate 3/4  valid rows 951  corrected RS bytes 0  invalid words 0  response error 0.00  last map 0.00 s
+abc      TRACK         0.00        0.00       0.00    0.00           0.00    1.00  100.00%  952 / 0 / 0
+           ADC estimate -0.00 ppm  fit RMS 0.00 ns  920 observations / 1.00 s  contributor yes  pilot SNR 60.00 dB
+           QAM 64 rate 3/4  valid rows 951  corrected RS bytes 0  invalid words 0  response error 0.00  last map 0.00 s
+CPU FEC workers summed 359.60 ms/input-s
+DVB-T live capture  |  SIMULATION  |  2.22 s  |  Ctrl-C stops
+RX 64.00 MS/s  center 202.00 MHz  gain 30.00 dB  BW 56.00 MHz  RX2
+Received 128712704  missing 0  host discarded 0  unquantified 0
+Overflows 0  sequence errors 0  timeouts 0  timestamp gaps 0  segments 1
+Capture queue 0.02 / 524.29 ms  |  DSP 2.43 x realtime  |  backlog age 0.02 ms
+Shared clock -0.00 ppm  segments 65  phase budget 3.00 deg
+Archive channels  643.49 MB  queued 0.00 MB
+CHANNEL    LOCK     CFO Hz   drift ppm  timing ns  RMS ns  phase RMS deg  pilots  RS pass   rows / resets / maps
+seven    TRACK         0.00       -0.00       0.00    0.00           0.00    1.00  100.00%  1632 / 0 / 0
+           ADC estimate 0.00 ppm  fit RMS 0.00 ns  920 observations / 1.00 s  contributor yes  pilot SNR 60.00 dB
+           QAM 64 rate 3/4  valid rows 1630  corrected RS bytes 0  invalid words 0  response error 0.00  last map 0.00 s
+sbs      TRACK        -0.00        0.00       0.00    0.00           0.00    1.00  100.00%  1632 / 0 / 0
+           ADC estimate -0.00 ppm  fit RMS 0.00 ns  920 observations / 1.00 s  contributor yes  pilot SNR 60.00 dB
+           QAM 64 rate 3/4  valid rows 1630  corrected RS bytes 0  invalid words 0  response error 0.00  last map 0.00 s
+nine     TRACK         0.00       -0.00      -0.00    0.00           0.00    1.00  100.00%  1632 / 0 / 0
+           ADC estimate 0.00 ppm  fit RMS 0.00 ns  920 observations / 1.00 s  contributor yes  pilot SNR 60.00 dB
+           QAM 64 rate 3/4  valid rows 1630  corrected RS bytes 0  invalid words 0  response error 0.00  last map 0.00 s
+ten      TRACK        -0.00       -0.00       0.00    0.00           0.00    1.00  100.00%  1632 / 0 / 0
+           ADC estimate -0.00 ppm  fit RMS 0.00 ns  920 observations / 1.00 s  contributor yes  pilot SNR 60.00 dB
+           QAM 64 rate 3/4  valid rows 1630  corrected RS bytes 0  invalid words 0  response error 0.00  last map 0.00 s
+abc      TRACK        -0.00        0.00       0.00    0.00           0.00    1.00  100.00%  1632 / 0 / 0
+           ADC estimate 0.00 ppm  fit RMS 0.00 ns  920 observations / 1.00 s  contributor yes  pilot SNR 60.00 dB
+           QAM 64 rate 3/4  valid rows 1630  corrected RS bytes 0  invalid words 0  response error 0.00  last map 0.00 s
+CPU FEC workers summed 596.12 ms/input-s

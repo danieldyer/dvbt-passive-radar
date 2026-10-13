@@ -10,6 +10,7 @@
 #include <cmath>
 #include <cstring>
 #include <numbers>
+#include <numeric>
 
 namespace radar {
 namespace {
@@ -54,7 +55,8 @@ float integer_bits(std::int64_t value) {
 }
 struct SpectralClock::Impl {
     static constexpr unsigned blocks=800,inverse_size=1024,stride=262144,response_size=65536;
-    unsigned rate,decimation,fft_size,guard,hop;
+    unsigned rate,source_rate,decimation,fft_size,guard,hop,raw_stride;
+    double source_ratio;
     bool touches_nyquist;
     std::vector<double> centres;
     ChannelClockInterpolator narrow;
@@ -68,11 +70,12 @@ struct SpectralClock::Impl {
     Plan forward,boundary_fft;
     struct Push {std::uint32_t fft_size,hop,decimation,count,channels,stride,input_count,guard;};
     Impl(std::uint32_t fs,std::span<const double> offsets,std::span<const float> prototype,
-         std::shared_ptr<gpu::Context> context)
-        : rate(fs),decimation(fs/8'000'000),fft_size(512*decimation),
-          touches_nyquist(std::ranges::any_of(offsets,[fs](double f){return std::abs(f)+3671875>fs/2.0;})),
+         std::shared_ptr<gpu::Context> context,std::uint32_t source)
+        : rate(fs),source_rate(source ? source : fs),decimation(fs/8'000'000),fft_size(512*decimation),
+          source_ratio(double(source_rate)/fs),
+          touches_nyquist(std::ranges::any_of(offsets,[this](double f){return std::abs(f)+3671875>source_rate/2.0;})),
           centres(offsets.begin(),offsets.end()),
-          raw((std::abs(*std::max_element(offsets.begin(),offsets.end(),[](double a,double b){return std::abs(a)<std::abs(b);}))+3328125)/fs),
+          raw((std::abs(*std::max_element(offsets.begin(),offsets.end(),[](double a,double b){return std::abs(a)<std::abs(b);}))+3328125)/source_rate),
           kernel(boundary_code,32,std::array<std::uint32_t,3>{raw.taps,fft_size,blocks},std::move(context)),
           synth(kernel.pipeline(synth_code,std::array<std::uint32_t,5>{fft_size,
               std::bit_cast<std::uint32_t>(float(SmallClockInterpolator::weights[0])),
@@ -83,6 +86,11 @@ struct SpectralClock::Impl {
         guard=unsigned(((prototype.size()/2+(narrow.taps/2+1)*decimation/2+72+decimation-1)/decimation)*decimation);
         hop=(fft_size-2*guard)/decimation;
         if(hop>=16)hop-=hop%16;
+        // Exact raw FFT stride for rational nominal rate conversion whenever
+        // a useful block fits; otherwise boundary synthesis handles the residue.
+        const auto alignment=std::lcm(16U,8'000'000/std::gcd(source_rate,8'000'000U));
+        if(alignment<=hop)hop-=hop%alignment;
+        raw_stride=unsigned(std::floor(double(hop)*decimation*source_ratio));
         if(2*guard>=fft_size || !hop)throw std::runtime_error("Insufficient FFT support for spectral clock correction");
         forward_bytes=std::uint64_t(fft_size)*blocks*sizeof(C);
         input_bytes=(std::max<std::uint64_t>(stride,std::uint64_t(blocks)*hop)*decimation+fft_size+8192)*sizeof(C);
@@ -94,7 +102,7 @@ struct SpectralClock::Impl {
         config.buffer=&forward_buffer;config.bufferSize=&forward_bytes;config.makeForwardPlanOnly=1;config.useLUT=1;
         config.specifyOffsetsAtLaunch=1;
         config.isInputFormatted=1;config.inputBuffer=&input_buffer;config.inputBufferSize=&input_bytes;
-        config.inputBufferStride[0]=hop*decimation;
+        config.inputBufferStride[0]=raw_stride;
         forward.initialize(config);
         config.isInputFormatted=0;config.numberBatches=touches_nyquist ? blocks : 1;
         boundary_fft.initialize(config);
@@ -117,8 +125,8 @@ struct SpectralClock::Impl {
     }
 };
 SpectralClock::SpectralClock(std::uint32_t rate,std::span<const double> centres,
-    std::span<const float> prototype,std::shared_ptr<gpu::Context> context)
-    : impl_(std::make_unique<Impl>(rate,centres,prototype,std::move(context))) {}
+    std::span<const float> prototype,std::shared_ptr<gpu::Context> context,std::uint32_t source_rate)
+    : impl_(std::make_unique<Impl>(rate,centres,prototype,std::move(context),source_rate)) {}
 SpectralClock::~SpectralClock()=default;
 C* SpectralClock::input_data(std::size_t count) {
     if(count>impl_->input_bytes/sizeof(C))throw std::runtime_error("Spectral clock input exceeds batch support");
@@ -152,7 +160,13 @@ void SpectralClock::process(const gpu::BufferView& samples,std::size_t valid_sam
         return it==clock.begin() ? it : it-1;
     };
     auto source_at=[&](std::uint64_t n) {
-        return std::int64_t(n)-std::int64_t(input_start)+segment_at(n)->offset_at(double(n));
+        // Exact integer quotient/remainder before subtracting the buffer epoch:
+        // nominal rational conversion must not discard fractional samples at a
+        // large recording index, or introduce differential RF phase errors.
+        const auto product=(n%p.rate)*std::uint64_t(p.source_rate);
+        const auto integer=n/p.rate*p.source_rate+product/p.rate;
+        return double(std::int64_t(integer)-std::int64_t(input_start))+
+            double(product%p.rate)/p.rate+segment_at(n)->offset_at(double(n))*p.source_ratio;
     };
     if(source_at(first-p.guard)<p.raw.left ||
        std::floor(source_at(first+(count-1)*p.decimation+p.guard))+p.raw.taps-p.raw.left>double(valid_samples))
@@ -162,15 +176,15 @@ void SpectralClock::process(const gpu::BufferView& samples,std::size_t valid_sam
     const auto active=(count+p.hop-1)/p.hop;
     const auto middle=unsigned(active/2);
     const auto centre=first+std::uint64_t(middle)*p.hop*p.decimation;
-    const auto offset=segment_at(centre)->offset_at(double(centre));
-    const auto unaligned_base=std::max<std::int64_t>(0,std::int64_t(centre)-std::int64_t(input_start)+std::int64_t(std::floor(offset))-
-        p.guard-std::int64_t(middle)*p.hop*p.decimation);
+    const auto unaligned_base=std::max<std::int64_t>(0,std::int64_t(std::floor(source_at(centre)))-
+        p.guard-std::int64_t(middle)*p.raw_stride);
     const auto input_base=(unaligned_base+8)/16*16;
-    const auto padded=std::size_t(input_base)+(Impl::blocks-1)*p.hop*p.decimation+p.fft_size;
+    const auto padded=std::size_t(input_base)+(Impl::blocks-1)*p.raw_stride+p.fft_size;
     if(padded*sizeof(C)>p.input_bytes)throw std::runtime_error("Spectral clock FFT input exceeds batch support");
     for(unsigned c=0;c<p.centres.size();++c) {
-        const auto bin=std::int32_t(std::llround(p.centres[c]*p.fft_size/p.rate));
-        metadata[Impl::blocks+c]={std::bit_cast<float>(bin),float(p.centres[c]*p.fft_size/p.rate),0,0};
+        const auto bin=std::int32_t(std::llround(p.centres[c]*p.fft_size/p.source_rate));
+        const auto corrected_bin=std::int32_t(std::llround(p.centres[c]*p.fft_size/p.rate));
+        metadata[Impl::blocks+c]={std::bit_cast<float>(bin),float(p.centres[c]*p.fft_size/p.rate),std::bit_cast<float>(corrected_bin),0};
     }
     for(unsigned b=0;b<active;++b) {
         const auto n=first+std::uint64_t(b)*p.hop*p.decimation;
@@ -181,11 +195,10 @@ void SpectralClock::process(const gpu::BufferView& samples,std::size_t valid_sam
         // A prototype transition cut by ADC Nyquist is not a band-limited
         // channel field. Preserve the original full-band interpolation there.
         bool affine=!p.touches_nyquist && segment_at(begin-8)==segment_at(begin+p.fft_size+8);
-        const double offset=segment->offset_at(double(n));
-        const auto input_begin=input_base+std::int64_t(b)*p.hop*p.decimation;
-        const double shift=double(std::int64_t(n)-std::int64_t(input_start)+std::int64_t(std::floor(offset))-input_begin-p.guard)+offset-std::floor(offset);
+        const auto input_begin=input_base+std::int64_t(b)*p.raw_stride;
+        const double shift=source_at(n)-double(input_begin)-p.guard;
         const double first_at=2.0*(p.guard+shift)/p.decimation;
-        const double rate=segment->rate;
+        const double rate=segment->rate*p.source_ratio;
         const auto used=std::min<std::size_t>(p.hop,count-b*p.hop);
         const double last_at=first_at+2*(used-1)*rate;
         const double halo=double(p.guard-72);
@@ -197,11 +210,11 @@ void SpectralClock::process(const gpu::BufferView& samples,std::size_t valid_sam
             for(unsigned j=0;j<p.fft_size;j+=64) {
                 const auto t=begin+j;const auto s=segment_at(t);
                 const auto next=s+1;
-                const double off=s->offset_at(double(t));
-                const auto integer=std::int64_t(t)-std::int64_t(input_start)+std::int64_t(std::floor(off));
+                const double position=source_at(t);
+                const auto integer=std::int64_t(std::floor(position));
                 const double split=next!=clock.end() && next->start<t+64 ? double(next->start-t) : 64;
-                const double after=split<64 ? next->rate : s->rate;
-                coordinates.push_back({integer_bits(integer),float(off-std::floor(off)),float(s->rate-1),float(after-1)});
+                const double after=(split<64 ? next->rate : s->rate)*p.source_ratio;
+                coordinates.push_back({integer_bits(integer),float(position-std::floor(position)),float(s->rate*p.source_ratio-1),float(after-1)});
                 coordinates.push_back({float(split),0,0,0});
             }
         }
@@ -212,7 +225,7 @@ void SpectralClock::process(const gpu::BufferView& samples,std::size_t valid_sam
         metadata[b]={integer_bits(std::int64_t(std::floor(at))+std::int64_t(std::floor(fractional))),
             float(fractional-std::floor(fractional)),float(applied_rate-1),std::bit_cast<float>(coordinate)};
         for(unsigned c=0;c<p.centres.size();++c) {
-            const double bin=std::llround(p.centres[c]*p.fft_size/p.rate);
+            const double bin=std::llround(p.centres[c]*p.fft_size/(affine ? p.source_rate : p.rate));
             const auto anchor=oscillator(n,p.centres[c],p.rate)*static_cast<C>(std::polar(1.0,
                 tau*bin*(affine ? p.guard+shift : p.guard)/p.fft_size));
             const double step=tau*(bin*applied_rate/512-p.centres[c]/8e6);

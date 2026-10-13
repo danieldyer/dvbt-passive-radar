@@ -1,0 +1,16 @@
+Test project /Users/danielrd/sources/dvbt_passive_radar/build/release
+    Start  5: live_capture_phase_gpu
+1/4 Test  #5: live_capture_phase_gpu ...........   Passed    0.26 sec
+    Start  7: matched_profiles_gpu
+2/4 Test  #7: matched_profiles_gpu .............   Passed   20.15 sec
+    Start 15: frame_equalizer_gpu
+3/4 Test #15: frame_equalizer_gpu ..............   Passed    0.10 sec
+    Start 19: receiver_short_batches_gpu
+4/4 Test #19: receiver_short_batches_gpu .......   Passed    1.23 sec
+
+100% tests passed out of 4
+
+Label Time Summary:
+gpu    =  21.74 sec*proc (4 tests)
+
+Total Test time (real) =  21.74 sec

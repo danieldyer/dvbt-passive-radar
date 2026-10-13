@@ -1,0 +1,5 @@
+Raw interpolator: band=0.14202, taps=32, complex error=7.31614e-07
+Raw interpolator: band=0.434484, taps=64, complex error=2.41176e-06
+Raw interpolator: band=0.478516, taps=192, complex error=2.13366e-06
+Common clock: maximum 1 s timing error=0.000226618 ADC samples; budget=0.00959109
+Changing pilot precision, biased transmitter clocks: 1 s ensemble RMS=0.00783699, maximum=0.0209776 ADC samples

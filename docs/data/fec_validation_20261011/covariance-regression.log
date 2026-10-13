@@ -1,0 +1,13 @@
+Test project /Users/danielrd/sources/dvbt_passive_radar/build/release
+    Start 3: live_archive_cpu
+1/2 Test #3: live_archive_cpu .................   Passed    0.45 sec
+    Start 7: matched_profiles_gpu
+2/2 Test #7: matched_profiles_gpu .............   Passed    8.59 sec
+
+100% tests passed out of 2
+
+Label Time Summary:
+cpu    =   0.45 sec*proc (1 test)
+gpu    =   8.59 sec*proc (1 test)
+
+Total Test time (real) =   9.05 sec

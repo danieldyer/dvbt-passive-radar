@@ -1,0 +1,8 @@
+Maximum GPU/CPU power difference: 5.17689e-07 dB
+Maximum GPU/CPU power difference: 3.1206e-06 dB
+Maximum GPU/CPU power difference: 5.17719e-07 dB
+Maximum GPU/CPU power difference: 3.39134e-06 dB
+Maximum GPU/CPU power difference: 5.17714e-07 dB
+Maximum GPU/CPU power difference: 3.45076e-06 dB
+{"maps":8,"focus_wall_ms_per_map":10.8025,"focus_gpu_ms_per_map":9.48007,"calibration_cpu_ms_per_map":1.56825,"preview_wall_ms_per_map":1.15043}
+GPU preview and device-map regression: PASS

@@ -24,7 +24,7 @@ bool same(const ClockSegment& a,const ClockSegment& b) {
 bool same(const SarCapture& a,const SarCapture& b) {
     if(a.input_rate!=b.input_rate || a.decimation!=b.decimation || a.origin!=b.origin ||
        a.recording_rf_hz!=b.recording_rf_hz || a.clock_phase_degrees!=b.clock_phase_degrees ||
-       a.channels.size()!=b.channels.size())return false;
+       a.channels.size()!=b.channels.size() || a.source_rate!=b.source_rate)return false;
     for(std::size_t c=0;c<a.channels.size();++c)
         if(a.channels[c].rf_hz!=b.channels[c].rf_hz || a.channels[c].nco_hz!=b.channels[c].nco_hz ||
            a.channels[c].guard!=b.channels[c].guard)return false;
@@ -32,14 +32,15 @@ bool same(const SarCapture& a,const SarCapture& b) {
 }
 }
 void SarCapture::validate() const {
+    const auto raw_rate=source_rate ? source_rate : input_rate;
     if(!input_rate || input_rate%8'000'000 || input_rate>128'000'000 || decimation!=input_rate/8'000'000 ||
        origin>=exact_limit || !std::isfinite(recording_rf_hz) || recording_rf_hz<=0 ||
        !std::isfinite(clock_phase_degrees) || clock_phase_degrees<=0 || clock_phase_degrees>30 ||
-       channels.empty() || channels.size()>64)
+       channels.empty() || channels.size()>64 || raw_rate<8'000'000 || raw_rate>input_rate)
         throw std::invalid_argument("Invalid SAR capture coordinates");
     for(const auto& c:channels)
         if(!std::isfinite(c.rf_hz) || c.rf_hz<=0 || !std::isfinite(c.nco_hz) ||
-           std::abs(c.nco_hz)+3.5e6>input_rate/2.0 ||
+           std::abs(c.nco_hz)+3.5e6>raw_rate/2.0 ||
            (c.guard!=4 && c.guard!=8 && c.guard!=16 && c.guard!=32))
             throw std::invalid_argument("Invalid SAR channel coordinates");
 }
@@ -61,7 +62,8 @@ SarBatch::SarBatch(const SarCapture& c,const SpectralBatch& s,std::vector<ClockS
     for(std::size_t row=0;row<f.symbols.size();++row) {
         const auto& symbol=f.symbols[row];
         if(symbol.channel!=f.channel || symbol.segment!=f.segment || !std::isfinite(symbol.window.phase) ||
-           !std::isfinite(symbol.window.frequency_hz) || symbol.modulo4>3)
+           !std::isfinite(symbol.window.frequency_hz) || !std::isfinite(symbol.source_offset_samples) ||
+           !std::isfinite(symbol.source_rate_error) || symbol.modulo4>3)
             throw std::invalid_argument("Inconsistent SAR symbol coordinates");
         corrected_adc(row);
     }
@@ -81,7 +83,7 @@ double SarBatch::original_adc(std::size_t row,double within_window) const {
         throw std::out_of_range("SAR within-window coordinate out of range");
     const auto n=double(corrected_adc(row))+within_window*capture.decimation;
     auto it=std::upper_bound(clock.begin(),clock.end(),n,[](double x,const ClockSegment& s){return x<double(s.start);});
-    --it;return n+it->offset_at(n);
+    --it;return (n+it->offset_at(n))*(capture.source_rate ? double(capture.source_rate)/capture.input_rate : 1);
 }
 double SarBatch::carrier_rf_hz(unsigned k) const {
     if(k>=6817)throw std::out_of_range("SAR carrier out of range");
@@ -93,11 +95,16 @@ SarWriter::SarWriter(const std::filesystem::path& path,const SarCapture& capture
     // C++23 noreplace makes the no-overwrite guarantee atomic.
     file_.exceptions(std::ios::badbit|std::ios::failbit);
     file_.open(path,std::ios::binary|std::ios::out|std::ios::noreplace);
-    file_.write("DVBTSAR1",8);
+    file_.write("DVBTSAR2",8);
     put(file_,capture.input_rate);put(file_,capture.decimation);put(file_,std::uint32_t(capture.channels.size()));
-    put(file_,std::uint32_t{0}); // flags: no UTC, absolute RF calibration or surveyed geometry asserted
+    put(file_,std::uint32_t(capture.source_rate && capture.source_rate!=capture.input_rate));
+    // Bit 0: SRAT nominal rate conversion follows. No UTC, absolute RF
+    // calibration or surveyed geometry is asserted.
     put(file_,capture.origin);put(file_,capture.recording_rf_hz);put(file_,capture.clock_phase_degrees);
     for(const auto& c:capture.channels) {put(file_,c.rf_hz);put(file_,c.nco_hz);put(file_,c.guard);put(file_,std::uint32_t{0});}
+    if(capture.source_rate && capture.source_rate!=capture.input_rate) {
+        record(file_,"SRAT",4);put(file_,capture.source_rate);
+    }
 }
 void SarWriter::write(const SarBatch& batch) {
     if(!file_.is_open() || !same(capture_,batch.capture))throw std::invalid_argument("SAR writer capture changed or closed");
@@ -113,13 +120,14 @@ void SarWriter::write(const SarBatch& batch) {
     const auto& s=batch.spectra;const auto& f=s.frame;
     const auto rows=std::uint32_t(f.symbols.size()),frames=std::uint32_t(f.frames.size());
     // Fixed fields, rows, TPS, response, measured/reference/mask planes.
-    record(file_,"SPEC",40+32ULL*rows+92ULL*frames+8ULL*6817+20ULL*rows*6817);
+    record(file_,"SPEC",40+48ULL*rows+92ULL*frames+8ULL*6817+20ULL*rows*6817);
     put(file_,std::uint32_t(f.channel));put(file_,std::uint32_t(f.segment));put(file_,rows);
     put(file_,std::uint32_t(f.first));put(file_,std::uint32_t(f.last));put(file_,frames);
     put(file_,s.estimate.reference_origin);put(file_,s.estimate.relative_error);
     for(const auto& row:f.symbols) {
         put(file_,row.window.sample);put(file_,row.window.phase);put(file_,row.window.frequency_hz);
         put(file_,std::uint32_t(row.modulo4));put(file_,std::uint32_t(row.discontinuity));
+        put(file_,row.source_offset_samples);put(file_,row.source_rate_error);
     }
     for(const auto& t:f.frames) {
         for(auto x:{t.frame,t.constellation,t.rate,t.guard,t.mode,t.hierarchy})put(file_,std::uint32_t(x));

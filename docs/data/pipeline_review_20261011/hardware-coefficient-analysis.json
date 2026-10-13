@@ -1,0 +1,474 @@
+{
+  "archive": "/Users/danielrd/sources/dvbt_passive_radar/build/live-review-hardware-20261011/capture/capture.dvblive",
+  "header": {
+    "version": 1,
+    "recording": {
+      "centre_hz": 202000000,
+      "sample_rate_hz": 61440000,
+      "sample_format": "ci16_le",
+      "iq_order": "I,Q",
+      "time_reference": "One shared SDR sample clock; not calibrated UTC"
+    },
+    "transmitters": [
+      {
+        "id": "ornata",
+        "name": "TXA Ornata Road",
+        "address": "12 Ornata Road, Mount Dandenong",
+        "location": {
+          "latitude_deg": -37.837500000000006,
+          "longitude_deg": 145.34666666666666
+        },
+        "position_reference": "ACMA July 2026 licensed site coordinates, whole arcsecond resolution. Not a surveyed antenna phase centre."
+      },
+      {
+        "id": "eyre",
+        "name": "TXA Eyre Road",
+        "address": "8 Eyre Road, Mount Dandenong",
+        "location": {
+          "latitude_deg": -37.83555555555556,
+          "longitude_deg": 145.3477777777778
+        },
+        "position_reference": "ACMA July 2026 licensed site coordinates, whole arcsecond resolution. Not a surveyed antenna phase centre."
+      },
+      {
+        "id": "ridge",
+        "name": "BAI Ridge Road",
+        "address": "116\u2013118 Ridge Road, Mount Dandenong",
+        "location": {
+          "latitude_deg": -37.835,
+          "longitude_deg": 145.34861111111113
+        },
+        "position_reference": "ACMA July 2026 licensed site coordinates, whole arcsecond resolution. Not a surveyed antenna phase centre."
+      }
+    ],
+    "signals": [
+      {
+        "id": "seven",
+        "name": "Seven",
+        "callsign": "HSV6",
+        "rf_channel": 6,
+        "frequency_hz": 177500000,
+        "bandwidth_hz": 7000000,
+        "fft_size": 8192,
+        "guard_denominator": 16,
+        "transmitter_id": "ornata",
+        "licensed_site_ids": [
+          "ornata",
+          "eyre"
+        ],
+        "transmitter_assignment": "Nominal mast from Oz Digital TV listing; active antenna for this capture not independently confirmed. ACMA also licenses alternative sites."
+      },
+      {
+        "id": "sbs",
+        "name": "SBS",
+        "callsign": "SBS7",
+        "rf_channel": 7,
+        "frequency_hz": 184500000,
+        "bandwidth_hz": 7000000,
+        "fft_size": 8192,
+        "guard_denominator": 16,
+        "transmitter_id": "ridge",
+        "licensed_site_ids": [
+          "ridge",
+          "ornata"
+        ],
+        "transmitter_assignment": "Nominal mast from Oz Digital TV listing; active antenna for this capture not independently confirmed. ACMA also licenses alternative sites."
+      },
+      {
+        "id": "nine",
+        "name": "Nine",
+        "callsign": "GTV8",
+        "rf_channel": 8,
+        "frequency_hz": 191625000,
+        "bandwidth_hz": 7000000,
+        "fft_size": 8192,
+        "guard_denominator": 16,
+        "transmitter_id": "eyre",
+        "licensed_site_ids": [
+          "eyre",
+          "ornata"
+        ],
+        "transmitter_assignment": "Nominal mast from Oz Digital TV listing; active antenna for this capture not independently confirmed. ACMA also licenses alternative sites."
+      },
+      {
+        "id": "ten",
+        "name": "Ten",
+        "callsign": "ATV11",
+        "rf_channel": 11,
+        "frequency_hz": 219500000,
+        "bandwidth_hz": 7000000,
+        "fft_size": 8192,
+        "guard_denominator": 16,
+        "transmitter_id": "ridge",
+        "licensed_site_ids": [
+          "ridge",
+          "eyre",
+          "ornata"
+        ],
+        "transmitter_assignment": "Nominal mast from Oz Digital TV listing; active antenna for this capture not independently confirmed. ACMA also licenses alternative sites."
+      },
+      {
+        "id": "abc",
+        "name": "ABC",
+        "callsign": "ABC12",
+        "rf_channel": 12,
+        "frequency_hz": 226500000,
+        "bandwidth_hz": 7000000,
+        "fft_size": 8192,
+        "guard_denominator": 16,
+        "transmitter_id": "ornata",
+        "licensed_site_ids": [
+          "ornata",
+          "ridge"
+        ],
+        "transmitter_assignment": "Nominal mast from Oz Digital TV listing; active antenna for this capture not independently confirmed. ACMA also licenses alternative sites."
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://www.ozdigitaltv.com/transmitters/VIC/326-Mount-Dandenong",
+        "used_for": "Multiplex centre frequencies and nominal mast assignments",
+        "accessed": "2026-10-10"
+      },
+      {
+        "url": "https://www.acma.gov.au/sites/default/files/2026-07/9%20Televison%20by%20Area%20Served.pdf",
+        "used_for": "Licensed site coordinates and alternate locations; page 371",
+        "accessed": "2026-10-10"
+      }
+    ],
+    "capture": {
+      "device_args": "type=b200,num_recv_frames=256",
+      "channel": 0,
+      "sample_rate_hz": 61440000,
+      "centre_hz": 202000000,
+      "gain_db": 34,
+      "bandwidth_hz": 56000000,
+      "antenna": "TX/RX",
+      "clock_source": "internal",
+      "time_source": "internal",
+      "buffer_seconds": 0.5
+    },
+    "archive_mode": "profiles",
+    "corrected_rate_hz": 64000000,
+    "archive_sample_format": "complex_f32le",
+    "profile_row_policy": "fixed_grid_zero_information_erasures",
+    "template_weighting": "unmodified_reconstructed_waveform",
+    "noise_weighting": "previous_batch_diagonal_residual_covariance",
+    "source_nominal_rate_hz": 61440000,
+    "decimation": 8,
+    "origin": 0,
+    "applied_capture": {
+      "device": "Single USRP:\n  Device: B-Series Device\n  Mboard 0: B200mini\n  RX Channel: 0\n    RX DSP: 0\n    RX Dboard: A\n    RX Subdev: FE-RX1\n  TX Channel: 0\n    TX DSP: 0\n    TX Dboard: A\n    TX Subdev: FE-TX1\n",
+      "serial": "30AA097",
+      "rate_hz": 61440000.04787071,
+      "centre_hz": 201999999.99523142,
+      "gain_db": 34.0,
+      "bandwidth_hz": 56000000.0,
+      "antenna": "TX/RX",
+      "clock_source": "internal",
+      "time_source": "internal",
+      "master_clock_hz": 61440000.04787071
+    },
+    "applied_channels": [
+      {
+        "rf_hz": 177500000.0,
+        "nco_hz": -24499999.99523142,
+        "guard": 16
+      },
+      {
+        "rf_hz": 184500000.0,
+        "nco_hz": -17499999.99523142,
+        "guard": 16
+      },
+      {
+        "rf_hz": 191625000.0,
+        "nco_hz": -10374999.99523142,
+        "guard": 16
+      },
+      {
+        "rf_hz": 219500000.0,
+        "nco_hz": 17500000.00476858,
+        "guard": 16
+      },
+      {
+        "rf_hz": 226500000.0,
+        "nco_hz": 24500000.00476858,
+        "guard": 16
+      }
+    ]
+  },
+  "records": {
+    "EPOC": 1,
+    "GAPS": 1,
+    "CLCK": 159,
+    "PROF": 620,
+    "DONE": 1
+  },
+  "row_policy": "fixed_grid_zero_information_erasures",
+  "clock_segments": 1250,
+  "integration_requested_s": 3,
+  "analysis_update_s": 0.25,
+  "ideal_rectangular_doppler_fwhm_hz": 0.295297647,
+  "channels": [
+    {
+      "id": "seven",
+      "name": "Seven",
+      "channel": 0,
+      "rows": 33660,
+      "valid_rows": 33659,
+      "invalid_rows": 1,
+      "segments": 1,
+      "first_profile_s": 3.234981,
+      "last_profile_s": 39.855973,
+      "interval_s": 0.001088,
+      "window_rows": 2758,
+      "integration_s": 3.000704,
+      "nominal_window_span_s": 2.999616,
+      "timestamp_step_error_ns_max": 4.240965217894299e-06,
+      "information": {
+        "min": 387.6089501809012,
+        "p10": 441.0078388102103,
+        "median": 528.7397828612172,
+        "p90": 576.6321014450565,
+        "max": 590.1484803205311
+      },
+      "batch_range_fwhm_m": {
+        "min": 48.61190485397375,
+        "p10": 48.69216064616706,
+        "median": 48.80843192961939,
+        "p90": 49.473574542313095,
+        "max": 50.666072590261955
+      },
+      "range_fwhm_m": {
+        "min": 48.62190845704768,
+        "p10": 48.66965938232589,
+        "median": 48.73568760364321,
+        "p90": 48.84130842519472,
+        "max": 49.178988809842956
+      },
+      "admitted_maps": 135,
+      "effective_integration_s": {
+        "min": 2.947656605474886,
+        "p10": 2.956248285955515,
+        "median": 2.976775312385195,
+        "p90": 2.9877296357665943,
+        "max": 2.99105998436465
+      },
+      "doppler_fwhm_hz": {
+        "min": 0.2872082818634376,
+        "p10": 0.2907903986536669,
+        "median": 0.2951536200276001,
+        "p90": 0.30001387931977885,
+        "max": 0.30917137462763356
+      }
+    },
+    {
+      "id": "sbs",
+      "name": "SBS",
+      "channel": 1,
+      "rows": 33660,
+      "valid_rows": 33659,
+      "invalid_rows": 1,
+      "segments": 1,
+      "first_profile_s": 3.230731375,
+      "last_profile_s": 39.851723375,
+      "interval_s": 0.001088,
+      "window_rows": 2758,
+      "integration_s": 3.000704,
+      "nominal_window_span_s": 2.999616,
+      "timestamp_step_error_ns_max": 4.240965217894299e-06,
+      "information": {
+        "min": 510.73397490401754,
+        "p10": 724.9418839417147,
+        "median": 1212.9378312503861,
+        "p90": 1627.8843271078108,
+        "max": 1707.030041249006
+      },
+      "batch_range_fwhm_m": {
+        "min": 37.333469325280966,
+        "p10": 37.7706348353395,
+        "median": 41.07577729261965,
+        "p90": 48.27027227335583,
+        "max": 54.081022238172935
+      },
+      "range_fwhm_m": {
+        "min": 39.444221931598456,
+        "p10": 39.96037527743019,
+        "median": 40.53669393820761,
+        "p90": 41.213554654053986,
+        "max": 42.14182227658025
+      },
+      "admitted_maps": 135,
+      "effective_integration_s": {
+        "min": 2.644628820567954,
+        "p10": 2.719192532394667,
+        "median": 2.7851486213970076,
+        "p90": 2.8512714851120453,
+        "max": 2.888792915348092
+      },
+      "doppler_fwhm_hz": {
+        "min": 0.27593795372501273,
+        "p10": 0.28189837614136276,
+        "median": 0.2964753705890947,
+        "p90": 0.311499462195293,
+        "max": 0.3281304047753894
+      }
+    },
+    {
+      "id": "nine",
+      "name": "Nine",
+      "channel": 2,
+      "rows": 33660,
+      "valid_rows": 33659,
+      "invalid_rows": 1,
+      "segments": 1,
+      "first_profile_s": 3.27340475,
+      "last_profile_s": 39.89439675,
+      "interval_s": 0.001088,
+      "window_rows": 2758,
+      "integration_s": 3.000704,
+      "nominal_window_span_s": 2.999616,
+      "timestamp_step_error_ns_max": 4.240965217894299e-06,
+      "information": {
+        "min": 278.7385840328166,
+        "p10": 361.12650055954816,
+        "median": 727.6448690007679,
+        "p90": 1038.8311417258737,
+        "max": 1615.522529523208
+      },
+      "batch_range_fwhm_m": {
+        "min": 37.81336815562424,
+        "p10": 39.021795589842036,
+        "median": 40.63607903275907,
+        "p90": 46.05483048786373,
+        "max": 55.754786563526665
+      },
+      "range_fwhm_m": {
+        "min": 38.74261019075595,
+        "p10": 39.27820574168355,
+        "median": 40.085886432061265,
+        "p90": 41.09690564380444,
+        "max": 42.67301203826413
+      },
+      "admitted_maps": 135,
+      "effective_integration_s": {
+        "min": 2.462597305222323,
+        "p10": 2.5841203349584663,
+        "median": 2.7028216801721294,
+        "p90": 2.790100453614218,
+        "max": 2.8431354569858627
+      },
+      "doppler_fwhm_hz": {
+        "min": 0.2623815490113039,
+        "p10": 0.28205454047962736,
+        "median": 0.29815379412504844,
+        "p90": 0.3217721649139065,
+        "max": 0.3409590008194876
+      }
+    },
+    {
+      "id": "ten",
+      "name": "Ten",
+      "channel": 3,
+      "rows": 33660,
+      "valid_rows": 33659,
+      "invalid_rows": 1,
+      "segments": 1,
+      "first_profile_s": 3.240157875,
+      "last_profile_s": 39.861149875,
+      "interval_s": 0.001088,
+      "window_rows": 2758,
+      "integration_s": 3.000704,
+      "nominal_window_span_s": 2.999616,
+      "timestamp_step_error_ns_max": 4.240965217894299e-06,
+      "information": {
+        "min": 504.2030160338315,
+        "p10": 605.3796278803378,
+        "median": 851.5697808024383,
+        "p90": 1028.3562094517245,
+        "max": 1167.3995275226089
+      },
+      "batch_range_fwhm_m": {
+        "min": 41.210314131344624,
+        "p10": 42.27561042798493,
+        "median": 44.055120463371566,
+        "p90": 49.54678721734813,
+        "max": 52.5794962732873
+      },
+      "range_fwhm_m": {
+        "min": 42.51119613680731,
+        "p10": 43.391291568494005,
+        "median": 44.713508264591475,
+        "p90": 45.26410254827733,
+        "max": 45.78892312827482
+      },
+      "admitted_maps": 135,
+      "effective_integration_s": {
+        "min": 2.8303734485758443,
+        "p10": 2.886855840075448,
+        "median": 2.9215619493900835,
+        "p90": 2.955656436045537,
+        "max": 2.97361966191118
+      },
+      "doppler_fwhm_hz": {
+        "min": 0.2770893937638656,
+        "p10": 0.2875657980491674,
+        "median": 0.2963622015736988,
+        "p90": 0.30825305107397033,
+        "max": 0.31905357478541674
+      }
+    },
+    {
+      "id": "abc",
+      "name": "ABC",
+      "channel": 4,
+      "rows": 33660,
+      "valid_rows": 33659,
+      "invalid_rows": 1,
+      "segments": 1,
+      "first_profile_s": 3.238311625,
+      "last_profile_s": 39.859303625,
+      "interval_s": 0.001088,
+      "window_rows": 2758,
+      "integration_s": 3.000704,
+      "nominal_window_span_s": 2.999616,
+      "timestamp_step_error_ns_max": 4.240965217894299e-06,
+      "information": {
+        "min": 358.3455685113947,
+        "p10": 409.7808343770888,
+        "median": 495.58034882665083,
+        "p90": 559.2130525197468,
+        "max": 597.2185355901652
+      },
+      "batch_range_fwhm_m": {
+        "min": 41.80734226340891,
+        "p10": 42.37297826169634,
+        "median": 43.02640263834853,
+        "p90": 44.5827710923105,
+        "max": 45.87746320685964
+      },
+      "range_fwhm_m": {
+        "min": 42.70675390889942,
+        "p10": 42.81851351661355,
+        "median": 43.08040801871186,
+        "p90": 43.470569481750424,
+        "max": 43.725581212997895
+      },
+      "admitted_maps": 135,
+      "effective_integration_s": {
+        "min": 2.9407471272197836,
+        "p10": 2.9555660312757066,
+        "median": 2.9733502918951857,
+        "p90": 2.9857208844012204,
+        "max": 2.9954374783636593
+      },
+      "doppler_fwhm_hz": {
+        "min": 0.28463953165361344,
+        "p10": 0.28932890614987017,
+        "median": 0.2956452320713137,
+        "p90": 0.30128945655015127,
+        "max": 0.31117388197924
+      }
+    }
+  ]
+}

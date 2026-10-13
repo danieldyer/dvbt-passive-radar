@@ -1,0 +1,12 @@
+[ 20%] Built target radar_frontend
+[ 25%] Built target dvbt_sync
+[ 95%] Built target radar_dsp
+[ 95%] Building CXX object support/validation/CMakeFiles/information_probe.dir/information_probe.cpp.o
+[100%] Linking CXX executable information_probe
+[100%] Built target information_probe
+[ 20%] Built target radar_frontend
+[ 25%] Built target dvbt_sync
+[ 95%] Built target radar_dsp
+[100%] Building CXX object support/validation/CMakeFiles/sensitivity_response.dir/response_probe.cpp.o
+[100%] Linking CXX executable sensitivity_response
+[100%] Built target sensitivity_response

@@ -1,6 +1,6 @@
 #pragma once
 #include "gpu_compute.hpp"
-#include <vkFFT.h>
+#include "gpu_fft_config.hpp"
 #include <stdexcept>
 #include <string>
 
@@ -21,6 +21,7 @@ public:
         config.device=&device_;config.physicalDevice=&physical_;config.queue=&queue_;
         config.commandPool=&pool_;config.fence=&fence_;config.buffer=&buffer_;
         config.bufferSize=&bytes_;config.bufferOffset=offset;config.normalize=1;config.useLUT=1;
+        configure_fft(config);
         // VkFFT uploads plan tables through the queue while initializing.
         // Share the submission lock with every other owner of that queue.
         const std::lock_guard queue_lock(kernel.context()->queue_mutex);

@@ -39,8 +39,7 @@ def read_exact(source, size, allow_eof=False):
 
 
 def read_frames(source):
-    previous_sequence = 0
-    previous_end = -math.inf
+    previous = {}
     while True:
         prefix = read_exact(source, 16, allow_eof=True)
         if prefix is None:
@@ -52,9 +51,11 @@ def read_frames(source):
         nr, nf = meta['ranges'], meta['frequencies']
         if meta['format'] != 'cf32le' or meta['order'] != 'range,doppler' or size != nr*nf*8:
             raise ValueError('Unsupported RDM layout')
+        channel=meta.get('channel',0)
+        previous_sequence,previous_end=previous.get(channel,(0,-math.inf))
         if meta['sequence'] != previous_sequence+1 or meta['time_end_s'] < previous_end:
             raise ValueError('Missing, reordered or non-monotonic RDM frame')
-        previous_sequence, previous_end = meta['sequence'], meta['time_end_s']
+        previous[channel]=meta['sequence'],meta['time_end_s']
         values = np.frombuffer(read_exact(source, size), dtype='<c8').reshape(nr, nf)
         if not np.isfinite(values).all():
             raise ValueError('Non-finite radar map')
@@ -111,6 +112,8 @@ class Renderer:
         self.text(draw,(42,28),'DVB-T  /  PASSIVE RADAR',28,'#55d6c1')
         title='MATCHED-FILTER DETECTION' if self.args.backend=='matched' else 'RESIDUAL CROSS-SPECTRUM'
         self.text(draw,(485,31),title,24,'#899bad')
+        if getattr(self.args,'signal_name',None):
+            self.text(draw,(1878,31),self.args.signal_name,24,'#eef5f8',anchor='rt')
         draw.line((42,78,1878,78),fill='#304050',width=1)
         x0,y0,x1,y1 = self.box
         draw.rectangle(self.box, fill='#040813', outline='#415568')
@@ -136,6 +139,10 @@ class Renderer:
     def set_map(self, meta, values):
         x0,y0,x1,y1 = self.box
         db = power_preview(values, x1-x0, y1-y0)
+        self.set_display_map(meta,db)
+
+    def set_display_map(self,meta,db):
+        x0,y0,x1,y1=self.box
         if self.args.auto_scale:
             self.db_max = float(db.max())
             self.db_min = self.db_max-(self.args.db_max-self.args.db_min)
@@ -175,7 +182,7 @@ def duration_from_metadata(path, start, seconds):
 
 def arguments(argv=None):
     p=argparse.ArgumentParser(description=__doc__,formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    p.add_argument('input',type=Path,help='Float32 stereo I/Q WAV recording')
+    p.add_argument('input',type=Path,help='Float32 or signed int16 stereo I/Q WAV recording')
     p.add_argument('--output',type=Path,required=True,help='New video path; existing outputs are not overwritten')
     p.add_argument('--encoding',choices=tuple(ENCODINGS),default='h264',
                    help='h264: compact MP4; prores: hardware ProRes 422 MOV for QuickTime scrubbing on Apple Silicon')
@@ -196,6 +203,9 @@ def arguments(argv=None):
     p.add_argument('--backend',choices=('matched','legacy'),default='matched',help='Production matched detector or previous Hann processor for comparisons')
     p.add_argument('--recording-rf-hz',type=float,default=553000000)
     p.add_argument('--channel-rf-hz',type=float,default=557625000,help='Physical transmitter RF, independent of NCO and receiver CFO')
+    p.add_argument('--metadata',type=Path,help='Production recording JSON')
+    p.add_argument('--select-channel',help='Signal id from recording metadata')
+    p.add_argument('--signal-name',help='Display label')
     p.add_argument('--processor',type=Path,help='Override the selected backend executable')
     p.add_argument('--ffmpeg',default='ffmpeg')
     args=p.parse_args(argv)
@@ -221,9 +231,12 @@ def processor_command(args,work):
             '--doppler-hz',str(args.doppler_hz),'--map-stream','-',
             '--response-order',str(args.response_order),'--start',str(args.start),'--seconds',str(args.seconds)]
     if args.backend=='matched':
-        common+=['--recording-rf-hz',str(args.recording_rf_hz),
-                 '--channel',f'{args.channel_rf_hz},{args.offset_hz},{args.guard}',
-                 '--update-seconds',str(1/args.fps),'--stream-only']
+        if args.metadata:
+            common+=['--metadata',str(args.metadata.resolve())]
+            if args.select_channel:common+=['--select-channel',args.select_channel]
+        else:
+            common+=['--recording-rf-hz',str(args.recording_rf_hz),'--channel',f'{args.channel_rf_hz},{args.offset_hz},{args.guard}']
+        common+=['--update-seconds',str(1/args.fps),'--stream-only']
         if not args.remove_dc:common.append('--keep-dc')
     else:
         interval=(8192+8192/args.guard)/8e6
@@ -313,7 +326,7 @@ def main(argv=None):
 
 
 def recording_duration(path):
-    """RIFF/RF64 float I/Q duration, including the recorder's exact 32-bit wrap."""
+    """RIFF/RF64 cf32/ci16 I/Q duration, including exact 32-bit size wrap."""
     length=path.stat().st_size
     with path.open('rb') as f:
         magic,riff_size,wave=struct.unpack('<4sI4s',f.read(12))
@@ -325,8 +338,8 @@ def recording_duration(path):
                 _,rf64_bytes,_=struct.unpack('<QQQ',f.read(24))
             elif tag==b'fmt ' and size>=16:
                 fmt,channels,sample_rate,byte_rate,align,bits=struct.unpack('<HHIIHH',f.read(16))
-                if (fmt,channels,align,bits)!=(3,2,8,32) or sample_rate==0 or byte_rate!=sample_rate*8:
-                    raise ValueError('Expected float32 stereo I/Q WAV')
+                if (fmt,channels,align,bits) not in ((3,2,8,32),(1,2,4,16)) or sample_rate==0 or byte_rate!=sample_rate*align:
+                    raise ValueError('Expected float32 or signed int16 stereo I/Q WAV')
             elif tag==b'data':
                 if sample_rate is None:raise ValueError('Missing WAV format')
                 data_bytes=size
@@ -335,8 +348,8 @@ def recording_duration(path):
                     data_bytes=rf64_bytes
                 elif length-position>0xffffffff and (length-position)&0xffffffff==size and (length-8)&0xffffffff==riff_size:
                     data_bytes=length-position
-                if data_bytes>length-position or data_bytes%8:raise ValueError('Invalid WAV data length')
-                return data_bytes/(8*sample_rate)
+                if data_bytes>length-position or data_bytes%align:raise ValueError('Invalid WAV data length')
+                return data_bytes/(align*sample_rate)
             if position+size+(size&1)>length:raise ValueError('Invalid WAV chunk')
             f.seek(position+size+(size&1))
     raise ValueError('Missing WAV sample data')

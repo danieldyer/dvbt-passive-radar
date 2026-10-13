@@ -68,6 +68,36 @@ int main(int argc,char**) {
         }
         std::cout<<"Common clock: maximum 1 s timing error="<<worst<<" ADC samples; budget="<<clock->timing_budget_samples()<<'\n';
         require(worst<clock->timing_budget_samples(),"Ensemble clock fails 3 degree relative-phase budget");
+        // A transmitter's fixed frequency bias must not turn into a changing
+        // ADC phase origin when the precision of its pilot measurements changes.
+        // The reference is the arithmetic mean of these three clock standards.
+        SampleClock standards(fs,offsets,3);
+        constexpr std::array biases{-.04e-6,0.0,.04e-6};
+        double standard_error=0,standard_square=0;unsigned standard_count=0;
+        for(unsigned i=1;i<=10000;++i){
+            const double n=fs*i*.001,previous=n-fs*.001;
+            for(std::size_t c=0;c<offsets.size();++c){
+                const auto s=standards.at(n);
+                const double actual=actual_offset(n)+biases[c]*n;
+                const double old=actual_offset(previous)+biases[c]*previous;
+                const double applied=1+(s.offset_at(n)-standards.at(previous).offset_at(previous))/(fs*.001);
+                standards.observe_rate(c,n,applied/(1+(actual-old)/(fs*.001))-1);
+                const double sigma=((i/700+c)%3==0 ? .03 : .002);
+                if(i>=200)standards.observe_offset(c,n,(s.offset_at(n)-actual+17*c)/s.rate+noise(random)*(sigma/.0005));
+            }
+            if(i%20==0)standards.update(std::uint64_t(n+fs*.03));
+            if(i>2000){
+                const double old=n-fs;
+                const double error=(standards.at(n).offset_at(n)-standards.at(old).offset_at(old))-(actual_offset(n)-actual_offset(old));
+                standard_error=std::max(standard_error,std::abs(error));
+                standard_square+=error*error;++standard_count;
+            }
+        }
+        const double standard_rms=std::sqrt(standard_square/standard_count);
+        std::cout<<"Changing pilot precision, biased transmitter clocks: 1 s ensemble RMS="<<standard_rms
+            <<", maximum="<<standard_error<<" ADC samples\n";
+        require(standard_rms<clock->timing_budget_samples() && standard_error<3*clock->timing_budget_samples(),
+            "Pilot precision changes the ensemble phase reference");
         if(argc==1)return 0;
 
         GpuChannelBank bank(56000000,offsets);bank.set_clock(clock);

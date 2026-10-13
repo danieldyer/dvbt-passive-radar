@@ -1,10 +1,80 @@
 # Sensitivity audit tools
 
+The [2026-10-13 performance and capture-robustness report](../../docs/performance_20261013.md)
+uses `live_pipeline_benchmark` to replay saved channelised IQ through the actual
+receiver and profile pipeline. Build that opt-in target, then run:
+
+```sh
+build/release/support/validation/live_pipeline_benchmark \
+  captures/live-vhf-002/capture.dvblive 35 1 1
+```
+
+The arguments after the archive are the ending input time, number of map channels
+and GPU-timestamp enable. Fifteen seconds warm the pipeline; the remainder is
+measured. Maps use 3 s, ±100 Hz and four updates/s. The output distinguishes wall
+time, file reads, process/main-thread CPU, summed FEC worker intervals and GPU
+timestamps. Already-channelised input excludes the frontend; live simulation
+separately qualifies that path, receive buffering and archive output.
+
+The [receiver qualification report](../../docs/receiver_validation_20261011.md)
+contains the subsequent all-mode FEC waterfalls, equaliser fix, response solver,
+source-clock and cancellation-uncertainty validation. `fec_waterfall --inspect`
+checks known payloads and the RS correction radius. `cancellation_likelihood.py`
+checks declared covariance models independently of production map rendering.
+
 These opt-in tools inspect the scientific spectral handoff without changing the
 production pipeline. The dated measurements and their limitations are in
 [the sensitivity report](../../docs/sensitivity_audit_20261006.md).
 The subsequent production detector, corrected noise analysis and qualified
 bounds are in [the improvements report](../../docs/sensitivity_improvements_20261007.md).
+
+## Information-preservation audit
+
+The [2026-10-11 review](../../docs/information_preservation_review_20261011.md)
+checks production estimators against conditional likelihood bounds and audits
+each irreversible stage. It includes counterexamples to unconditional optimality
+claims; it is not a real-capture sensitivity certificate. Nothing in these tools
+enables extra normalisation or filtering in production.
+
+Using the isolated Python environment and Vulkan runtime described below:
+
+```sh
+cmake --preset release
+cmake --build --preset release --target information_probe sensitivity_response spectral_clock_tests -j6
+mkdir -p build/information-audit/figures
+build/release/support/validation/information_probe > build/information-audit/estimators.json
+build/release/support/validation/sensitivity_response --rows 408 \
+  > build/information-audit/response-live.csv 2> build/information-audit/response-live.log
+build/release/spectral_clock_tests --gpu > build/information-audit/spectral-clock.log
+MPLCONFIGDIR="$PWD/build/cache/matplotlib" build/validation-venv/bin/python \
+  support/validation/information_audit.py \
+  --estimators build/information-audit/estimators.json \
+  --response build/information-audit/response-live.csv \
+  --response-log build/information-audit/response-live.log \
+  --output build/information-audit --figures build/information-audit/figures
+```
+
+`information_probe` uses the actual CPU pilot and shared-clock estimators with
+seeded observations. It now compares unweighted, known-covariance and estimated
+secondary-covariance pilot likelihoods. `receiver_tests --independent-clocks`
+separately checks two complete DVB-T streams with different clocks and CFOs;
+the ensemble calculation here supplies timing observations directly.
+
+`sensitivity_response --rows 408` uses the live fit's batch size. Its stderr
+includes known-channel convergence controls at orders one/eight and 16–128
+iterations. The CSV remains paired echo **voltage** retention, not noise-normalised
+SNR. These controls have no random observation noise and use the diagonal OFDM
+model; they do not test finite beyond-guard waveform reconstruction.
+
+`information_audit.py` independently evaluates Gaussian Fisher compression,
+minimum-phase parameter information, two-moment loss, OFDM observation selection,
+a correlated-interference counterexample and the shipped float32 prototypes.
+Plots label the model assumptions. The strengthened spectral-clock GPU test
+includes five channels at both 61 and 61.44 MS/s with large epochs and boundaries.
+
+The dated results are in `docs/data/information_audit_20261011`; its manifest
+records source hashes and model settings. The full 34-test regression was also
+run. Performance is not inferred from test-suite duration.
 
 ## Matched-detector validation
 
@@ -71,22 +141,37 @@ build/validation-venv/bin/python support/validation/compare_filter_bound.py \
   --output build/detection-check/previous-filter-comparison.json
 ```
 
-The output-free benchmark preloads I/Q, warms for ten seconds, then measures
-the remainder. Its positional arguments are input seconds, channels, FEC workers,
-frame slots, timing enable and consumer (`0` core, `1` new detector, `2` legacy):
+The output-free benchmark warms for ten seconds, then measures the remainder.
+Its positional arguments are input seconds, channels, FEC workers, frame slots,
+timing enable (`0` off, `1` stage queries, `2` detailed queries), consumer
+(`0` reconstructed spectra, `1` matched maps, `2` legacy maps, `3` complex range
+profiles), optional recording metadata, TPS frames per decoder batch and input
+mode (`resident`, `stream` or `live`). `live` reads native int16 into the mapped
+capture buffer and uses the production GPU unpack/channelisation path:
 
 ```sh
 build/release/support/validation/detection_pipeline_benchmark \
-  /Users/danielrd/data/dvbt_passive_radar/baseband_553000000Hz_12-51-54_26-09-2026.wav \
-  20 1 1 3 1 1
+  /Users/danielrd/data/dvbt_passive_radar/baseband_202000000Hz_20-55-20_10-10-2026.wav \
+  20 5 0 0 1 3 recordings/baseband_202000000Hz_20-55-20_10-10-2026.json 6 live
 ```
 
 Run consumers sequentially with no concurrent compilation or analysis. The
 benchmark reports device time, active process/main CPU time and wall time
-separately. File reads, writes and encoding are excluded. A preloaded 20-second
-56 MS/s float-I/Q buffer takes about 9 GB; use a shorter interval greater than
-ten seconds if necessary. The two consumers have different grid sizes and the
-legacy consumer publishes an additional map at finish.
+separately. Reads are included in `stream` and `live` and excluded in `resident`.
+Archive writes and encoding are excluded. `compute_ms_per_s` excludes the
+support-only payload hashing; `wall_including_validation_ms_per_s` includes it.
+Neither is a sum of CPU and GPU times. Five channels default to five FEC workers
+and seven frame slots. A preloaded 20-second 56 MS/s float-I/Q buffer takes about
+9 GB; bounded `live` input avoids that unrelated working set. The legacy
+consumer has a different grid and publishes an additional map at finish.
+
+An optional final timestamp-query bitmask selects frontend, unpack, receiver,
+frames, reconstruction, response, noise, profiles and focus in that order
+(`511` enables all, `0` retains CPU counters only). This is a diagnostic for
+instrumentation effects, not a different DSP path. `fft_plan_probe` independently
+measures alternative 8K VkFFT plans and checks their round-trip error. See the
+[performance report](../../docs/performance_20261012.md) for measurements and
+accuracy gates after the receiver fixes.
 
 ## Setup
 

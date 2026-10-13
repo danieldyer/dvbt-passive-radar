@@ -1,5 +1,7 @@
 #include "gpu_frontend.hpp"
 #include "sar_handoff.hpp"
+#include "recording_metadata.hpp"
+#include <optional>
 #include <charconv>
 #include <cmath>
 #include <iostream>
@@ -25,6 +27,7 @@ int main(int argc,char** argv) {
         if(argc<2 || std::string_view(argv[1])=="--help") {
             std::cout<<"Usage: dvbt_sar INPUT.wav --output FILE.sar --recording-rf-hz HZ\n"
                 <<"       --channel RF_HZ,NCO_HZ[,GUARD_DENOMINATOR] (repeat per channel)\n"
+                <<"       Or: --metadata RECORDING.json [--select-channel SIGNAL_ID]\n"
                 <<"       [--start 0] [--seconds 0] [--response-order 8] [--clock-phase-degrees 3]\n"
                 <<"       [--reference-delay-samples 0] (explicit fixed origin; otherwise acquisition estimates it)\n"
                 <<"Unpaced Vulkan raw-IQ to complex SAR spectra, 7 MHz non-hierarchical 8K DVB-T.\n"
@@ -34,11 +37,14 @@ int main(int argc,char** argv) {
         }
         radar::SarCapture capture;radar::GpuPipelineConfig config;
         std::filesystem::path output;double start=0,seconds=0;
+        std::filesystem::path metadata_path;std::string selected;std::optional<radar::RecordingMetadata> description;
         for(int i=2;i<argc;++i) {
             const std::string_view key=argv[i];
             if(i+1==argc)throw std::invalid_argument("Missing option value");
             const std::string_view value=argv[++i];
             if(key=="--output")output=value;
+            else if(key=="--metadata")metadata_path=value;
+            else if(key=="--select-channel")selected=value;
             else if(key=="--channel")capture.channels.push_back(channel(value));
             else if(key=="--recording-rf-hz")capture.recording_rf_hz=number(value);
             else if(key=="--start")start=number(value);
@@ -52,10 +58,18 @@ int main(int argc,char** argv) {
             } else throw std::invalid_argument("Unknown option: "+std::string(key));
         }
         if(output.empty() || start<0 || seconds<0)throw std::invalid_argument("Output and a nonnegative interval are required");
-        radar::WaveReader wave(argv[1]);capture.input_rate=wave.info.sample_rate;capture.decimation=capture.input_rate/8'000'000;
+        if(metadata_path.empty()) {
+            auto sidecar=std::filesystem::path(argv[1]);sidecar.replace_extension(".json");
+            if(std::filesystem::exists(sidecar))metadata_path=sidecar;
+        }
+        if(!metadata_path.empty()){description=radar::RecordingMetadata::read(metadata_path);description->configure(capture,selected);}
+        else if(!selected.empty())throw std::invalid_argument("--select-channel requires recording metadata");
+        radar::WaveReader wave(argv[1]);if(description)description->validate_wave(wave.info);
+        capture.source_rate=wave.info.sample_rate;
+        capture.input_rate=(capture.source_rate+7'999'999)/8'000'000*8'000'000;capture.decimation=capture.input_rate/8'000'000;
         capture.validate();
-        if(start>=double(wave.info.samples)/capture.input_rate)throw std::invalid_argument("Start is beyond recording");
-        if(seconds==0)seconds=double(wave.info.samples)/capture.input_rate-start;
+        if(start>=double(wave.info.samples)/capture.source_rate)throw std::invalid_argument("Start is beyond recording");
+        if(seconds==0)seconds=double(wave.info.samples)/capture.source_rate-start;
         std::vector<double> centres;
         for(const auto& c:capture.channels){centres.push_back(c.nco_hz);config.guards.push_back(c.guard);}
         auto clock=std::make_shared<radar::SampleClock>(capture.input_rate,centres,capture.clock_phase_degrees);
@@ -63,6 +77,7 @@ int main(int argc,char** argv) {
         capture.origin=bank.origin;config.origin=bank.origin;config.decimation=bank.decimation;config.max_samples=bank.capacity();
         radar::GpuPipeline pipeline(config,bank.context(),clock);
         radar::SarWriter writer(output,capture);
+        if(description){auto sidecar=output;sidecar.replace_extension(".json");description->write(sidecar,selected);}
         std::vector<std::size_t> rows(centres.size());
         auto consume=[&](const radar::SpectralBatch& spectra) {
             writer.write(radar::SarBatch(capture,spectra,clock->segments()));

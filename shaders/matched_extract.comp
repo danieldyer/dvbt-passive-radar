@@ -1,10 +1,10 @@
 #version 450
 layout(local_size_x=64) in;
-layout(binding=5) readonly buffer Samples {vec2 samples[];};
 layout(binding=6) readonly buffer Correlation {vec2 correlation[];};
 layout(binding=7) writeonly buffer Profiles {vec2 profiles[];};
-layout(push_constant) uniform Parameters {uint start,count,total,capacity,guard;int origin;float fraction,gain;uint cancel_direct,output_count,output_first;} p;
-vec2 mul_conj(vec2 a,vec2 b){return vec2(a.x*b.x+a.y*b.y,a.y*b.x-a.x*b.y);}
+layout(binding=10) readonly buffer SourceClock {vec4 coordinate[];};
+layout(binding=11) readonly buffer Prefix {vec2 prefix[];};
+layout(push_constant) uniform Parameters {uint start,count,total,capacity,guard;int origin;float fraction,gain;uint cancel_direct,output_count,output_first,size;} p;
 void main(){
     uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
     if(i>=p.capacity*1024)return;
@@ -16,13 +16,14 @@ void main(){
         zero=correlation[row*8192+bin];one=correlation[stride+row*8192+bin];
         // Circular correlation is exact inside the guard. Replace only the
         // short prefix belonging to the previous symbol: an exact finite CAF.
-        int cp=int(8192/p.guard),end=max(0,p.origin+lag-cp);
-        for(int j=0;j<end;++j){
-            uint current=uint(8192+j-p.origin-lag);
-            vec2 difference=samples[row*8192+current+uint(cp)]-samples[(row+1)*8192+current];
-            vec2 error=samples[(p.capacity+row+2)*8192+uint(j)];
-            vec2 value=mul_conj(error,difference);
-            zero+=value;one+=value*((float(j)-4095.5)/8192);
+        int origin=int(coordinate[p.start+row].x);
+        int cp=int(8192/p.guard),end=max(0,origin+lag-cp);
+        if(end>0){
+            // Exact linear convolution of the short error prefix with the
+            // reversed previous-minus-current reference. Zero padding, not
+            // circular extension, preserves echoes beyond the guard interval.
+            zero+=prefix[row*p.size+uint(end)];
+            one+=prefix[(p.capacity+row)*p.size+uint(end)];
         }
     }
     uint at=(p.start-p.output_first+row)*1024+range;

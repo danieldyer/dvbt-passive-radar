@@ -12,7 +12,8 @@ namespace radar {
 class SpectralClock {
 public:
     SpectralClock(std::uint32_t rate,std::span<const double> centres,
-                  std::span<const float> prototype,std::shared_ptr<gpu::Context> context);
+                  std::span<const float> prototype,std::shared_ptr<gpu::Context> context,
+                  std::uint32_t source_rate=0);
     ~SpectralClock();
     void process(std::span<const C> input,std::uint64_t input_start,
                  std::uint64_t first,std::size_t count,std::span<const ClockSegment> clock,

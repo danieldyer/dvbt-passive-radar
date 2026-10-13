@@ -13,6 +13,7 @@ struct OfdmWindow {
 struct OfdmBatch {
     gpu::BufferView measured,equalized,pilots;
     std::size_t count{},pilot_stride{};
+    gpu::BufferView coded_bits{}; // Optional byte-valued hard decisions (0, 1, erasure=2), in convolutional-code order.
 };
 struct CpCorrelation {C correlation{};float energy{},quality{};};
 struct IntegerFrequency {int bins{};float quality{};};

@@ -35,12 +35,13 @@ class GpuFrames {
 public:
     using Consume=std::function<void(const FrameBatch&)>;
     using Select=std::function<void(const FrameSelection&)>;
-    GpuFrames(std::span<const unsigned> guards,std::shared_ptr<gpu::Context> context);
+    GpuFrames(std::span<const unsigned> guards,std::shared_ptr<gpu::Context> context,unsigned frames_per_batch=15);
     ~GpuFrames();
     void append(const ReceiverBatch& input,const Consume& consume,ComputeTimings* timings=nullptr);
     void finish(const Consume& consume,ComputeTimings* timings=nullptr);
     void select(const ReceiverBatch&,const Select&,ComputeTimings* =nullptr,gpu::Commands* =nullptr);
     void finish_select(const Select&);
     void wait();
+    void reset();
 };
 }

@@ -24,6 +24,7 @@ struct WaveInfo {
     std::uint32_t sample_rate{};
     std::uint64_t samples{}, data_offset{};
     bool wrapped_size{};
+    std::uint16_t sample_bytes=8; // One complex sample: cf32 or signed ci16.
 };
 class WaveReader {
 public:
@@ -34,6 +35,7 @@ private:
     // Larger filebuf reads; storage outlives the stream that uses it.
     std::vector<char> file_buffer_;
     std::ifstream file_;
+    std::vector<std::int16_t> integer_samples_;
 };
 
 // Offline, centred symmetric FIR: no filter group delay in the sample coordinates.
@@ -64,6 +66,9 @@ struct ResponseFit {
     std::vector<C> response;
     double relative_error{};
 };
+// Real-orthonormal coordinates for the same causal log-response space. The
+// imaginary companions undergo exactly the same basis transformations.
+std::vector<std::complex<double>> minimum_phase_basis(std::size_t bins,unsigned order);
 // Fit one fixed, short, causal log-response to a batch. A scalar is the safe default.
 // Nonzero cepstral order is an explicit modelling assumption, not an echo separator.
 ResponseFit fit_minimum_phase(std::span<const C> measured,

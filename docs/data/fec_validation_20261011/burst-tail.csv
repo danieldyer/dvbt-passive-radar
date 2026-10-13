@@ -1,0 +1,6 @@
+model,receiver,qam,rate,esn0_db,blocks,packets,rejected,wrong_accepted,corrected_bytes,edge_packets,edge_rejected,payload_bit_errors,payload_bits,coded_bits,coded_errors,trellis_bits,trellis_errors,beyond_radius,radius_violation
+burst,known_channel,64,2,30,12,40692,972,0,413,384,0,437401,61200768,88833024,199808,66624768,477145,972,0
+burst,known_channel,64,2,34,12,40692,972,0,309,384,0,335553,61200768,88833024,105198,66624768,365650,972,0
+burst,known_channel,64,2,38,12,40692,324,0,2871,384,0,12499,61200768,88833024,31958,66624768,23651,324,0
+burst,known_channel,64,2,42,12,40692,0,0,2,384,0,0,61200768,88833024,2282,66624768,3,0,0
+burst,known_channel,64,2,46,12,40692,0,0,0,384,0,0,61200768,88833024,8,66624768,0,0,0

@@ -167,10 +167,61 @@ void rates() {
     std::cout<<"Supported-rate spectral synthesis: maximum complex error="<<maximum<<'\n';
     require(maximum<5e-6,"Spectral resampling fails at a supported ADC decimation ratio");
 }
+void rational_rate(unsigned source_rate) {
+    constexpr unsigned fs=64'000'000,d=8,count=4096;
+    const std::array centres{-24.5e6,-17.5e6,-10.375e6,17.5e6,24.5e6};
+    const std::array frequencies{-3328125.0,0.0,3328125.0};
+    const std::uint64_t first=64'000'000ULL*1200+8000;
+    const std::uint64_t start=first/fs*source_rate;
+    auto clock=std::make_shared<SampleClock>(fs,centres);
+    clock->schedule(first-1000,1.00003);clock->schedule(first+15001,.999985);
+    GpuChannelBank bank(source_rate,centres);bank.set_clock(clock);bank.origin=first;
+    const auto segments=clock->segments();std::vector<C> input(45000);
+    for(std::size_t j=0;j<input.size();++j) {
+        const auto raw=start+j;
+        const auto numerator=(raw%source_rate)*std::uint64_t(fs);
+        // Generate the independent analytic waveform in local coordinates.
+        // Adding a fractional sample to a 20-minute absolute epoch would itself
+        // inject phase error into this reference before testing the resampler.
+        const double nominal=double(std::int64_t(raw/source_rate*fs+numerator/source_rate)-std::int64_t(first))+
+            double(numerator%source_rate)/source_rate;
+        auto segment=segments.front();
+        for(auto next:segments)
+            if(nominal>=double(std::int64_t(next.start)-std::int64_t(first))+next.offset)segment=next;
+        const double local_start=double(std::int64_t(segment.start)-std::int64_t(first));
+        const double n=(nominal-segment.offset+local_start*(segment.rate-1))/segment.rate;
+        std::complex<double> value{};
+        for(unsigned c=0;c<centres.size();++c)for(double f:frequencies)
+            value+=std::polar(.02,tau*(centres[c]+f)*n/fs+.31*c);
+        input[j]=static_cast<C>(value);
+    }
+    const auto output=bank.process_clocked(input,start,first,count);
+    const auto overlap=bank.process_clocked(input,start,first+777*d,count-777);
+    double error=0,chunk=0,phase=0;
+    for(unsigned m=0;m<count;++m) {
+        std::array<std::complex<double>,5> ratios{};
+        double amplitude=0;
+        for(unsigned c=0;c<centres.size();++c) {
+            std::complex<double> expected{};
+            for(double f:frequencies)expected+=std::polar(.02,tau*f*(m*d)/fs+.31*c);
+            expected*=epoch_nco(first,centres[c],fs);
+            amplitude=std::abs(expected);
+            error=std::max(error,std::abs(std::complex<double>(output[c][m])-expected));
+            ratios[c]=std::complex<double>(output[c][m])/expected;
+            if(m>=777)chunk=std::max(chunk,double(std::abs(output[c][m]-overlap[c][m-777])));
+        }
+        // Phase is undefined at destructive interference nulls of the three
+        // tones; complex absolute error above still tests every such sample.
+        if(amplitude>.005)for(unsigned c=1;c<centres.size();++c)
+            phase=std::max(phase,std::abs(std::arg(ratios[c]*std::conj(ratios[0]))));
+    }
+    std::cout<<double(source_rate)/1e6<<" MS/s, five VHF channels, late seek and clock boundaries: max="<<error<<", chunk="<<chunk<<", differential phase="<<phase*180/std::numbers::pi<<" degrees\n";
+    require(error<6e-6 && chunk<3e-6 && phase<.01*std::numbers::pi/180,"Rational ADC rate conversion loses multichannel coherence");
+}
 }
 int main(int argc,char**) {
     try {
         interpolation();
-        if(argc>1) {waveform(1.000005);waveform(1.00003);waveform(1.001);waveform(.999);blocker();rates();}
+        if(argc>1) {waveform(1.000005);waveform(1.00003);waveform(1.001);waveform(.999);blocker();rates();rational_rate(61'000'000);rational_rate(61'440'000);}
     }catch(const std::exception& e){std::cerr<<"FAIL: "<<e.what()<<'\n';return 1;}
 }

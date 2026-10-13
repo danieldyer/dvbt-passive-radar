@@ -1,0 +1,28 @@
+#version 450
+layout(local_size_x=64) in;
+layout(set=0,binding=0,std430) readonly buffer SourceRaw {vec2 source_raw[];};
+layout(set=0,binding=2,std430) readonly buffer SourcePilots {vec2 source_pilots[];};
+layout(set=0,binding=3,std430) writeonly buffer Raw {vec2 raw[];};
+layout(set=0,binding=4,std430) writeonly buffer Equalized {vec2 equalized[];};
+layout(set=0,binding=5,std430) writeonly buffer Pilots {vec2 pilots[];};
+layout(set=0,binding=6,std430) readonly buffer Rows {uint rows[];};
+layout(set=0,binding=7,std430) readonly buffer Tables {vec2 table[];};
+layout(set=0,binding=8,std430) readonly buffer SourceOffsets {float offsets[];};
+layout(set=0,binding=9,std430) readonly buffer Channel {vec2 channel[];};
+layout(push_constant) uniform Parameters {uint count;uint stride;uint destination;uint capacity;} pc;
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+vec2 rotation(uint k,float offset){float angle=6.283185307179586*(float(k)-3408)*offset/8192;return vec2(cos(angle),sin(angle));}
+void main() {
+    uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
+    if(i>=pc.count*6817)return;
+    uint s=i/6817,k=i%6817,source=rows[s];
+    uint first=uint(clamp(int(k/3)-3,0,2272-7));
+    uint phase=k-3*first;
+    vec2 h=vec2(0);
+    for(uint j=0;j<8;++j)h+=table[2*6817+phase*8+j].x*channel[s*2273+first+j];
+    h=multiply(multiply(h,table[6817+k]),rotation(k,offsets[s]));
+    vec2 y=source_raw[source*6817+k];
+    raw[i]=y; // The scientific measurement is copied bit for bit.
+    equalized[i]=multiply(y,vec2(h.x,-h.y))/max(dot(h,h),1e-30);
+    if(k<pc.stride)pilots[s*pc.stride+k]=source_pilots[source*pc.stride+k];
+}

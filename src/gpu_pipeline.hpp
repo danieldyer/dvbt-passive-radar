@@ -13,6 +13,8 @@ struct GpuPipelineConfig {
     bool automatic_origin=true;
     unsigned fec_workers=0; // Zero: one per channel, capped by hardware concurrency.
     unsigned frame_slots=0; // Zero: workers + two; bounded backpressure, no dropped frames.
+    unsigned frames_per_batch=15; // Includes one TPS frame of context on each side.
+    bool residual_spectra=true; // Finite-waveform profile consumers need only the aligned reference.
 };
 struct GpuPipelineTimings {
     ComputeTimings receiver,frames,reconstruction,response;
@@ -43,5 +45,8 @@ public:
     void finish(const Consume& consume,GpuPipelineTimings* timings=nullptr);
     // Complete queued batches without finalizing partial TPS frames.
     void drain(const Consume& consume,GpuPipelineTimings* timings=nullptr);
+    std::vector<ReceiverStatus> status() const;
+    // Reuse compiled plans after a drained calibration/warmup stream.
+    void reset();
 };
 }

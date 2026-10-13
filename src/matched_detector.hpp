@@ -8,23 +8,29 @@ namespace radar {
 struct DetectionOptions {
     double integration_seconds=3,update_seconds=1;
     FocusOptions focus;
-    bool standardize_noise=false; // Physical complex amplitudes remain the API default.
+    bool publish_maps=true; // Range-history archiving can skip focusing entirely.
+    bool best_effort_maps=false; // Live display may skip refreshes while its previous map is busy.
 };
-struct DetectionTimings {ComputeTimings noise,profiles,focus;double calibration_cpu{},standardization_cpu{};};
-// Positive, robust background calibration changes detection units, not phase.
-// The raw complex map remains available until standardize_map() is requested.
-void estimate_map_noise(DopplerMap&);
-void standardize_map(DopplerMap&);
+struct DetectionTimings {ComputeTimings noise,profiles,focus;};
 class MatchedDetector {
     struct Impl;
     std::unique_ptr<Impl> impl_;
 public:
     using Consumer=std::function<void(std::size_t channel,DopplerMap&&)>;
-    MatchedDetector(std::shared_ptr<gpu::Context>,std::size_t channels,DetectionOptions={});
+    // Optional device consumer receives physical complex amplitudes on the owned
+    // focus worker. It must finish borrowing the buffer before returning. The
+    // later caller-thread Consumer receives metadata only.
+    using Projector=std::function<void(DopplerMap&,const gpu::BufferView&)>;
+    using ProfileConsumer=std::function<void(const SarBatch&,const MatchedProfiles&,std::span<const C> stationary,std::span<const float> variance)>;
+    MatchedDetector(std::shared_ptr<gpu::Context>,std::size_t channels,DetectionOptions={},Projector={},ProfileConsumer={});
     ~MatchedDetector();
     void append(const SarBatch&,const Consumer&,DetectionTimings* =nullptr);
     // Drain owned focusing jobs. Borrowed SarBatch buffers never escape append.
     // Consumers and timing accumulators are called only on the caller's thread.
     void finish(const Consumer&,DetectionTimings* =nullptr);
+    void reset(); // Drains jobs and clears observations; keeps compiled plans.
+    // Called on the append/finish owner thread. Keeps bounded range history
+    // while hiding a display, and avoids scheduling unnecessary focusing jobs.
+    void set_publish_maps(std::size_t channel,bool);
 };
 }

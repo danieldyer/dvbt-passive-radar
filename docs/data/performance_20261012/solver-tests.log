@@ -1,0 +1,10 @@
+Test project /Users/danielrd/sources/dvbt_passive_radar/build/release
+    Start 14: response_gpu
+1/1 Test #14: response_gpu .....................   Passed    0.75 sec
+
+100% tests passed out of 1
+
+Label Time Summary:
+gpu    =   0.75 sec*proc (1 test)
+
+Total Test time (real) =   0.76 sec

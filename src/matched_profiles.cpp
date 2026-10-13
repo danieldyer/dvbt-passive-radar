@@ -1,12 +1,13 @@
 #include "matched_profiles.hpp"
 #include "gpu_fft_plan.hpp"
+#include <bit>
 #include <cmath>
 #include <cstring>
 #include <numbers>
 
 namespace radar {
 namespace {
-constexpr unsigned capacity=128,fft_size=8192;
+constexpr unsigned capacity=128,fft_size=8192,prefix_size=2048;
 constexpr std::uint32_t pack_code[] =
 #include "matched_pack.inc"
 ;
@@ -19,23 +20,42 @@ constexpr std::uint32_t product_code[] =
 constexpr std::uint32_t extract_code[] =
 #include "matched_extract.inc"
 ;
-struct Parameters {unsigned start,count,total,capacity,guard;int origin;float fraction,gain;unsigned cancel_direct,output_count,output_first;};
+constexpr std::uint32_t prefix_code[] =
+#include "matched_prefix.inc"
+;
+constexpr std::uint32_t prefix_product_code[] =
+#include "matched_prefix_product.inc"
+;
+struct Parameters {unsigned start,count,total,capacity,guard;int origin;float fraction,gain;unsigned cancel_direct,output_count,output_first,size;};
 }
 struct GpuMatchedProfiles::Impl {
     gpu::Kernel kernel;
-    vk::UniquePipeline pad,product,extract;
-    std::unique_ptr<gpu::FftPlan> samples,moment,inverse;
+    vk::UniquePipeline pad,product,extract,prefix,prefix_product;
+    struct Plans {
+        gpu::FftPlan samples,moment,inverse,prefix_forward,prefix_inverse;
+        Plans(gpu::Kernel& kernel,unsigned tile):samples(kernel,5,8192,2*(tile+1)),
+            moment(kernel,6,fft_size,tile,tile*fft_size*sizeof(C)),inverse(kernel,6,fft_size,2*tile),
+            prefix_forward(kernel,11,prefix_size,3*tile),prefix_inverse(kernel,11,prefix_size,2*tile){}
+    };
+    std::array<std::unique_ptr<Plans>,4> shapes;
     double last_origin=-1;
     explicit Impl(std::shared_ptr<gpu::Context> context)
         :kernel(pack_code,sizeof(Parameters),{},std::move(context)),pad(kernel.pipeline(pad_code)),
-         product(kernel.pipeline(product_code)),extract(kernel.pipeline(extract_code)) {
+         product(kernel.pipeline(product_code)),extract(kernel.pipeline(extract_code)),
+         prefix(kernel.pipeline(prefix_code)),prefix_product(kernel.pipeline(prefix_product_code)) {
         kernel.storage(5,2*(capacity+1)*8192*sizeof(C));
         kernel.storage(6,2*capacity*fft_size*sizeof(C));
         kernel.storage(7,2*1020*matched_profile_size*sizeof(C));
         kernel.storage(9,6817*sizeof(C));
-        samples=std::make_unique<gpu::FftPlan>(kernel,5,8192,2*(capacity+1));
-        moment=std::make_unique<gpu::FftPlan>(kernel,6,fft_size,capacity,capacity*fft_size*sizeof(C));
-        inverse=std::make_unique<gpu::FftPlan>(kernel,6,fft_size,2*capacity);
+        kernel.storage(11,3*capacity*prefix_size*sizeof(C));
+        // All possible tail shapes are bounded and known before capture.
+        // A discontinuity must not trigger compilation of an unseen FFT size.
+        for(unsigned tile:{16U,32U,64U,128U})plans(tile);
+    }
+    Plans& plans(unsigned tile){
+        auto& shape=shapes.at(std::bit_width(tile)-5);
+        if(!shape)shape=std::make_unique<Plans>(kernel,tile);
+        return *shape;
     }
     ~Impl(){kernel.wait();}
 };
@@ -49,7 +69,7 @@ MatchedProfiles GpuMatchedProfiles::calculate(const SpectralBatch& batch,gpu::Bu
        !batch.estimate.response.mapped || batch.estimate.response.bytes<6817*sizeof(C) || !noise.mapped || noise.bytes<6817*sizeof(float))
         throw std::invalid_argument("Invalid finite reference correlation coordinates");
     const auto first=std::min(f.last,std::max<std::size_t>(1,f.first)),count=f.last-first;
-    MatchedProfiles output{{},first,count};output.values.resize(2*count*matched_profile_size);
+    MatchedProfiles output;output.first=first;output.count=count;output.values.resize(2*count*matched_profile_size);
     if(!count)return output;
     if(!stationary.empty() && stationary.size()!=6817)throw std::invalid_argument("Incomplete stationary background");
     static constexpr std::array<C,6817> zero{};
@@ -65,24 +85,48 @@ MatchedProfiles GpuMatchedProfiles::calculate(const SpectralBatch& batch,gpu::Bu
     }
     p.kernel.bind(0,f.carriers.measured);p.kernel.bind(1,batch.transmitted.carriers);
     p.kernel.bind(2,batch.transmitted.valid);p.kernel.bind(3,batch.estimate.response);p.kernel.bind(4,noise);
+    const auto offsets=batch.estimate.source_offsets;
+    if(offsets.bytes && (offsets.context!=p.kernel.context() || !offsets.mapped || offsets.bytes<batch.transmitted.count*sizeof(float)))
+        throw std::invalid_argument("Incomplete matched-filter source clock");
+    const auto* shifts=static_cast<const float*>(offsets.mapped);
+    std::vector<std::array<float,4>> coordinates(batch.transmitted.count);
+    for(std::size_t row=0;row<coordinates.size();++row){
+        const double shift=shifts ? shifts[row] : 0,local=origin-shift;
+        if(!std::isfinite(local) || local<0 || local>256)throw std::invalid_argument("Source clock moved outside finite reference support");
+        coordinates[row]={float(std::floor(local)),float(local-std::floor(local)),float(shift),0};
+    }
+    p.kernel.upload(10,std::span<const std::array<float,4>>{coordinates});
     const auto* h=static_cast<const C*>(batch.estimate.response.mapped);
     const auto* variance=static_cast<const float*>(noise.mapped);
     double gain=0;for(unsigned k=0;k<6817;++k)gain+=std::norm(h[k])/std::max(double(variance[k]),1e-30);
     gain/=8192;
     if(!std::isfinite(gain) || gain<=0)throw std::runtime_error("No finite matched-template energy");
     output.information=gain;
+    // Compile/cache only the four bounded batch shapes. The small tail must
+    // not execute the transforms and scratch writes of a full 128-row tile.
+    const auto tail=unsigned(std::max(std::size_t(16),std::bit_ceil(count%capacity)));
+    if(count>=capacity)p.plans(capacity);
+    if(count%capacity)p.plans(tail);
+    const bool correct_prefix=std::ranges::any_of(coordinates,[&](const auto& c){return c[0]+928>8192/guard;});
     const auto cmd=p.kernel.begin(timing);
     for(std::size_t offset=0;offset<count;offset+=capacity) {
         const auto n=std::min<std::size_t>(capacity,count-offset);
-        const Parameters push{unsigned(first+offset),unsigned(n),unsigned(batch.transmitted.count),capacity,
-                              guard,int(std::floor(origin)),float(origin-std::floor(origin)),float(gain),unsigned(cancel_direct),unsigned(count),unsigned(first)};
-        p.kernel.dispatch(cmd,p.kernel.primary(),push,2*(capacity+1)*8192);p.kernel.barrier(cmd);
-        p.samples->append(cmd,true);
-        p.kernel.dispatch(cmd,*p.pad,push,capacity*fft_size);p.kernel.barrier(cmd);
-        p.moment->append(cmd,false);
-        p.kernel.dispatch(cmd,*p.product,push,capacity*fft_size);p.kernel.barrier(cmd);
-        p.inverse->append(cmd,true);
-        p.kernel.dispatch(cmd,*p.extract,push,capacity*matched_profile_size);p.kernel.barrier(cmd);
+        const auto tile=n==capacity ? capacity : tail;auto& plans=p.plans(tile);
+        const Parameters push{unsigned(first+offset),unsigned(n),unsigned(batch.transmitted.count),tile,
+                              guard,int(std::floor(origin)),float(origin-std::floor(origin)),float(gain),unsigned(cancel_direct),unsigned(count),unsigned(first),prefix_size};
+        p.kernel.dispatch(cmd,p.kernel.primary(),push,2*(tile+1)*8192);p.kernel.barrier(cmd);
+        plans.samples.append(cmd,true);
+        if(correct_prefix){
+            p.kernel.dispatch(cmd,*p.prefix,push,3*tile*prefix_size);p.kernel.barrier(cmd);
+            plans.prefix_forward.append(cmd,false);
+            p.kernel.dispatch(cmd,*p.prefix_product,push,2*tile*prefix_size);p.kernel.barrier(cmd);
+            plans.prefix_inverse.append(cmd,true);
+        }
+        p.kernel.dispatch(cmd,*p.pad,push,tile*fft_size);p.kernel.barrier(cmd);
+        plans.moment.append(cmd,false);
+        p.kernel.dispatch(cmd,*p.product,push,tile*fft_size);p.kernel.barrier(cmd);
+        plans.inverse.append(cmd,true);
+        p.kernel.dispatch(cmd,*p.extract,push,tile*matched_profile_size);p.kernel.barrier(cmd);
     }
     p.kernel.finish(cmd);
     const auto* result=static_cast<const C*>(p.kernel.view(7).mapped);

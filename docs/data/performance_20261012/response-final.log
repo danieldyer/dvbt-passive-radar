@@ -1,0 +1,109 @@
+[Vulkan Loader] LAYER:          Searching for implicit layer manifest files
+[Vulkan Loader] LAYER:             In following locations:
+[Vulkan Loader] LAYER:                /Users/danielrd/sources/dvbt_passive_radar/build/release/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /Users/danielrd/.config/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /etc/xdg/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /Users/lunarg/Dev/macos-sdk-build/Vulkan-Loader/build/install/etc/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /etc/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /Users/danielrd/.local/share/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /usr/local/share/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /usr/share/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:             Found no files
+[Vulkan Loader] LAYER:          Searching for implicit layer manifest files
+[Vulkan Loader] LAYER:             In following locations:
+[Vulkan Loader] LAYER:                /Users/danielrd/sources/dvbt_passive_radar/build/release/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /Users/danielrd/.config/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /etc/xdg/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /Users/lunarg/Dev/macos-sdk-build/Vulkan-Loader/build/install/etc/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /etc/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /Users/danielrd/.local/share/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /usr/local/share/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /usr/share/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:             Found no files
+[Vulkan Loader] LAYER:          Searching for implicit layer manifest files
+[Vulkan Loader] LAYER:             In following locations:
+[Vulkan Loader] LAYER:                /Users/danielrd/sources/dvbt_passive_radar/build/release/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /Users/danielrd/.config/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /etc/xdg/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /Users/lunarg/Dev/macos-sdk-build/Vulkan-Loader/build/install/etc/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /etc/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /Users/danielrd/.local/share/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /usr/local/share/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /usr/share/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:             Found no files
+[Vulkan Loader] LAYER:          Searching for implicit layer manifest files
+[Vulkan Loader] LAYER:             In following locations:
+[Vulkan Loader] LAYER:                /Users/danielrd/sources/dvbt_passive_radar/build/release/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /Users/danielrd/.config/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /etc/xdg/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /Users/lunarg/Dev/macos-sdk-build/Vulkan-Loader/build/install/etc/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /etc/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /Users/danielrd/.local/share/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /usr/local/share/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /usr/share/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:             Found no files
+[Vulkan Loader] LAYER:          Searching for implicit layer manifest files
+[Vulkan Loader] LAYER:             In following locations:
+[Vulkan Loader] LAYER:                /Users/danielrd/sources/dvbt_passive_radar/build/release/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /Users/danielrd/.config/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /etc/xdg/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /Users/lunarg/Dev/macos-sdk-build/Vulkan-Loader/build/install/etc/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /etc/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /Users/danielrd/.local/share/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /usr/local/share/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:                /usr/share/vulkan/implicit_layer.d
+[Vulkan Loader] LAYER:             Found no files
+[Vulkan Loader] LAYER:          Searching for explicit layer manifest files
+[Vulkan Loader] LAYER:             In following locations:
+[Vulkan Loader] LAYER:                /Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/share/vulkan/explicit_layer.d
+[Vulkan Loader] LAYER:             Found the following files:
+[Vulkan Loader] LAYER:                /Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/share/vulkan/explicit_layer.d/VkLayer_api_dump.json
+[Vulkan Loader] LAYER:                /Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/share/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json
+[Vulkan Loader] LAYER:                /Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/share/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json
+[Vulkan Loader] LAYER:                /Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/share/vulkan/explicit_layer.d/VkLayer_khronos_validation.json
+[Vulkan Loader] LAYER:                /Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/share/vulkan/explicit_layer.d/VkLayer_screenshot.json
+[Vulkan Loader] LAYER:                /Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/share/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json
+[Vulkan Loader] LAYER:                /Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/share/vulkan/explicit_layer.d/VkLayer_khronos_shader_object.json
+[Vulkan Loader] WARNING | LAYER: env var 'VK_INSTANCE_LAYERS' defined and adding layers "VK_LAYER_KHRONOS_validation"
+[Vulkan Loader] WARNING | LAYER: env var 'VK_INSTANCE_LAYERS' defined and adding layers "VK_LAYER_KHRONOS_validation"
+[Vulkan Loader] DEBUG | LAYER:  Loading layer library /Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/share/vulkan/explicit_layer.d/../../../lib/libVkLayer_khronos_validation.dylib
+[Vulkan Loader] INFO | LAYER:   Insert instance layer "VK_LAYER_KHRONOS_validation" (/Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/lib/libVkLayer_khronos_validation.dylib)
+[Vulkan Loader] LAYER:          vkCreateInstance layer callstack setup to:
+[Vulkan Loader] LAYER:             <Application>
+[Vulkan Loader] LAYER:               ||
+[Vulkan Loader] LAYER:             <Loader>
+[Vulkan Loader] LAYER:               ||
+[Vulkan Loader] LAYER:             VK_LAYER_KHRONOS_validation
+[Vulkan Loader] LAYER:                     Type: Explicit
+[Vulkan Loader] LAYER:                     Enabled By: Environment Variable VK_INSTANCE_LAYERS
+[Vulkan Loader] LAYER:                     Manifest: /Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/share/vulkan/explicit_layer.d/VkLayer_khronos_validation.json
+[Vulkan Loader] LAYER:                     Library:  /Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/lib/libVkLayer_khronos_validation.dylib
+[Vulkan Loader] LAYER:               ||
+[Vulkan Loader] LAYER:             <Drivers>
+[Vulkan Loader] INFO | LAYER:   Inserted device layer "VK_LAYER_KHRONOS_validation" (/Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/lib/libVkLayer_khronos_validation.dylib)
+[Vulkan Loader] DRIVER:         vkCreateDevice layer callstack setup to:
+[Vulkan Loader] DRIVER:            <Application>
+[Vulkan Loader] DRIVER:              ||
+[Vulkan Loader] DRIVER:            <Loader>
+[Vulkan Loader] DRIVER:              ||
+[Vulkan Loader] LAYER:             VK_LAYER_KHRONOS_validation
+[Vulkan Loader] LAYER:                     Type: Explicit
+[Vulkan Loader] LAYER:                     Enabled By: Environment Variable VK_INSTANCE_LAYERS
+[Vulkan Loader] LAYER:                     Manifest: /Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/share/vulkan/explicit_layer.d/VkLayer_khronos_validation.json
+[Vulkan Loader] LAYER:                     Library:  /Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/lib/libVkLayer_khronos_validation.dylib
+[Vulkan Loader] LAYER:               ||
+[Vulkan Loader] DRIVER:            <Device>
+[Vulkan Loader] DRIVER:                Using "Apple M5" with driver: "/Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/lib/libMoltenVK.dylib"
+[Vulkan Loader] DEBUG | LAYER:  Unloading layer library /Users/danielrd/sources/dvbt_passive_radar/build/sdk/macOS/lib/libVkLayer_khronos_validation.dylib
+Faded-carrier conditional direct origin error=3.84206e-05 samples
+Faded-carrier conditional direct origin error=6.28736e-05 samples
+Order 0: CPU/GPU max relative response error=7.39305e-08
+Order 1: CPU/GPU max relative response error=2.49829e-07
+Order 8: CPU/GPU max relative response error=2.81193e-07
+Convergence gain=0.01 noise=0 relative response error=5.95023e-07
+Convergence gain=0.01 noise=0.003 relative response error=7.16417e-07
+Convergence gain=1 noise=0 relative response error=4.22813e-07
+Convergence gain=1 noise=0.003 relative response error=4.84037e-07
+Convergence gain=100 noise=0 relative response error=6.46848e-07
+Convergence gain=100 noise=0.003 relative response error=8.01741e-07
+Masks, all-pass rejection, explicit origin, independent gain phase and moving echo PASS; echo max error=4.61721e-07

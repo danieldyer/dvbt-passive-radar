@@ -1,0 +1,73 @@
+Test project /Users/danielrd/sources/dvbt_passive_radar/build/release
+      Start  1: capture_tui_cpu
+ 1/32 Test  #1: capture_tui_cpu ....................   Passed    0.43 sec
+      Start  2: capture_replay_cpu
+ 2/32 Test  #2: capture_replay_cpu .................   Passed    0.02 sec
+      Start  3: live_archive_cpu
+ 3/32 Test  #3: live_archive_cpu ...................   Passed    0.39 sec
+      Start  4: live_capture_continuity_cpu
+ 4/32 Test  #4: live_capture_continuity_cpu ........   Passed    0.38 sec
+      Start  5: live_capture_phase_gpu
+ 5/32 Test  #5: live_capture_phase_gpu .............   Passed    0.21 sec
+      Start  6: recording_input_cpu
+ 6/32 Test  #6: recording_input_cpu ................   Passed    0.42 sec
+      Start  7: matched_profiles_gpu
+ 7/32 Test  #7: matched_profiles_gpu ...............   Passed    5.85 sec
+      Start  8: command_dependencies_gpu
+ 8/32 Test  #8: command_dependencies_gpu ...........   Passed    0.37 sec
+      Start  9: sar_coordinates_cpu
+ 9/32 Test  #9: sar_coordinates_cpu ................   Passed    0.40 sec
+      Start 10: sar_multichannel_gpu
+10/32 Test #10: sar_multichannel_gpu ...............   Passed    4.32 sec
+      Start 11: sar_bounded_workers_gpu
+11/32 Test #11: sar_bounded_workers_gpu ............   Passed    4.47 sec
+      Start 12: sar_consumer_failure_gpu
+12/32 Test #12: sar_consumer_failure_gpu ...........   Passed    4.28 sec
+      Start 13: sar_mixed_mcs_gpu
+13/32 Test #13: sar_mixed_mcs_gpu ..................   Passed    4.55 sec
+      Start 14: response_gpu
+14/32 Test #14: response_gpu .......................   Passed    0.64 sec
+      Start 15: remodulation_gpu
+15/32 Test #15: remodulation_gpu ...................   Passed    1.16 sec
+      Start 16: receiver_gpu
+16/32 Test #16: receiver_gpu .......................   Passed    1.89 sec
+      Start 17: ofdm_gpu
+17/32 Test #17: ofdm_gpu ...........................   Passed    0.75 sec
+      Start 18: fec_cpu
+18/32 Test #18: fec_cpu ............................   Passed    0.53 sec
+      Start 19: common_clock_cpu
+19/32 Test #19: common_clock_cpu ...................   Passed    0.42 sec
+      Start 20: common_clock_gpu
+20/32 Test #20: common_clock_gpu ...................   Passed    0.18 sec
+      Start 21: spectral_clock_cpu
+21/32 Test #21: spectral_clock_cpu .................   Passed    0.40 sec
+      Start 22: spectral_clock_gpu
+22/32 Test #22: spectral_clock_gpu .................   Passed    1.71 sec
+      Start 23: frontend_gpu
+23/32 Test #23: frontend_gpu .......................   Passed    2.33 sec
+      Start 24: range_doppler_cpu
+24/32 Test #24: range_doppler_cpu ..................   Passed    0.73 sec
+      Start 25: phase_coordinates_cpu
+25/32 Test #25: phase_coordinates_cpu ..............   Passed    0.71 sec
+      Start 26: phase_coordinates_gpu
+26/32 Test #26: phase_coordinates_gpu ..............   Passed    0.33 sec
+      Start 27: receiver_phase_gpu
+27/32 Test #27: receiver_phase_gpu .................   Passed    0.98 sec
+      Start 28: pipeline_phase_gpu
+28/32 Test #28: pipeline_phase_gpu .................   Passed    1.02 sec
+      Start 29: reconstruction_cpu
+29/32 Test #29: reconstruction_cpu .................   Passed    0.61 sec
+      Start 30: residual_gpu
+30/32 Test #30: residual_gpu .......................   Passed    0.02 sec
+      Start 31: cross_spectrum_8k
+31/32 Test #31: cross_spectrum_8k ..................   Passed    0.10 sec
+      Start 32: cross_spectrum_partial_workgroup
+32/32 Test #32: cross_spectrum_partial_workgroup ...   Passed    0.07 sec
+
+100% tests passed out of 32
+
+Label Time Summary:
+cpu    =   5.45 sec*proc (12 tests)
+gpu    =  35.23 sec*proc (20 tests)
+
+Total Test time (real) =  40.69 sec

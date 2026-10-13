@@ -1,0 +1,34 @@
+#version 450
+layout(local_size_x=64) in;
+layout(binding=4) readonly buffer Equalized {vec2 equalized[];};
+layout(binding=5) readonly buffer Pilots {vec2 pilots[];};
+layout(binding=10) readonly buffer Mapping {uint mapping[];};
+layout(binding=11) writeonly buffer Bits {uint bits[];};
+layout(push_constant) uniform Parameters {uint count,stride,qam_bits,capacity;} pc;
+uint label(vec2 z){
+    if(any(isnan(z)) || any(isinf(z)))return 255;
+    uint axis=pc.qam_bits/2,axis_half=1U<<(axis-1),result=0;
+    float scale=pc.qam_bits==2 ? 1.4142135381698608 : pc.qam_bits==4 ? 3.1622776985168457 : 6.480740547180176;
+    for(uint a=0;a<2;++a){
+        precise float magnitude=abs(z[a])*scale*.5;
+        uint rank=uint(clamp(float(axis_half)-magnitude,0.,float(axis_half-1))),gray=rank^(rank>>1);
+        // Some devices flush subnormal arithmetic to zero. Preserve its sign
+        // decision while treating both signed zeros exactly like the CPU.
+        uint representation=floatBitsToUint(z[a]);
+        result|=((representation>>31)*uint((representation&0x7fffffffU)!=0))<<a;
+        for(uint j=0;j<axis-1;++j)result|=((gray>>(axis-2-j))&1U)<<(2+2*j+a);
+    }
+    return result;
+}
+void main(){
+    uint word=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
+    uint row_bits=6048*pc.qam_bits;if(word*4>=pc.count*row_bits)return;
+    uint packed=0;
+    for(uint b=0;b<4;++b){
+        uint i=4*word+b,row=i/row_bits,mod=floatBitsToUint(pilots[row*pc.stride].x);
+        uint index=mapping[mod*row_bits+i%row_bits];
+        uint value=label(equalized[row*6817+index/8]);
+        packed|=(value==255 ? 2 : (value>>(index%8))&1U)<<(8*b);
+    }
+    bits[word]=packed;
+}

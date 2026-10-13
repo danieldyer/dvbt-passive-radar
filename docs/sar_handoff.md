@@ -62,8 +62,9 @@ transmitters need not have aligned frames.
 * Declared physical carrier frequency: `channel.rf_hz+k*Fo/N`.
 * Canonical reference `S`: transmitted active carriers, with validity mask.
   Its direct-arrival useful-symbol origin is modelled at `m+d`, where
-  `d=estimate.reference_origin` in channel samples. This is one explicit fixed
-  coordinate per acquisition segment, separate from the minimum-phase response.
+  `d=estimate.reference_origin-symbol.source_offset_samples` in channel samples.
+  The first term is fixed per acquisition segment; the second tracks that source
+  on the shared receive grid. Neither is a minimum-phase response coefficient.
 * Aligned reference `X=S*exp(-j*2*pi*k*d/N)`; fitted response `H`.
 * Residual cross spectrum `C=(Y-H*X)*conj(X)` and normalized product
   `R=(Y-H*X)*conj(H*X)/max(abs(H*X)^2,1e-30)`.
@@ -77,8 +78,11 @@ These are relative, direct-path-referenced coordinates. No UTC epoch, surveyed
 propagation delay, absolute RF phase calibration, or transmitter oscillator
 calibration is inferred from them. The three-degree parameter is a clock-loop
 design budget, not a claim that every physical calibration error is bounded by
-three degrees. Independent transmitter clock error remains a modelling limit
-of assuming one nominal 8 MS/s waveform grid after common ADC retiming.
+three degrees. Each row also exports `source_rate_error`, the residual source
+rate relative to this common grid. Integer FFT-window steering stays explicit
+in `window.sample`; it is removed from ADC clock observations. The source-phase
+model is constant within a symbol, so unmodelled intra-symbol dilation/ICI still
+needs a bound for the actual residual rate. See the receiver validation report.
 
 ## Finite measurement operator
 
@@ -104,6 +108,12 @@ allows a SAR consumer to account for these effects rather than hide them in a
 range/Doppler display. Minimum-phase fitting can absorb minimum-phase parts of
 the scene; the constraint alone does not guarantee preservation of every echo.
 
+See the [information-preservation audit](information_preservation_review_20261011.md)
+for the conditional Fisher-information criterion, the response solver's measured
+convergence limitation, and the distinction between this spectral handoff, live
+channel IQ and compressed profiles. None is a claim of universal SAR sufficiency
+independent of the assumed scene, nuisance and noise models.
+
 ## Archive version 1
 
 Little-endian, IEEE float32/float64, no struct padding. Complex float32 is
@@ -111,14 +121,23 @@ real followed by imaginary. The fixed header is:
 
 | Field | Type |
 |---|---|
-| Magic `DVBTSAR1` | 8 bytes |
-| Input rate, decimation, channel count, flags (zero) | 4 x uint32 |
+| Magic `DVBTSAR2` | 8 bytes |
+| Corrected coordinate rate, decimation, channel count, flags | 4 x uint32 |
 | Corrected ADC origin | uint64 |
 | Declared recording RF, clock phase budget in degrees | 2 x float64 |
 | Per channel: physical RF, NCO, guard denominator, reserved zero | float64, float64, uint32, uint32 |
 
 Records have a four-byte tag and uint64 body length. A reader can skip unknown
-tags. `CLCK` appends uint32 count followed by that many `(uint64 start, float64
+tags. Flag bit 0 means nominal source-rate conversion is present; readers that
+cannot support it must reject that flag. Other flags are zero. Optional `SRAT`
+contains one uint32 original WAV sample rate when it differs
+from the coordinate rate. Its presence requires the conversion
+`original_adc = (corrected_adc + clock_offset) * source_rate / coordinate_rate`;
+`seconds = corrected_adc / coordinate_rate` is unchanged. The same conversion
+applies to every channel. Without `SRAT`, source rate equals coordinate rate.
+Geometry and channel names are retained in the optional recording JSON sidecar.
+
+`CLCK` appends uint32 count followed by that many `(uint64 start, float64
 offset, float64 rate)` segments. Existing published segments never change.
 Segments preceding a SPEC record cover its coordinates, including future
 segments already scheduled at the time of that batch.
@@ -128,7 +147,9 @@ segments already scheduled at the time of that batch.
 1. uint32 channel, segment, rows, first-new-row, end-new-row, TPS-frame count.
 2. float64 reference origin (channel samples), relative response-fit error.
 3. Per row: uint64 channel sample; float64 applied phase, applied CFO in Hz;
-   uint32 modulo-4 index, discontinuity flag.
+   uint32 modulo-4 index, discontinuity flag; float64 source offset in channel
+   samples, source rate error. Each row is 48 bytes. Version 1 used 32 bytes and
+   implied zero source offset/rate; the support readers accept both versions.
 4. Per TPS frame: six uint32 values (frame, constellation, code rate, guard,
    mode, hierarchy), then 68 uint8 BCH-checked TPS bits. Enum values follow
    `Tps`; the channel header separately gives the guard denominator.

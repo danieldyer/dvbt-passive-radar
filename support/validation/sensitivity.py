@@ -10,6 +10,7 @@ NFFT, BINS, FS, DT = 8192, 6817, 8e6, 8704/8e6
 C, RF = 299792458., 557625000.
 K = np.arange(BINS)-3408
 ROW = np.dtype([('sample','<u8'),('phase','<f8'),('frequency','<f8'),('modulo','<u4'),('discontinuity','<u4')])
+ROW2 = np.dtype(ROW.descr+[('source_offset','<f8'),('source_rate','<f8')])
 
 
 def db(power):
@@ -20,7 +21,9 @@ def blocks(path):
     """Read checked records; include context for checks, emit only new rows."""
     size=path.stat().st_size
     with path.open('rb') as f:
-        if f.read(8)!=b'DVBTSAR1':raise ValueError('Not a DVBTSAR1 file')
+        magic=f.read(8)
+        if magic not in (b'DVBTSAR1',b'DVBTSAR2'):raise ValueError('Not a DVBTSAR file')
+        row_type=ROW2 if magic==b'DVBTSAR2' else ROW
         rate,decimation,channels,flags,origin,rf,budget=struct.unpack('<4IQdd',f.read(40))
         if channels!=1 or rate!=decimation*FS:raise ValueError('Expected one 8-MS/s channel')
         channel=struct.unpack('<ddII',f.read(24));count=0
@@ -29,9 +32,9 @@ def blocks(path):
             if start+length>size:raise ValueError('Truncated SAR record')
             if tag==b'SPEC':
                 index,segment,rows,first,last,frames,reference_origin,error=struct.unpack('<6Idd',f.read(40))
-                if not 0<=first<last<=rows<=1020 or length!=40+32*rows+92*frames+8*BINS+20*rows*BINS:
+                if not 0<=first<last<=rows<=1020 or length!=40+row_type.itemsize*rows+92*frames+8*BINS+20*rows*BINS:
                     raise ValueError('Invalid SPEC dimensions')
-                coordinates=np.frombuffer(f.read(rows*32),ROW).copy()
+                coordinates=np.frombuffer(f.read(rows*row_type.itemsize),row_type).copy()
                 f.seek(frames*92,1);pos=f.tell()
                 h=np.memmap(path,dtype='<c8',mode='r',offset=pos,shape=(BINS,))
                 pos+=BINS*8
@@ -42,7 +45,8 @@ def blocks(path):
                 valid=np.memmap(path,dtype='<u4',mode='r',offset=pos,shape=(rows,BINS))
                 yield dict(index=index,segment=segment,first=first,last=last,h=h,y=y,s=s,valid=valid,
                            coordinates=coordinates,origin=origin,rate=rate,decimation=decimation,
-                           reference_origin=reference_origin,error=error)
+                           reference_origin=reference_origin,error=error,
+                           source_offsets=coordinates['source_offset'] if magic==b'DVBTSAR2' else np.zeros(rows))
                 count+=1
             elif tag==b'DONE':
                 if length!=8 or struct.unpack('<Q',f.read(8))[0]!=count or start+length!=size:
@@ -61,7 +65,7 @@ def profiles(spectrum,ranges=801):
 def summarize(path,output):
     before=[];after=[];flat=[];stationary=[];times=[];records=[];noise=[];reference_power=[];discarded=0;replay_error=[]
     for b in blocks(path):
-        x=np.asarray(b['s'],dtype=np.complex128)*np.exp(-2j*np.pi*K*b['reference_origin']/NFFT)
+        x=np.asarray(b['s'],dtype=np.complex128)*np.exp(-2j*np.pi*K*(b['reference_origin']-b['source_offsets'][:,None])/NFFT)
         y=np.asarray(b['y'],dtype=np.complex128);h=np.asarray(b['h'],dtype=np.complex128)
         mask=np.asarray(b['valid'],dtype=bool);predicted=x*h;error=np.where(mask,y-predicted,0)
         ratio=np.sum(np.abs(error)**2)/np.sum(np.abs(y[mask])**2)

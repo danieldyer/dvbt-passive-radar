@@ -1,23 +1,37 @@
 #version 450
-layout(local_size_x=256) in;
+#ifdef RADAR_SUBGROUPS
+#extension GL_KHR_shader_subgroup_arithmetic : require
+#endif
+layout(local_size_x_id=1) in;
+layout(constant_id=0) const uint model_order=8;
+const uint lanes=gl_WorkGroupSize.x,elements=(6817+lanes-1)/lanes;
 layout(set=0,binding=4,std430) readonly buffer Statistics {vec4 stats[];};
 layout(set=0,binding=5,std430) buffer Response {vec2 response[];};
 layout(set=0,binding=6,std430) readonly buffer Basis {vec2 basis[];};
 layout(push_constant) uniform Parameters {uint count;uint order;uint iterations;uint unused;} pc;
-shared vec2 reduction[256];
+shared vec2 reduction[lanes];
 shared float coefficient[65];
 shared float gain,update;
 shared uint usable;
 vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
 vec2 reduce(vec2 value) {
+#ifdef RADAR_SUBGROUPS
+    vec2 part=subgroupAdd(value);
+    if(gl_SubgroupInvocationID==0)reduction[gl_SubgroupID]=part;
+    barrier();
+    vec2 result=vec2(0);
+    for(uint i=gl_SubgroupInvocationID;i<gl_NumSubgroups;i+=gl_SubgroupSize)result+=reduction[i];
+    result=subgroupAdd(result);barrier();return result;
+#else
     uint lane=gl_LocalInvocationID.x;reduction[lane]=value;barrier();
-    for(uint step=128;step>0;step/=2){if(lane<step)reduction[lane]+=reduction[lane+step];barrier();}
+    for(uint step=lanes/2;step>0;step/=2){if(lane<step)reduction[lane]+=reduction[lane+step];barrier();}
     vec2 result=reduction[0];barrier();return result;
+#endif
 }
 void main() {
-    uint lane=gl_LocalInvocationID.x,dimensions=2*pc.order+1;
+    uint lane=gl_LocalInvocationID.x,dimensions=2*model_order+1;
     vec2 sums=vec2(0);
-    for(uint k=lane;k<6817;k+=256)sums+=vec2(length(stats[k].xy),stats[k].z);
+    for(uint k=lane;k<6817;k+=lanes)sums+=vec2(length(stats[k].xy),stats[k].z);
     sums=reduce(sums);
     if(lane==0) {
         usable=uint(sums.x>1e-20 && sums.y>1e-20 && !any(isnan(sums)) && !any(isinf(sums)));
@@ -25,44 +39,70 @@ void main() {
     }
     if(lane<65)coefficient[lane]=0;barrier();
     if(usable==0) {
-        for(uint k=lane;k<6817;k+=256)response[k]=vec2(0);
+        for(uint k=lane;k<6817;k+=lanes)response[k]=vec2(0);
         if(lane==0){response[6817]=vec2(0);response[6818]=vec2(0);}return;
     }
     if(lane==0)coefficient[0]=log(gain);
-    float amplitude[27],target[27],power[27];
-    for(uint j=0;j<27;++j) {
-        uint k=lane+256*j;amplitude[j]=gain;power[j]=k<6817 ? stats[k].z : 0;
+    float amplitude[elements],target[elements],power[elements];
+    for(uint j=0;j<elements;++j) {
+        uint k=lane+lanes*j;amplitude[j]=gain;power[j]=k<6817 ? stats[k].z : 0;
         target[j]=power[j]>1e-12 ? length(stats[k].xy)/power[j] : 0;
+    }
+    barrier();
+    // Orthogonal projection of log magnitude is an initial guess only. The
+    // following iterations still minimise the original power-weighted
+    // amplitude objective, with exactly the same minimum-phase constraint.
+    for(uint d=0;d<dimensions;++d){
+        vec2 projection=vec2(0);
+        for(uint j=0;j<elements;++j){uint k=lane+lanes*j;if(k>=6817)break;
+            if(target[j]>0)projection.x+=basis[d*6817+k].x*log(target[j]/gain);
+        }
+        projection=reduce(projection);
+        if(lane==0)coefficient[d]+=projection.x/6817;
+        barrier();
+    }
+    for(uint j=0;j<elements;++j){uint k=lane+lanes*j;if(k>=6817)break;float value=0;
+        for(uint d=0;d<dimensions;++d)value+=coefficient[d]*basis[d*6817+k].x;
+        amplitude[j]=exp(value);
     }
     barrier();
     // The small constrained solve has one workgroup. No global convergence
     // polling, host round trips, atomics or per-coordinate dispatches are needed.
-    for(uint iteration=0;iteration<pc.iterations;++iteration)for(uint d=0;d<dimensions;++d) {
+    for(uint iteration=0;iteration<pc.iterations;++iteration){
+        for(uint d=0;d<dimensions;++d) {
         vec2 step=vec2(0);
-        for(uint j=0;j<27;++j) {
-            uint k=lane+256*j;if(k>=6817)break;
+        for(uint j=0;j<elements;++j) {
+            uint k=lane+lanes*j;if(k>=6817)break;
             float derivative=amplitude[j]*basis[d*6817+k].x;
             step+=vec2(derivative*(target[j]-amplitude[j]),derivative*derivative)*power[j];
         }
         step=reduce(step);
         if(lane==0){update=clamp(step.x/(step.y+1e-12),-.25,.25);coefficient[d]+=update;}
         barrier();
-        for(uint j=0;j<27;++j) {
-            uint k=lane+256*j;if(k>=6817)break;
+        for(uint j=0;j<elements;++j) {
+            uint k=lane+lanes*j;if(k>=6817)break;
             amplitude[j]*=exp(update*basis[d*6817+k].x);
         }
         barrier();
     }
+        // Keep magnitude and phase on the same cepstrum. Incremental float
+        // amplitude products otherwise stop changing before coefficients do.
+        for(uint j=0;j<elements;++j){uint k=lane+lanes*j;if(k>=6817)break;float value=0;
+            for(uint d=0;d<dimensions;++d)value+=coefficient[d]*basis[d*6817+k].x;
+            amplitude[j]=exp(value);
+        }
+        barrier();
+    }
     vec2 phase=vec2(0);
-    for(uint j=0;j<27;++j) {
-        uint k=lane+256*j;if(k>=6817)break;float angle=0;
+    for(uint j=0;j<elements;++j) {
+        uint k=lane+lanes*j;if(k>=6817)break;float angle=0;
         for(uint d=0;d<dimensions;++d)angle+=coefficient[d]*basis[d*6817+k].y;
         vec2 h=amplitude[j]*vec2(cos(angle),sin(angle));response[k]=h;
         phase+=multiply(stats[k].xy,vec2(h.x,-h.y));
     }
     phase=reduce(phase);phase=length(phase)>0 ? phase/length(phase) : vec2(1,0);
     vec2 energy=vec2(0);
-    for(uint k=lane;k<6817;k+=256) {
+    for(uint k=lane;k<6817;k+=lanes) {
         vec2 h=multiply(response[k],phase);response[k]=h;
         vec4 s=stats[k];energy+=vec2(s.w-2*dot(s.xy,h)+dot(h,h)*s.z,s.w);
     }
