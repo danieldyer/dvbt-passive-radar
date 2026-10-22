@@ -108,7 +108,7 @@ int run_capture(const Options& options,const RecordingMetadata& description,cons
         for(const auto& signal:description.signals){CaptureChannelStatus channel;channel.id=signal.id;channel.name=signal.name;
             channel.rf_hz=signal.channel.rf_hz;channel.nco_hz=signal.channel.nco_hz;view.channels.push_back(std::move(channel));}
         view.message="Configuring capture source";monitor.publish(view);
-        auto source=options.simulation.empty() ? make_uhd_source(*description.capture) :
+        auto source=options.simulation.empty() ? make_capture_source(*description.capture) :
             make_replay_source(options.simulation,*description.capture,!options.unpaced,options.gap_seconds,options.gap_samples,!options.simulate_once,options.simulate_cyclic);
         const auto applied=source->applied();view.settings=applied;view.applied=true;view.phase=CapturePhase::warming;
         view.message="Preparing Vulkan channeliser and receiver";monitor.publish(view);SarCapture capture;description.configure(capture);
@@ -121,7 +121,7 @@ int run_capture(const Options& options,const RecordingMetadata& description,cons
         view.phase_budget=capture.clock_phase_degrees;
         capture.validate();auto clock=std::make_shared<SampleClock>(capture.input_rate,centres,capture.clock_phase_degrees,description.capture->clock);
         // Integer source coordinates label samples; this tiny initial slope
-        // retains UHD's fractional applied rate without independently retiming channels.
+        // retains the device's fractional applied rate without independently retiming channels.
         clock->schedule(64,applied.rate_hz/capture.source_rate);
         GpuChannelBank bank(capture.source_rate,centres);bank.set_clock(clock);
         config.max_samples=bank.capacity();config.decimation=bank.decimation;config.frames_per_batch=6;config.residual_spectra=false;
@@ -138,7 +138,7 @@ int run_capture(const Options& options,const RecordingMetadata& description,cons
             {"display_remove_dc",options.remove_dc},{"profile_stationary_subtraction",false},{"simulation",view.simulation},
             {"simulation_cyclic",options.simulate_cyclic},{"simulation_once",options.simulate_once},{"unpaced",options.unpaced},
             {"requested_seconds",options.seconds},{"gpu_timestamps_enabled",options.profile},
-            {"applied_capture",boost::json::object{{"device",applied.device},{"serial",applied.serial},{"antenna",applied.antenna},
+            {"applied_capture",boost::json::object{{"driver",applied.driver},{"device",applied.device},{"serial",applied.serial},{"antenna",applied.antenna},
                 {"rate_hz",applied.rate_hz},{"centre_hz",applied.centre_hz},{"gain_db",applied.gain_db},
                 {"bandwidth_hz",applied.bandwidth_hz},{"master_clock_hz",applied.master_clock_hz},
                 {"clock_source",applied.clock_source},{"time_source",applied.time_source}}},
@@ -195,8 +195,8 @@ int run_capture(const Options& options,const RecordingMetadata& description,cons
             }
         };
         // Complete the first channelizer dispatch before starting the source.
-        // UHD must never wait for shader/FFT initialization in its receive loop.
-        // Materialise the whole receive ring before UHD starts, including the
+        // Capture must never wait for shader/FFT initialization in its receive loop.
+        // Materialise the whole receive ring before capture starts, including the
         // pages beyond the first FFT tile. Avoid first-touch faults on recv().
         std::ranges::fill(gpu_input.storage(),Iq16{});
         const auto warm_first=std::uint64_t(16384);
@@ -224,7 +224,7 @@ int run_capture(const Options& options,const RecordingMetadata& description,cons
                     const bool discard_block=target.empty();if(discard_block)target=discard;
                     auto result=source->receive(target);
                     if(result.end)break;
-                    if(result.error==CaptureRead::Error::fatal)throw std::runtime_error("UHD receive: "+result.message);
+                    if(result.error==CaptureRead::Error::fatal)throw std::runtime_error("SDR receive: "+result.message);
                     if(result.error==CaptureRead::Error::timeout)++counters.timeouts;
                     if(result.count){
                         if(result.restart)timeline.restart();if(result.looped)++counters.replay_loops;
@@ -340,7 +340,7 @@ int run_capture(const Options& options,const RecordingMetadata& description,cons
         {std::lock_guard lock(failure_mutex);if(producer_failure){try{std::rethrow_exception(producer_failure);}catch(const std::exception& e){summary["error"]=e.what();}}}
         summary["actual_rate_hz"]=applied.rate_hz;summary["actual_centre_hz"]=applied.centre_hz;
         summary["device"]=applied.device;summary["serial"]=applied.serial;summary["antenna"]=applied.antenna;
-        summary["actual_gain_db"]=applied.gain_db;summary["actual_bandwidth_hz"]=applied.bandwidth_hz;
+        summary["capture_driver"]=applied.driver;summary["actual_gain_db"]=applied.gain_db;summary["actual_bandwidth_hz"]=applied.bandwidth_hz;
         summary["actual_master_clock_hz"]=applied.master_clock_hz;
         summary["clock_source"]=applied.clock_source;summary["time_source"]=applied.time_source;
         summary["dsp_seconds"]=dsp_wall;summary["processed_seconds"]=processed_seconds;summary["processing_speed"]=processed_seconds/std::max(dsp_wall,1e-9);

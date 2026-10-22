@@ -1,6 +1,7 @@
 #include "recording_metadata.hpp"
 #include <array>
 #include <iostream>
+#include <boost/json.hpp>
 
 using namespace radar;
 namespace {
@@ -40,6 +41,17 @@ int main(int argc,char** argv) {
         rejects([&]{SarCapture c;metadata.configure(c,"unknown");});
         auto mismatch=wave.info;mismatch.sample_rate=56'000'000;rejects([&]{metadata.validate_wave(mismatch);});
         mismatch=wave.info;mismatch.sample_bytes=8;rejects([&]{metadata.validate_wave(mismatch);});
+        const auto usdr_path=path.parent_path()/"radar-usdr-metadata-test.json";Remove remove_usdr{usdr_path};
+        auto document=boost::json::parse(metadata.json());
+        document.as_object()["capture"]=boost::json::object{{"driver","usdr"}};
+        auto save=[&]{std::ofstream file(usdr_path);file<<boost::json::serialize(document);};save();
+        auto usdr=RecordingMetadata::read(usdr_path);
+        check(usdr.capture->driver=="usdr" && usdr.capture->device_args=="bus=pcie" && usdr.capture->antenna=="auto" && usdr.capture->bandwidth_hz==28e6,"Wrong uSDR metadata defaults");
+        usdr.write(usdr_path);usdr=RecordingMetadata::read(usdr_path);
+        check(usdr.capture->driver=="usdr","Saved metadata lost capture driver");
+        document.at("capture").as_object().erase("driver");save();
+        check(RecordingMetadata::read(usdr_path).capture->driver=="uhd","Legacy metadata changed default driver");
+        document.at("capture").as_object()["driver"]="typo";save();rejects([&]{RecordingMetadata::read(usdr_path);});
         std::cout<<"Exact ci16 I/Q, seek, bounds, five-channel metadata and declaration/header consistency passed\n";
     }catch(const std::exception& e){std::cerr<<"FAIL: "<<e.what()<<'\n';return 1;}
 }

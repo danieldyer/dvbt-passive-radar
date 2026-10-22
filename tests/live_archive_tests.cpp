@@ -14,7 +14,7 @@ int main(int argc,char** argv){try{
     if(argc!=2)throw std::invalid_argument("Metadata path required");
     const auto metadata=RecordingMetadata::read(argv[1]);check(metadata.capture.has_value(),"Capture settings missing");
     SarCapture capture;metadata.configure(capture);capture.input_rate=64'000'000;capture.decimation=8;capture.source_rate=61'440'000;capture.validate();
-    AppliedCapture applied;applied.rate_hz=61'440'000.047871;applied.centre_hz=202e6;
+    AppliedCapture applied;applied.driver="usdr";applied.rate_hz=61'440'000.047871;applied.centre_hz=202e6;
     applied.gain_db=29.75;applied.bandwidth_hz=55'999'999.875;applied.master_clock_hz=61'440'000.125;
     const auto path=std::filesystem::temp_directory_path()/("dvbt-live-"+std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
     struct Remove {std::filesystem::path path;~Remove(){std::error_code error;std::filesystem::remove(path,error);}} remove{path};
@@ -38,7 +38,8 @@ int main(int argc,char** argv){try{
     std::ifstream file(path,std::ios::binary);char magic[8];file.read(magic,8);check(std::memcmp(magic,"DVBTLIV1",8)==0,"Wrong archive header");
     const auto size=read<std::uint32_t>(file);std::string text(size,'\0');file.read(text.data(),size);const auto header=parse(text);
     check(!header.at("profile_stationary_subtraction").as_bool() && header.at("profile_training_rows_retained").as_bool(),"Archive did not declare the preserved stationary/training information");
-    check(header.at("applied_capture").at("rate_hz").as_double()==applied.rate_hz,"Lost fractional UHD rate");
+    check(header.at("applied_capture").at("rate_hz").as_double()==applied.rate_hz,"Lost fractional SDR rate");
+    check(header.at("applied_capture").at("driver").as_string()==applied.driver,"Lost archive capture driver");
     check(header.at("applied_capture").at("gain_db").as_double()==applied.gain_db &&
         header.at("applied_capture").at("bandwidth_hz").as_double()==applied.bandwidth_hz &&
         header.at("applied_capture").at("master_clock_hz").as_double()==applied.master_clock_hz,"Lost applied SDR settings");

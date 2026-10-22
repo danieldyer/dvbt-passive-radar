@@ -146,7 +146,7 @@ class CaptureScreen final:public ComponentBase {
         const auto& a=s.settings;
         return vbox({panel("Applied SDR settings",{
             value("Rate / centre",s.applied ? fixed(a.rate_hz/1e6,9)+" MS/s / "+fixed(a.centre_hz/1e6,6)+" MHz" : "configuration pending"),
-            value("Gain / bandwidth",s.applied ? fixed(a.gain_db)+" dB / "+fixed(a.bandwidth_hz/1e6,3)+" MHz" : "--"),
+            value("Gain / bandwidth",s.applied ? fixed(a.gain_db)+" dB / "+(a.driver=="usdr" && a.bandwidth_hz==0 ? "LPF bypass" : fixed(a.bandwidth_hz/1e6,3)+" MHz") : "--"),
             value("Antenna / serial",a.antenna+" / "+a.serial),
             value("Clock / time reference",a.clock_source+" / "+a.time_source),
             value("Master clock",s.applied ? fixed(a.master_clock_hz/1e6,9)+" MHz" : "--")}),
@@ -154,7 +154,7 @@ class CaptureScreen final:public ComponentBase {
                 value("CPI / update",fixed(s.integration_seconds,2)+" / "+fixed(s.update_seconds,2)+" s"),
                 value("Map extent","0-"+fixed(s.range_metres/1000,0)+" km / +/- "+fixed(s.doppler_hz,0)+" Hz"),
                 value("Stationary suppression",s.remove_dc ? "display only; archive preserved" : "disabled"),
-                value("Archive / simulation",s.archive+" / "+(s.looping ? "loops until stopped" : s.simulation ? "single pass" : "UHD continuous"))}),
+                value("Archive / simulation",s.archive+" / "+(s.looping ? "loops until stopped" : s.simulation ? "single pass" : "SDR continuous"))}),
             panel("Capture health",{
                 value("Minimum recent headroom",fixed(s.minimum_recent_headroom)+"x"),
                 value("Longest processing block",fixed(s.maximum_block_ms,1)+" ms"),
@@ -211,7 +211,7 @@ public:
         case 3:content=source(s);break;
         default:content=help();break;
         }
-        const auto mode=s.simulation ? (s.looping ? "SIMULATION / loop "+count(s.replay_loops+1) : "SIMULATION / single pass") : "UHD";
+        const auto mode=s.simulation ? (s.looping ? "SIMULATION / loop "+count(s.replay_loops+1) : "SIMULATION / single pass") : s.settings.driver;
         auto result=vbox({
             hbox({tint(text(" DVB-T PASSIVE RADAR "),accent)|bold,filler(),tint(text(std::string(capture_phase_name(s.phase))+" "),health(s))|bold}),
             hbox({text(" "+mode),filler(),tint(text(fixed(s.elapsed,1)+" s elapsed / "+fixed(s.processed_seconds,1)+" s processed "),muted)}),

@@ -8,6 +8,7 @@ namespace radar {
 struct AppliedCapture {
     std::string device,serial,antenna,clock_source,time_source;
     double rate_hz{},centre_hz{},gain_db{},bandwidth_hz{},master_clock_hz{};
+    std::string driver="uhd";
 };
 struct CaptureRead {
     enum class Error {none,timeout,overflow,fatal};
@@ -26,6 +27,8 @@ public:
     virtual void stop()=0;
     virtual std::optional<DeviceTimeAnchor> time_anchor(){return {};}
 };
+std::unique_ptr<CaptureSource> make_capture_source(const SdrCaptureSettings&);
+std::unique_ptr<CaptureSource> make_usdr_source(const SdrCaptureSettings&);
 std::unique_ptr<CaptureSource> make_uhd_source(const SdrCaptureSettings&);
 // File replay is only a capture-transport test source. It shares the complete
 // live ring/channelizer/decoder path and can inject timestamped sample losses.

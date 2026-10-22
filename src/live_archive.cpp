@@ -45,7 +45,7 @@ struct LiveArchive::Impl {
         root["profile_row_coordinates"]=boost::json::array{"sample","seconds","original_adc","phase","frequency_hz","valid","source_offset_samples","source_rate_error"};
         root["source_timing"]="reference_phase_only; receive samples share one clock";
         root["source_nominal_rate_hz"]=capture.source_rate;root["decimation"]=capture.decimation;root["origin"]=capture.origin;
-        root["applied_capture"]=boost::json::object{{"device",applied.device},{"serial",applied.serial},{"rate_hz",applied.rate_hz},
+        root["applied_capture"]=boost::json::object{{"driver",applied.driver},{"device",applied.device},{"serial",applied.serial},{"rate_hz",applied.rate_hz},
             {"centre_hz",applied.centre_hz},{"gain_db",applied.gain_db},{"bandwidth_hz",applied.bandwidth_hz},
             {"antenna",applied.antenna},{"clock_source",applied.clock_source},{"time_source",applied.time_source},
             {"master_clock_hz",applied.master_clock_hz}};

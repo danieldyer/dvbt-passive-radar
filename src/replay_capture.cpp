@@ -20,6 +20,7 @@ public:
         if(!wave_.samples)throw std::invalid_argument("Capture simulation cannot replay an empty WAV");
         applied_={"simulated capture", "simulation",settings.antenna,settings.clock_source,settings.time_source,
             double(wave_.sample_rate),settings.centre_hz,settings.gain_db,settings.bandwidth_hz,double(wave_.sample_rate)};
+        applied_.driver="replay";
         file_.exceptions(std::ios::badbit|std::ios::failbit);file_.open(path,std::ios::binary);file_.seekg(wave_.data_offset);
         gap_at_=std::uint64_t(gap_at*wave_.sample_rate);
     }

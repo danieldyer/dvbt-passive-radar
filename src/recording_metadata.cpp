@@ -43,6 +43,9 @@ RecordingMetadata RecordingMetadata::read(const std::filesystem::path& path) {
         s.sample_rate_hz=result.sample_rate;s.centre_hz=result.recording_rf_hz;
         auto text=[&](const char* key,std::string& out){if(const auto* v=c.if_contains(key))out=string(*v);};
         auto real=[&](const char* key,double& out){if(const auto* v=c.if_contains(key))out=number(*v);};
+        text("driver",s.driver);
+        if(s.driver!="uhd" && s.driver!="usdr")throw std::invalid_argument("Unknown capture driver");
+        if(s.driver=="usdr"){s.device_args="bus=pcie";s.antenna="auto";s.bandwidth_hz=28e6;}
         text("device_args",s.device_args);text("antenna",s.antenna);text("clock_source",s.clock_source);text("time_source",s.time_source);
         real("sample_rate_hz",s.sample_rate_hz);real("centre_hz",s.centre_hz);real("gain_db",s.gain_db);
         real("bandwidth_hz",s.bandwidth_hz);real("buffer_seconds",s.buffer_seconds);
