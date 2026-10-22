@@ -17,6 +17,10 @@ appear as unavailable intervals. Existing carrier whitening and stationary
 subtraction are already part of the profiles and cannot be replaced exactly
 by this exporter.
 
+For new 100 km live captures, add `--range-km 100` to render the full saved
+extent. The reader accepts both 4,096-slot profiles and older 1,024-slot profiles;
+older captures cannot supply the newly added ranges.
+
 Defaults are a three-second CPI, ±100 Hz, 0–30 km, a symbol-aligned rate above
 30 fps, whole-recording fixed noise-floor/maximum colour bounds and hardware
 ProRes for QuickTime seeking. It accepts the capture directory or its

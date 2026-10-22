@@ -4,14 +4,14 @@ layout(binding=6) readonly buffer Correlation {vec2 correlation[];};
 layout(binding=7) writeonly buffer Profiles {vec2 profiles[];};
 layout(binding=10) readonly buffer SourceClock {vec4 coordinate[];};
 layout(binding=11) readonly buffer Prefix {vec2 prefix[];};
-layout(push_constant) uniform Parameters {uint start,count,total,capacity,guard;int origin;float fraction,gain;uint cancel_direct,output_count,output_first,size;} p;
+layout(push_constant) uniform Parameters {uint start,count,total,capacity,guard;int origin;float fraction,gain;uint cancel_direct,output_count,output_first,size,profile_size,positive_context;} p;
 void main(){
     uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
-    if(i>=p.capacity*1024)return;
-    uint row=i/1024,range=i%1024;if(row>=p.count)return;
+    if(i>=p.capacity*p.profile_size)return;
+    uint row=i/p.profile_size,range=i%p.profile_size;if(row>=p.count)return;
     vec2 zero=vec2(0),one=vec2(0);
-    if(range<=928 || range>=960){
-        int lag=range<=928 ? int(range) : int(range)-1024;
+    if(range<=p.positive_context || range>=p.profile_size-64){
+        int lag=range<=p.positive_context ? int(range) : int(range)-int(p.profile_size);
         uint bin=uint((lag+8192)%8192),stride=p.capacity*8192;
         zero=correlation[row*8192+bin];one=correlation[stride+row*8192+bin];
         // Circular correlation is exact inside the guard. Replace only the
@@ -26,6 +26,6 @@ void main(){
             one+=prefix[(p.capacity+row)*p.size+uint(end)];
         }
     }
-    uint at=(p.start-p.output_first+row)*1024+range;
-    profiles[at]=zero/p.gain;profiles[p.output_count*1024+at]=one/p.gain;
+    uint at=(p.start-p.output_first+row)*p.profile_size+range;
+    profiles[at]=zero/p.gain;profiles[p.output_count*p.profile_size+at]=one/p.gain;
 }

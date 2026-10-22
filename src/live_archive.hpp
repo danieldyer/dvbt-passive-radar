@@ -17,6 +17,7 @@ public:
     void channels(const ChannelBatch&,std::span<const ClockSegment>);
     void gap(const CaptureChunk&);
     void epoch(std::int64_t hardware_tick,double rate_hz);
+    void time_anchor(const DeviceTimeAnchor&);
     void finish();
     std::uint64_t bytes() const;
     std::size_t queued_bytes() const;

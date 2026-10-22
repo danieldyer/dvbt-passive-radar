@@ -10,6 +10,9 @@ struct DetectionOptions {
     FocusOptions focus;
     bool publish_maps=true; // Range-history archiving can skip focusing entirely.
     bool best_effort_maps=false; // Live display may skip refreshes while its previous map is busy.
+    // Offline compatibility. Live archives disable this: stationary nuisance
+    // projection belongs to the display, after the scientific profile export.
+    bool stationary_prediction=true;
 };
 struct DetectionTimings {ComputeTimings noise,profiles,focus;};
 class MatchedDetector {

@@ -3,12 +3,12 @@ layout(local_size_x=64) in;
 layout(binding=0) readonly buffer Input {vec2 profiles[];};
 layout(binding=7) writeonly buffer Means {vec2 means[];};
 layout(binding=9) readonly buffer Weights {float weights[];};
-layout(push_constant) uniform Parameters {uint rows,size,frequencies,first,count,ranges;int offset_bin;uint remove_dc;float interval,rf;} p;
+layout(push_constant) uniform Parameters {uint rows,size,frequencies,first,count,ranges;int offset_bin;uint remove_dc;float interval,rf;uint profile_size;} p;
 shared vec2 total[64];
 void main(){
-    uint column=gl_WorkGroupID.x,k=column%1024,moment=column/1024,lane=gl_LocalInvocationID.x;
+    uint column=gl_WorkGroupID.x,k=column%p.profile_size,moment=column/p.profile_size,lane=gl_LocalInvocationID.x;
     vec2 sum=vec2(0);
-    if(p.remove_dc!=0)for(uint n=lane;n<p.rows;n+=64)sum+=weights[n]*profiles[(moment*p.rows+n)*1024+k];
+    if(p.remove_dc!=0)for(uint n=lane;n<p.rows;n+=64)sum+=weights[n]*profiles[(moment*p.rows+n)*p.profile_size+k];
     total[lane]=sum;barrier();
     for(uint step=32;step>0;step/=2){if(lane<step)total[lane]+=total[lane+step];barrier();}
     if(lane==0)means[column]=total[0]/float(p.rows);

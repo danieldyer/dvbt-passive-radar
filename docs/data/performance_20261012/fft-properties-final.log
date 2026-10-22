@@ -1,4 +1,0 @@
-Apple M5 shared_memory=32768
-memory_type=0 flags={ DeviceLocal }
-memory_type=1 flags={ DeviceLocal | HostVisible | HostCoherent | HostCached }
-memory_type=2 flags={ DeviceLocal | LazilyAllocated }

@@ -1,5 +1,14 @@
 {
   "version": 1,
+  "receiver": {
+    "location": {
+      "latitude_deg": -37.81040454194318,
+      "longitude_deg": 144.98744506389454
+    },
+    "antenna_agl_m": 10.0,
+    "position_reference": "Nominal roof-antenna phase centre supplied by the user on 2026-10-16; WGS84 coordinates.",
+    "height_reference": "Approximately 10 m above local ground; add terrain elevation and geoid undulation when converting to ECEF."
+  },
   "recording": {
     "file": "/Users/danielrd/data/dvbt_passive_radar/baseband_202000000Hz_20-55-20_10-10-2026.wav",
     "centre_hz": 202000000,
@@ -16,30 +25,39 @@
       "name": "TXA Ornata Road",
       "address": "12 Ornata Road, Mount Dandenong",
       "location": {
-        "latitude_deg": -37.837500000000006,
-        "longitude_deg": 145.34666666666666
+        "latitude_deg": -37.83745859518615,
+        "longitude_deg": 145.34687782301492
       },
-      "position_reference": "ACMA July 2026 licensed site coordinates, whole arcsecond resolution. Not a surveyed antenna phase centre."
+      "position_reference": "Nominal antenna phase centre supplied by the user on 2026-10-16; WGS84 coordinates.",
+      "antenna_agl_m": 190.0,
+      "acma_site_id": "12013",
+      "height_reference": "User-supplied height above local ground on 2026-10-16; add transmitter_terrain elevation and EGM96 geoid undulation for ECEF. Shared nominal height for every channel at this site."
     },
     {
       "id": "eyre",
       "name": "TXA Eyre Road",
       "address": "8 Eyre Road, Mount Dandenong",
       "location": {
-        "latitude_deg": -37.83555555555556,
-        "longitude_deg": 145.3477777777778
+        "latitude_deg": -37.83540006541602,
+        "longitude_deg": 145.3477595896221
       },
-      "position_reference": "ACMA July 2026 licensed site coordinates, whole arcsecond resolution. Not a surveyed antenna phase centre."
+      "position_reference": "Nominal antenna phase centre supplied by the user on 2026-10-16; WGS84 coordinates.",
+      "antenna_agl_m": 130.0,
+      "acma_site_id": "12015",
+      "height_reference": "User-supplied height above local ground on 2026-10-16; add transmitter_terrain elevation and EGM96 geoid undulation for ECEF. Shared nominal height for every channel at this site."
     },
     {
       "id": "ridge",
       "name": "BAI Ridge Road",
-      "address": "116\u2013118 Ridge Road, Mount Dandenong",
+      "address": "116–118 Ridge Road, Mount Dandenong",
       "location": {
-        "latitude_deg": -37.835,
-        "longitude_deg": 145.34861111111113
+        "latitude_deg": -37.834854231253686,
+        "longitude_deg": 145.34846826008254
       },
-      "position_reference": "ACMA July 2026 licensed site coordinates, whole arcsecond resolution. Not a surveyed antenna phase centre."
+      "position_reference": "Nominal antenna phase centre supplied by the user on 2026-10-16; WGS84 coordinates.",
+      "antenna_agl_m": 138.0,
+      "acma_site_id": "12014",
+      "height_reference": "User-supplied height above local ground on 2026-10-16; add transmitter_terrain elevation and EGM96 geoid undulation for ECEF. Shared nominal height for every channel at this site."
     }
   ],
   "signals": [
@@ -57,7 +75,19 @@
         "ornata",
         "eyre"
       ],
-      "transmitter_assignment": "Nominal mast from Oz Digital TV listing; active antenna for this capture not independently confirmed. ACMA also licenses alternative sites."
+      "transmitter_assignment": "User-selected nominal primary/backup hypothesis, 2026-10-16; actual active site remains to be determined. Search only candidate_transmitter_ids.",
+      "transmitter_site_roles": {
+        "primary": "ornata",
+        "backup": "eyre"
+      },
+      "candidate_transmitter_ids": [
+        "ornata",
+        "eyre"
+      ],
+      "licensed_station_types": {
+        "ornata": "Main",
+        "eyre": "Alternative"
+      }
     },
     {
       "id": "sbs",
@@ -73,7 +103,20 @@
         "ridge",
         "ornata"
       ],
-      "transmitter_assignment": "Nominal mast from Oz Digital TV listing; active antenna for this capture not independently confirmed. ACMA also licenses alternative sites."
+      "transmitter_assignment": "User-selected nominal primary/backup hypothesis, 2026-10-16; actual active site remains to be determined. Search only candidate_transmitter_ids.",
+      "transmitter_site_roles": {
+        "primary": "ridge",
+        "backup": "ornata"
+      },
+      "candidate_transmitter_ids": [
+        "ridge",
+        "ornata"
+      ],
+      "licensed_station_types": {
+        "ornata": "Main",
+        "ridge": "Standby"
+      },
+      "assignment_caveat": "ACMA RRL snapshot retrieved 2026-10-13 labels Ornata Main and Ridge Standby, opposite to the configured primary/backup hypothesis. Both remain candidates."
     },
     {
       "id": "nine",
@@ -84,12 +127,24 @@
       "bandwidth_hz": 7000000,
       "fft_size": 8192,
       "guard_denominator": 16,
-      "transmitter_id": "eyre",
+      "transmitter_id": "ornata",
       "licensed_site_ids": [
         "eyre",
         "ornata"
       ],
-      "transmitter_assignment": "Nominal mast from Oz Digital TV listing; active antenna for this capture not independently confirmed. ACMA also licenses alternative sites."
+      "transmitter_assignment": "User-selected nominal primary/backup hypothesis, 2026-10-16; actual active site remains to be determined. Search only candidate_transmitter_ids.",
+      "transmitter_site_roles": {
+        "primary": "ornata",
+        "backup": "eyre"
+      },
+      "candidate_transmitter_ids": [
+        "ornata",
+        "eyre"
+      ],
+      "licensed_station_types": {
+        "ornata": "Main",
+        "eyre": "Alternative"
+      }
     },
     {
       "id": "ten",
@@ -100,13 +155,27 @@
       "bandwidth_hz": 7000000,
       "fft_size": 8192,
       "guard_denominator": 16,
-      "transmitter_id": "ridge",
+      "transmitter_id": "ornata",
       "licensed_site_ids": [
         "ridge",
         "eyre",
         "ornata"
       ],
-      "transmitter_assignment": "Nominal mast from Oz Digital TV listing; active antenna for this capture not independently confirmed. ACMA also licenses alternative sites."
+      "transmitter_assignment": "User-selected nominal primary/backup hypothesis, 2026-10-16; actual active site remains to be determined. Search only candidate_transmitter_ids.",
+      "transmitter_site_roles": {
+        "primary": "ornata",
+        "backup": "eyre"
+      },
+      "candidate_transmitter_ids": [
+        "ornata",
+        "eyre"
+      ],
+      "licensed_station_types": {
+        "ornata": "Main",
+        "eyre": "Alternative",
+        "ridge": "Alternative"
+      },
+      "assignment_caveat": "ACMA also licenses Ridge as Alternative; excluded from the search by user instruction on 2026-10-16."
     },
     {
       "id": "abc",
@@ -117,12 +186,24 @@
       "bandwidth_hz": 7000000,
       "fft_size": 8192,
       "guard_denominator": 16,
-      "transmitter_id": "ornata",
+      "transmitter_id": "ridge",
       "licensed_site_ids": [
         "ornata",
         "ridge"
       ],
-      "transmitter_assignment": "Nominal mast from Oz Digital TV listing; active antenna for this capture not independently confirmed. ACMA also licenses alternative sites."
+      "transmitter_assignment": "User-selected nominal primary/backup hypothesis, 2026-10-16; actual active site remains to be determined. Search only candidate_transmitter_ids.",
+      "transmitter_site_roles": {
+        "primary": "ridge",
+        "backup": "ornata"
+      },
+      "candidate_transmitter_ids": [
+        "ridge",
+        "ornata"
+      ],
+      "licensed_station_types": {
+        "ornata": "Standby",
+        "ridge": "Main"
+      }
     }
   ],
   "sources": [
@@ -135,6 +216,21 @@
       "url": "https://www.acma.gov.au/sites/default/files/2026-07/9%20Televison%20by%20Area%20Served.pdf",
       "used_for": "Licensed site coordinates and alternate locations; page 371",
       "accessed": "2026-10-10"
+    },
+    {
+      "url": "https://www.acma.gov.au/radiocomms-licence-data",
+      "used_for": "Licensed station types and alternative sites, preserved separately from the user-selected candidate set and nominal roles",
+      "accessed": "2026-10-16",
+      "snapshot_retrieved": "2026-10-13"
     }
-  ]
+  ],
+  "transmitter_terrain": {
+    "raster": "build/calibration-20261013/ga-dandenong-dem.tif",
+    "path_reference": "repository root",
+    "source": "https://services.ga.gov.au/gis/rest/services/DEM_SRTM_1Second_2024/MapServer",
+    "description": "Geoscience Australia one-arcsecond SRTM-derived DEM; existing cached raster approved by the user on 2026-10-16.",
+    "vertical_datum": "EGM96",
+    "native_dted2": false,
+    "interpolation": "bilinear at WGS84 antenna latitude/longitude"
+  }
 }

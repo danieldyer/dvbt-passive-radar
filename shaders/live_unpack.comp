@@ -2,11 +2,27 @@
 layout(local_size_x=64) in;
 layout(set=0,binding=0,std430) readonly buffer Input {uint iq[];};
 layout(set=0,binding=1,std430) writeonly buffer Output {vec2 samples[];};
-layout(push_constant) uniform Parameters {uint first;uint count;uint capacity;uint mask;} pc;
+struct Group {vec2 levels;uvec2 rails;};
+layout(set=0,binding=2,std430) writeonly buffer Health {Group health[];};
+layout(push_constant) uniform Parameters {uint first;uint count;uint capacity;uint mask;uint statistics_skip;} pc;
+shared float power[64],peak[64];
+shared uint rail[64],near_rail[64];
 void main(){
-    uint n=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
-    if(n>=pc.capacity)return;
-    if(n>=pc.count){samples[n]=vec2(0);return;}
-    uint v=iq[(pc.first+n)&pc.mask];
-    samples[n]=vec2(float(int(v<<16)>>16),float(int(v)>>16))*(1.0/32768.0);
+    uint group=gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x;
+    if(group>=(pc.capacity+63)/64)return; // Uniform workgroup branch before barriers.
+    uint lane=gl_LocalInvocationID.x,n=group*64+lane;
+    vec2 value=vec2(0);
+    if(n<pc.count){uint v=iq[(pc.first+n)&pc.mask];value=vec2(float(int(v<<16)>>16),float(int(v)>>16))*(1.0/32768.0);}
+    if(n<pc.capacity)samples[n]=value;
+    bool valid=n>=pc.statistics_skip && n<pc.count;
+    float largest=valid ? max(abs(value.x),abs(value.y)) : 0;
+    power[lane]=valid ? dot(value,value) : 0;peak[lane]=largest;
+    rail[lane]=uint(valid && largest>=32752.0/32768.0);near_rail[lane]=uint(valid && largest>=0.98);
+    barrier();
+    for(uint stride=32;stride>0;stride/=2){
+        if(lane<stride){power[lane]+=power[lane+stride];peak[lane]=max(peak[lane],peak[lane+stride]);
+            rail[lane]+=rail[lane+stride];near_rail[lane]+=near_rail[lane+stride];}
+        barrier();
+    }
+    if(lane==0){health[group].levels=vec2(power[0],peak[0]);health[group].rails=uvec2(rail[0],near_rail[0]);}
 }

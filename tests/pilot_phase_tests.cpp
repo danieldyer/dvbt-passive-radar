@@ -1,5 +1,6 @@
 #include "pilot_phase.hpp"
 #include "modem.hpp"
+#include "receiver_clock.hpp"
 #include <algorithm>
 #include <chrono>
 #include <iostream>
@@ -69,9 +70,67 @@ int main(){try{
         }
         const auto fitted=pilot_phase(now,anchor,indices,0,precision),whitened=pilot_phase(white_now,white_anchor,indices);
         check(std::abs(fitted.slope-whitened.slope)*8192/tau<1e-7,"Pilot precision differs from explicit whitening");
+        check(std::abs(fitted.delay_variance/whitened.delay_variance-1)<2e-7 &&
+              std::abs(fitted.phase_variance/whitened.phase_variance-1)<2e-7,"Pilot Fisher covariance differs from explicit whitening");
         unweighted_square+=std::pow(pilot_phase(now,anchor,indices).slope*8192/tau-.173,2);
         weighted_square+=std::pow(fitted.slope*8192/tau-.173,2);
     }
     check(weighted_square<unweighted_square/10,"Known coloured pilot noise was not downweighted by its precision");
     std::cout<<"Coloured pilot noise: timing MSE improvement="<<unweighted_square/weighted_square<<" times\n";
+    // A whole-band phase change belongs to the carrier phase, never to the
+    // clock slope. Use asymmetric faded pilots and changing precision so this
+    // tests profiling of the intercept, not symmetry of the pilot locations.
+    constexpr double adc_rate=56e6,channel_rate=8e6;
+    constexpr unsigned decimation=7,length=8704;
+    const std::array centres{-21e6,137123.25,21e6};
+    SampleClock baseline(adc_rate,centres),rotated(adc_rate,centres);
+    std::array<double,3> previous{},previous_rotated{},seeded{},rotated_seed{};
+    std::vector<C> changed(indices.size());
+    double maximum_delay=0,maximum_phase=0,maximum_clock=0,maximum_covariance=0;
+    for(unsigned symbol=1;symbol<=2000;++symbol){
+        const double n=double(symbol)*length,t=n/channel_rate;
+        for(unsigned channel=0;channel<centres.size();++channel){
+            const double delay=.03*channel+.01*t+.002*channel*t*t;
+            const double phase=.37*channel+.09*t;
+            const double injected=(channel+1)*std::sin(tau*(.3+.17*channel)*t)+(.2-.3*channel)*t*t;
+            const auto rotation=static_cast<C>(std::polar(1.,injected));
+            for(std::size_t j=0;j<indices.size();++j){
+                const double k=double(indices[j])-3408;
+                anchor[j]=static_cast<C>(1.+std::polar(.8,-tau*k*23.25/8192+.13*channel));
+                now[j]=anchor[j]*static_cast<C>(std::polar(1.,phase+tau*k*delay/8192))+C{noise(random),noise(random)};
+                changed[j]=now[j]*rotation;
+                precision[j]=(j%7==0 ? .02 : 1.)*(indices[j]>3408 ? .3 : 2.);
+            }
+            const auto a=pilot_phase(now,anchor,indices,seeded[channel],precision);
+            const auto b=pilot_phase(changed,anchor,indices,rotated_seed[channel],precision);
+            seeded[channel]=a.slope;rotated_seed[channel]=b.slope;
+            const double da=a.slope*8192/tau,db=b.slope*8192/tau;
+            maximum_delay=std::max(maximum_delay,std::abs(da-db));
+            maximum_phase=std::max(maximum_phase,std::abs(std::remainder(b.phase-a.phase-injected,tau)));
+            maximum_covariance=std::max(maximum_covariance,std::abs(a.delay_variance/b.delay_variance-1));
+            const std::array oa{
+                TimingObservation{TimingObservation::Kind::rate,channel,n,(da-previous[channel])/length},
+                TimingObservation{TimingObservation::Kind::offset,channel,n,da,a.delay_variance}};
+            const std::array ob{
+                TimingObservation{TimingObservation::Kind::rate,channel,n,(db-previous_rotated[channel])/length},
+                TimingObservation{TimingObservation::Kind::offset,channel,n,db,b.delay_variance}};
+            observe_timing(baseline,oa,0,decimation);observe_timing(rotated,ob,0,decimation);
+            previous[channel]=da;previous_rotated[channel]=db;
+        }
+        if(symbol%20==0){
+            const auto at=std::uint64_t(n*decimation)+1'000'000;
+            baseline.update(at);rotated.update(at);
+            maximum_clock=std::max(maximum_clock,std::abs(baseline.at(double(at)).offset_at(double(at))-
+                                                        rotated.at(double(at)).offset_at(double(at))));
+        }
+    }
+    const double clock_phase=maximum_clock*(centres.back()-centres.front()+6656250)/adc_rate*360;
+    std::cout<<"Independent time-varying band phases: maximum pilot timing change="<<maximum_delay
+        <<" channel samples, recovered phase error="<<maximum_phase*180/std::numbers::pi
+        <<" degrees, covariance change="<<maximum_covariance<<", common-clock change="<<maximum_clock
+        <<" ADC samples ("<<clock_phase<<" degrees across the occupied span)\n";
+    // Rotating FP32 samples introduces quantisation, so require sub-0.05-degree
+    // controller invariance rather than bitwise identity of the two estimates.
+    check(maximum_delay<5e-7 && maximum_phase<2e-6 && maximum_covariance<1e-6 && clock_phase<.05,
+          "Carrier phase variation leaked into the common timing controller");
 }catch(const std::exception& e){std::cerr<<"FAIL: "<<e.what()<<'\n';return 1;}}

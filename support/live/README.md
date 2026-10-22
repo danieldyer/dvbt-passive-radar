@@ -75,10 +75,39 @@ build/web-venv/bin/python support/live/validate_shutdown.py \
   --output build/capture-shutdown-validation --archive profiles
 ```
 
-The archive reader and finite validation need only Python's standard library.
+The archive reader, diagnostic analyser and preflight driver need only Python's
+standard library. Optional diagnostic plots and independent fixture rate conversion
+use Matplotlib and SciPy in a dedicated environment.
 Terminal validation uses `pyte` and Pillow in the existing dedicated
 `build/web-venv` (its historical name does not imply a browser dependency).
 Simulation generation is C++. UI/replay regression tests are CTest CPU targets.
+
+For a sustained test without coherence resets at file seams, generate a cyclic
+fixture. The encoder must produce **bit-identical carrier superframes** after
+warm-up; the generator refuses cyclic mode if that condition fails. Twenty-five
+superframes close the rational 64/61.44 MS/s sampling phase. The requested six
+seconds therefore rounds up to 7.3984 seconds.
+
+```sh
+cmake --build --preset release --target simulate_capture capture_preflight -j 6
+build/release/simulate_capture recordings/live_mt_dandenong.json \
+  build/live-validation/cyclic-64.wav 6 --cyclic
+build/isar-tools-venv/bin/python support/live/resample_fixture.py \
+  build/live-validation/cyclic-64.wav build/live-validation/cyclic-6144.wav --cyclic
+python3 support/live/preflight.py --metadata recordings/live_mt_dandenong.json \
+  --simulate build/live-validation/cyclic-6144.wav --simulate-cyclic \
+  --seconds 60 --range-metres 100000 --archive both --map-channels 1 \
+  --output build/preflight-continuous
+```
+
+The resampler is an independent SciPy reference, confined to test tooling. Tests
+verify exact blocked/global rational phase, including cyclic FIR context. It does
+not enter the production receiver. `preflight.py` checks transport, FEC, archive
+integrity and actual map publications, then deletes the large temporary archive.
+The compressed diagnostics and JSON report remain. Native-window painting is
+excluded; the full production map computation and write workload are included.
+Without `--simulate`, the same command receives from UHD. `--gain-db` overrides
+fixed gain in a temporary metadata copy without changing the original file.
 
 Validate the real native renderer with two known signed-Doppler targets, including
 window close/reopen. The helper exports only its own framebuffer; it does not use

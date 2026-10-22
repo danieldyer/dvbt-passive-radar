@@ -38,6 +38,10 @@ struct LiveArchive::Impl {
         root["profile_row_policy"]="fixed_grid_zero_information_erasures";
         root["template_weighting"]="unmodified_reconstructed_waveform";
         root["noise_weighting"]="previous_batch_diagonal_residual_covariance";
+        root["noise_initialization"]="first_batch_estimate_then_previous_batch";
+        root["stationary_suppression"]="display_only_constant_projection";
+        root["profile_stationary_subtraction"]=false;
+        root["profile_training_rows_retained"]=true;
         root["profile_row_coordinates"]=boost::json::array{"sample","seconds","original_adc","phase","frequency_hz","valid","source_offset_samples","source_rate_error"};
         root["source_timing"]="reference_phase_only; receive samples share one clock";
         root["source_nominal_rate_hz"]=capture.source_rate;root["decimation"]=capture.decimation;root["origin"]=capture.origin;
@@ -89,6 +93,8 @@ struct LiveArchive::Impl {
 LiveArchive::LiveArchive(const std::filesystem::path& path,const RecordingMetadata& metadata,const AppliedCapture& applied,const SarCapture& capture,std::string_view mode):impl_(std::make_unique<Impl>(path,metadata,applied,capture,mode)){}
 LiveArchive::~LiveArchive(){try{finish();}catch(...){}}
 void LiveArchive::profiles(const SarBatch& batch,const MatchedProfiles& profiles,std::span<const C> stationary,std::span<const float> variance){
+    if(!stationary.empty() || !profiles.cancellation_variance.empty())
+        throw std::invalid_argument("Live scientific profiles must precede stationary subtraction");
     auto& p=*impl_;p.clock(batch.clock);const auto& f=batch.spectra.frame;
     boost::json::array rows;
     const auto* valid=static_cast<const std::uint32_t*>(batch.spectra.transmitted.valid.mapped);
@@ -104,7 +110,9 @@ void LiveArchive::profiles(const SarBatch& batch,const MatchedProfiles& profiles
     append(payload,std::span{static_cast<const C*>(batch.spectra.estimate.response.mapped),std::size_t(6817)});
     append(payload,variance);
     append(payload,std::span<const double>{profiles.cancellation_variance});
-    p.send("PROF",{{"channel",f.channel},{"segment",f.segment},{"count",profiles.count},{"size",matched_profile_size},
+    p.send("PROF",{{"channel",f.channel},{"segment",f.segment},{"count",profiles.count},{"size",profiles.size},
+        {"positive_context_samples",matched_context_for_size(profiles.size)},{"negative_context_samples",matched_negative_context},
+        {"range_step_m",299792458.0/8e6},
         {"moments",2},{"order","moment,row,range"},{"information",profiles.information},{"reference_origin",batch.spectra.estimate.reference_origin},
         {"stationary_carriers",stationary.size()},{"response_carriers",6817},{"noise_carriers",variance.size()},
         {"cancellation_variance_carriers",profiles.cancellation_variance.size()},
@@ -119,6 +127,9 @@ void LiveArchive::channels(const ChannelBatch& batch,std::span<const ClockSegmen
 }
 void LiveArchive::gap(const CaptureChunk& chunk){impl_->send("GAPS",{{"source_first",chunk.source_first},{"segment",chunk.segment}});}
 void LiveArchive::epoch(std::int64_t tick,double rate){impl_->send("EPOC",{{"first_hardware_tick",tick},{"actual_rate_hz",rate},{"reference","device clock; uncalibrated UTC"}});}
+void LiveArchive::time_anchor(const DeviceTimeAnchor& anchor){impl_->send("UTCA",{
+    {"device_seconds",anchor.device_seconds},{"host_utc_ns",anchor.host_utc_ns},{"host_monotonic_ns",anchor.host_monotonic_ns},
+    {"query_uncertainty_ns",anchor.query_uncertainty_ns},{"absolute_utc_accuracy","host clock; not calibrated"}});}
 void LiveArchive::finish(){
     auto& p=*impl_;if(!p.worker.joinable())return;
     p.send("DONE",{});{std::lock_guard lock(p.mutex);p.done=true;p.condition.notify_all();}p.worker.join();

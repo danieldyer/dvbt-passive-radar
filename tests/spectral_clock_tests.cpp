@@ -218,10 +218,58 @@ void rational_rate(unsigned source_rate) {
     std::cout<<double(source_rate)/1e6<<" MS/s, five VHF channels, late seek and clock boundaries: max="<<error<<", chunk="<<chunk<<", differential phase="<<phase*180/std::numbers::pi<<" degrees\n";
     require(error<6e-6 && chunk<3e-6 && phase<.01*std::numbers::pi/180,"Rational ADC rate conversion loses multichannel coherence");
 }
+void phase_histories() {
+    constexpr unsigned fs=56'000'000,count=2048,decimation=7;
+    constexpr std::uint64_t epoch=(1ULL<<40)+137;
+    constexpr double tone=437500;
+    const std::array centres{-21e6,-9.5e6,132812.25,9e6,21e6};
+    auto clock=std::make_shared<SampleClock>(fs,centres);
+    clock->schedule(epoch-50000,1.000005);
+    clock->schedule(epoch+fs/3,1.00003);
+    clock->schedule(epoch+2*fs/3,.999985);
+    const auto segments=clock->segments();
+    GpuChannelBank bank(fs,centres);bank.set_clock(clock);
+    auto phase=[](unsigned c,double t){return .31*c+.7*(double(c)-2)*t+
+        1.8*std::sin(tau*(.37+.13*c)*t)+.015*c*t*t;};
+    double maximum=0,differential=0;
+    // Disjoint probes cover ten seconds, long epochs, and windows crossing both
+    // clock boundaries. Each band has its own linear, quadratic and sinusoidal
+    // phase history. No output phase origins or phase slopes are fitted away.
+    const std::array<std::uint64_t,9> times{fs/10,fs/3-2000,fs/3,fs/2,
+        2*fs/3-2000,2*fs/3,fs,3ULL*fs,10ULL*fs};
+    for(const auto time:times){
+        const auto first=epoch+time;
+        const auto start=std::uint64_t(std::int64_t(first)+std::int64_t(std::floor(clock->at(double(first)).offset_at(double(first))))-6000);
+        std::vector<C> input(45000);
+        for(std::size_t j=0;j<input.size();++j){
+            const double n=unwarp(double(start+j),segments,epoch),t=n/fs;
+            std::complex<double> sum{};
+            for(unsigned c=0;c<centres.size();++c)
+                sum+=std::polar(.1,tau*(centres[c]+tone)*n/fs+phase(c,t));
+            input[j]=static_cast<C>(sum);
+        }
+        const auto output=bank.process_clocked(input,start,first,count);
+        for(unsigned m=0;m<count;++m){
+            const double n=double(time+decimation*m),t=n/fs;
+            std::array<std::complex<double>,5> ratio;
+            for(unsigned c=0;c<centres.size();++c){
+                const auto expected=std::polar(.1,tau*tone*n/fs+phase(c,t))*epoch_nco(epoch,centres[c],fs);
+                ratio[c]=std::complex<double>(output[c][m])/expected;
+                maximum=std::max(maximum,std::abs(ratio[c]-1.));
+            }
+            for(unsigned c=1;c<centres.size();++c)
+                differential=std::max(differential,std::abs(std::arg(ratio[c]*std::conj(ratio[0]))));
+        }
+    }
+    std::cout<<"Independent band phase histories through shared GPU retiming: relative complex error="<<maximum
+        <<", differential phase error="<<differential*180/std::numbers::pi<<" degrees\n";
+    require(maximum<5e-5 && differential<.01*std::numbers::pi/180,
+        "Shared retiming absorbed time-varying interband phase");
+}
 }
 int main(int argc,char**) {
     try {
         interpolation();
-        if(argc>1) {waveform(1.000005);waveform(1.00003);waveform(1.001);waveform(.999);blocker();rates();rational_rate(61'000'000);rational_rate(61'440'000);}
+        if(argc>1) {waveform(1.000005);waveform(1.00003);waveform(1.001);waveform(.999);blocker();rates();rational_rate(61'000'000);rational_rate(61'440'000);phase_histories();}
     }catch(const std::exception& e){std::cerr<<"FAIL: "<<e.what()<<'\n';return 1;}
 }

@@ -53,7 +53,7 @@ int main(int argc,char** argv){try{
         else if(key=="--seconds")seconds=number(value);
         else throw std::invalid_argument("Unknown option: "+std::string(key));
     }
-    if(output.empty() || start<0 || seconds<0 || doppler<4/integration || doppler>200 || range<1000 || range>30000)
+    if(output.empty() || start<0 || seconds<0 || doppler<4/integration || doppler>200 || range<1000 || range>matched_max_range_metres)
         throw std::invalid_argument("Invalid archived detection options");
     std::ifstream source(input,std::ios::binary);source.exceptions(std::ios::badbit|std::ios::failbit);
     const auto total=std::filesystem::file_size(input);char magic[8];source.read(magic,8);
@@ -79,19 +79,21 @@ int main(int argc,char** argv){try{
         if(std::string_view(tag,4)=="PROF"){
             const auto channel=boost::json::value_to<std::size_t>(meta.at("channel"));auto& c=*channels.at(channel);
             const auto count=boost::json::value_to<std::size_t>(meta.at("count"));const auto segment=boost::json::value_to<std::uint64_t>(meta.at("segment"));
+            const auto profile_size=boost::json::value_to<std::size_t>(meta.at("size"));
             const auto info=boost::json::value_to<double>(meta.at("information")),origin=boost::json::value_to<double>(meta.at("reference_origin"));
             const auto& rows=meta.at("rows").as_array();
             const auto tail=8ULL*(boost::json::value_to<std::size_t>(meta.at("stationary_carriers"))+boost::json::value_to<std::size_t>(meta.at("response_carriers")))+
                 4ULL*boost::json::value_to<std::size_t>(meta.at("noise_carriers"))+
                 (meta.contains("cancellation_variance_carriers") ? 8ULL*boost::json::value_to<std::size_t>(meta.at("cancellation_variance_carriers")) : 0);
-            if(!count || count>1020 || rows.size()!=count || meta.at("moments")!=2 || meta.at("size")!=1024 ||
-               meta.at("order")!="moment,row,range" || bytes!=2*count*1024*sizeof(C)+tail)throw std::runtime_error("Invalid archived profile layout");
-            std::vector<C> values(2*count*1024);source.read(reinterpret_cast<char*>(values.data()),std::streamsize(values.size()*sizeof(C)));
+            if(!count || count>1020 || rows.size()!=count || meta.at("moments")!=2 || (profile_size!=matched_profile_size && profile_size!=matched_extended_profile_size) ||
+               meta.at("order")!="moment,row,range" || bytes!=2*count*profile_size*sizeof(C)+tail)throw std::runtime_error("Invalid archived profile layout");
+            if(range>30000 && profile_size==matched_profile_size)throw std::runtime_error("Requested range exceeds this archive's original 30 km capture extent");
+            std::vector<C> values(2*count*profile_size);source.read(reinterpret_cast<char*>(values.data()),std::streamsize(values.size()*sizeof(C)));
             if(std::ranges::any_of(values,[](C z){return !std::isfinite(z.real()) || !std::isfinite(z.imag());}))throw std::runtime_error("Nonfinite archived profile");
             for(std::size_t n=0;n<count;++n){const auto& row=rows[n].as_array();if(row.size()!=6 && row.size()!=8)throw std::runtime_error("Invalid archived row coordinates");
                 const auto time=boost::json::value_to<double>(row[1]);if(time<=c.last_time)throw std::runtime_error("Reordered archived rows");c.last_time=time;
                 duration=std::max(duration,time+c.interval);
-                const auto ready=c.history.append(time,info,row[5].as_bool(),segment,{values.data()+n*1024,1024},{values.data()+(count+n)*1024,1024});
+                const auto ready=c.history.append(time,info,row[5].as_bool(),segment,{values.data()+n*profile_size,profile_size},{values.data()+(count+n)*profile_size,profile_size});
                 if(!ready || time<start || (seconds>0 && time>start+seconds))continue;
                 c.history.snapshot(moments,information);
                 auto result=c.focus.calculate_device(moments,c.history.required(),c.interval,c.rf,c.history.first_time(),{range,doppler,true},nullptr,information);

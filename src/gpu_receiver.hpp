@@ -1,6 +1,7 @@
 #pragma once
 #include "gpu_ofdm.hpp"
 #include "channel_batch.hpp"
+#include <limits>
 
 namespace radar {
 struct TrackedSymbol {
@@ -17,6 +18,7 @@ struct TimingObservation {
     enum class Kind {reset,rate,offset};
     Kind kind;unsigned channel;
     double sample,value; // Corrected channel-grid coordinate; offset in channel samples.
+    double variance=std::numeric_limits<double>::quiet_NaN(); // Conditional on the fixed pilot anchor.
 };
 struct ReceiverBatch {
     OfdmBatch carriers;
@@ -31,6 +33,7 @@ struct ReceiverStatus {
     std::uint64_t symbols{},reacquisitions{};
     double frequency_hz{},pilot_quality{},timing_samples{},timing_rms_samples{},
         residual_rate_ppm{},phase_rms_degrees{},pilot_snr_db{};
+    double timing_sigma_samples=std::numeric_limits<double>::quiet_NaN();
 };
 // Streaming control uses reduced CP/pilot observations; samples and spectra
 // remain device-resident. Every channel observes the same external ADC clock.

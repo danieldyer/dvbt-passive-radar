@@ -15,7 +15,8 @@ struct RecordingSignal {
 struct SdrCaptureSettings {
     std::string device_args="type=b200",antenna="RX2",clock_source="internal",time_source="internal";
     unsigned channel=0;
-    double sample_rate_hz{},centre_hz{},gain_db=30,bandwidth_hz=56e6,buffer_seconds=2;
+    double sample_rate_hz{},centre_hz{},gain_db=30,bandwidth_hz=56e6,buffer_seconds=4;
+    ClockControlSettings clock;
 };
 class RecordingMetadata {
     std::string json_;

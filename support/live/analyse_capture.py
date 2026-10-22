@@ -69,10 +69,10 @@ def analyse(path, integration=3, update=1):
             tags[tag] += 1
             if tag == 'PROF':
                 c = meta['channel']
-                if len(meta['rows']) != meta['count'] or meta['size'] != 1024 or meta['moments'] != 2:
+                if len(meta['rows']) != meta['count'] or meta['size'] not in (1024, 4096) or meta['moments'] != 2:
                     raise ValueError('Invalid profile dimensions')
                 channels[c].extend((*r[:6], meta['segment'], meta['information'], meta['reference_origin']) for r in meta['rows'])
-                skip = (2*meta['count']*1024 + meta['stationary_carriers'])*8
+                skip = (2*meta['count']*meta['size'] + meta['stationary_carriers'])*8
                 tail = meta['response_carriers']*8 + meta['noise_carriers']*4 + meta.get('cancellation_variance_carriers', 0)*8
                 if skip+tail != size or meta['response_carriers'] != 6817 or meta['noise_carriers'] != 6817:
                     raise ValueError('Missing archived template/noise weights')

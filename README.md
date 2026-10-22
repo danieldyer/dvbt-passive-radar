@@ -100,7 +100,7 @@ backpressure.
 
 The main interface stays in the terminal; `t` shows timing plots, `?` shows help,
 `s` drains and retains results, and `q` exits. Default detection settings are 3 s,
-±100 Hz and 0–30 km. [Simulation launcher](support/live/simulate.command) loops
+±100 Hz and 0–100 km excess range. [Simulation launcher](support/live/simulate.command) loops
 until stopped. No raw ADC I/Q or display images are saved.
 
 ## Build

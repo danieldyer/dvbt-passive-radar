@@ -22,10 +22,12 @@ struct CaptureStatus {
     std::string message,source,output,metadata,archive,display;
     bool simulation{},looping{},applied{},profile{},remove_dc{};
     AppliedCapture settings;
+    RfHealth rf;
     double elapsed{},processed_seconds{},headroom{},queue_ms{},capacity_ms{},clock_ppm{},phase_budget{},
-        integration_seconds{},doppler_hz{},update_seconds{},fec_ms_per_second{},gpu_ms_per_second{};
+        integration_seconds{},doppler_hz{},update_seconds{},range_metres=100000,fec_ms_per_second{},gpu_ms_per_second{},
+        recent_headroom{},minimum_recent_headroom{},maximum_block_ms{},peak_queue_ms{},clock_sigma_ns{},clock_rate_sigma_ppm{};
     std::uint64_t received{},missing{},host_discarded{},unknown_gaps{},overflows{},sequence_errors{},
-        timeouts{},timestamp_gaps{},segments{},replay_loops{},archive_bytes{},archive_queued_bytes{},clock_segments{};
+        timeouts{},timestamp_gaps{},segments{},replay_loops{},archive_bytes{},archive_queued_bytes{},clock_segments{},display_pressure_skips{};
     std::vector<CaptureChannelStatus> channels;
 };
 std::string_view capture_phase_name(CapturePhase);

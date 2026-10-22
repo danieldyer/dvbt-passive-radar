@@ -190,15 +190,19 @@ struct GpuReceiver::Impl {
                 if(s.age==128){s.anchor.assign(pilots.size(),C{});s.anchor_slope=0;}
                 if(s.age>=128 && s.age<160)for(unsigned j=0;j<pilots.size();++j)s.anchor[j]+=pilots[j]/32.0F;
                 if(s.age>=160) {
-                    const auto fit=pilot_phase(pilots,s.anchor,pattern.continual,s.anchor_slope,s.pilot_precision);
+                    const auto fit=pilot_phase(pilots,s.anchor,pattern.continual,s.anchor_slope,s.pilot_precision,std::max(double(v[1].real()),1e-30));
                     s.anchor_slope=fit.slope;
                     const double local_offset=fit.slope*8192/tau;
-                    observations.push_back({TimingObservation::Kind::offset,meta.channel,n,local_offset-s.window_shift});
+                    observations.push_back({TimingObservation::Kind::offset,meta.channel,n,local_offset-s.window_shift,fit.delay_variance});
+                    // Carrier phase is a demodulation coordinate, not a clock
+                    // observation. Export exactly the rotation applied to Y;
+                    // the response and these coordinates retain its reference.
                     rotations[row]=-fit.phase;meta.window.phase+=rotations[row];
                     meta.ready=true;meta.discontinuity=!s.announced;s.announced=true;
                     meta.source_offset_samples=local_offset;
                     meta.source_rate_error=s.source_rate_error;
                     s.status.timing_samples=local_offset-s.window_shift;
+                    s.status.timing_sigma_samples=std::sqrt(fit.delay_variance);
                     const double alpha=-std::expm1(-double(s.length())/(fs*.25));
                     s.timing_square+=alpha*(s.status.timing_samples*s.status.timing_samples-s.timing_square);
                     s.status.timing_rms_samples=std::sqrt(s.timing_square);

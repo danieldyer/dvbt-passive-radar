@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "receiver": {
+    "location": {
+      "latitude_deg": -37.81040454194318,
+      "longitude_deg": 144.98744506389454
+    },
+    "antenna_agl_m": 10.0,
+    "position_reference": "Nominal roof-antenna phase centre supplied by the user on 2026-10-16; WGS84 coordinates.",
+    "height_reference": "Approximately 10 m above local ground; add terrain elevation and geoid undulation when converting to ECEF."
+  },
+  "recording": {
+    "centre_hz": 556625000,
+    "sample_rate_hz": 16000000,
+    "sample_format": "ci16_le",
+    "iq_order": "I,Q",
+    "time_reference": "One SDR sample clock; not calibrated UTC"
+  },
+  "transmitters": [
+    {
+      "id": "ornata",
+      "name": "TXA Ornata Road",
+      "address": "12 Ornata Road, Mount Dandenong",
+      "location": {
+        "latitude_deg": -37.83745859518615,
+        "longitude_deg": 145.34687782301492
+      },
+      "antenna_agl_m": 190.0,
+      "acma_site_id": "12013",
+      "position_reference": "Nominal mast position supplied by the user on 2026-10-16; WGS84 coordinates. C31 electrical phase centre has not been measured.",
+      "height_reference": "Inherited nominal site height above local ground, not a surveyed C31 antenna height; add transmitter_terrain elevation and EGM96 geoid undulation for ECEF."
+    }
+  ],
+  "signals": [
+    {
+      "id": "c31",
+      "name": "C31 Melbourne",
+      "callsign": "MGV32",
+      "logical_channel": 44,
+      "rf_channel": 32,
+      "frequency_hz": 557625000,
+      "bandwidth_hz": 7000000,
+      "fft_size": 8192,
+      "guard_denominator": 16,
+      "transmitter_id": "ornata",
+      "candidate_transmitter_ids": [
+        "ornata"
+      ],
+      "polarisation": "horizontal",
+      "erp_w": 15000,
+      "transmitter_assignment": "Ornata Road transmitter published by TX Australia; antenna phase centre remains a nominal site prior.",
+      "waveform_reference": "Previous C31 recording decoded as 8K, QPSK, rate 3/4, guard 1/16; modulation and code rate are recovered from TPS by the receiver."
+    }
+  ],
+  "capture": {
+    "device_args": "type=b200,num_recv_frames=256",
+    "channel": 0,
+    "sample_rate_hz": 16000000,
+    "centre_hz": 556625000,
+    "gain_db": 34,
+    "bandwidth_hz": 12000000,
+    "antenna": "TX/RX",
+    "clock_source": "internal",
+    "time_source": "internal",
+    "buffer_seconds": 4,
+    "clock_model": {
+      "receiver_white_fm": 1e-10,
+      "receiver_random_walk_fm": 1e-10,
+      "receiver_drift_diffusion": 1e-22,
+      "transmitter_white_fm": 1e-11,
+      "transmitter_random_walk_fm": 1e-11,
+      "settling_seconds": 0.25,
+      "innovation_huber_sigma": 6,
+      "parameter_reference": "Design priors; not measured oscillator stability. Validate against diagnostics.jsonl innovations."
+    }
+  },
+  "transmitter_terrain": {
+    "raster": "build/calibration-20261013/ga-dandenong-dem.tif",
+    "path_reference": "repository root",
+    "source": "https://services.ga.gov.au/gis/rest/services/DEM_SRTM_1Second_2024/MapServer",
+    "description": "Geoscience Australia one-arcsecond SRTM-derived DEM; existing cached raster approved by the user on 2026-10-16.",
+    "vertical_datum": "EGM96",
+    "native_dted2": false,
+    "interpolation": "bilinear at WGS84 antenna latitude/longitude"
+  },
+  "sources": [
+    {
+      "url": "https://www.txaustralia.com.au/tvcoverage/metropolitan/melbourne/tower/selby",
+      "used_for": "Ornata Road MGV RF channel 32, 557.625 MHz, 15 kW ERP, horizontal polarisation; Ornata Road table on the Melbourne specifications page",
+      "accessed": "2026-10-18"
+    },
+    {
+      "path": "docs/dvbt.md",
+      "used_for": "Previously decoded C31 TPS: 8K, QPSK, code rate 3/4, guard 1/16"
+    }
+  ]
+}

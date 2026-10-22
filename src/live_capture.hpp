@@ -12,5 +12,6 @@ struct LiveDisplay {
     std::shared_ptr<void> lifetime;
 };
 using LiveDisplayFactory=std::function<LiveDisplay(std::shared_ptr<gpu::Context>,const RecordingMetadata&)>;
-int capture_cli(int argc,char** argv,LiveDisplayFactory={},CaptureUiRunner={});
+enum class CaptureDisplayMode {interactive_only,headless_projector};
+int capture_cli(int argc,char** argv,LiveDisplayFactory={},CaptureUiRunner={},CaptureDisplayMode=CaptureDisplayMode::interactive_only);
 }

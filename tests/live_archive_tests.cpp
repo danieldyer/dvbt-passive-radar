@@ -27,24 +27,32 @@ int main(int argc,char** argv){try{
         for(std::size_t c=0;c<capture.channels.size();++c)for(std::size_t i=0;i<count;++i)
             check(read<C>(input)==samples[c*stride+i],"Archive changed complex phase");
     };
-    LiveArchive writer(path,metadata,applied,capture,"channels");writer.epoch(123456789012,applied.rate_hz);
+    const auto anchor=device_time_anchor(200.125,1'700'000'000'000'000'000,1'700'000'000'000'004'000,1000,5000);
+    check(anchor.host_monotonic_ns==3000 && anchor.query_uncertainty_ns==2001,"Incorrect UTC query bracket");
+    const auto step=device_time_anchor(200,0,2'000'004'000,1000,5000);
+    check(step.query_uncertainty_ns>1'000'000'000,"Host clock step was hidden from UTC uncertainty");
+    LiveArchive writer(path,metadata,applied,capture,"channels");writer.epoch(123456789012,applied.rate_hz);writer.time_anchor(anchor);
     writer.channels(batch,std::array<ClockSegment,1>{{}});writer.gap({0,998877,23,5});writer.finish();
     check(writer.queued_bytes()==0 && writer.bytes()==std::filesystem::file_size(path),"Archive queue did not drain");
     bool rejected=false;try{LiveArchive duplicate(path,metadata,applied,capture,"channels");}catch(...){rejected=true;}check(rejected,"Overwrote archive");
     std::ifstream file(path,std::ios::binary);char magic[8];file.read(magic,8);check(std::memcmp(magic,"DVBTLIV1",8)==0,"Wrong archive header");
     const auto size=read<std::uint32_t>(file);std::string text(size,'\0');file.read(text.data(),size);const auto header=parse(text);
+    check(!header.at("profile_stationary_subtraction").as_bool() && header.at("profile_training_rows_retained").as_bool(),"Archive did not declare the preserved stationary/training information");
     check(header.at("applied_capture").at("rate_hz").as_double()==applied.rate_hz,"Lost fractional UHD rate");
     check(header.at("applied_capture").at("gain_db").as_double()==applied.gain_db &&
         header.at("applied_capture").at("bandwidth_hz").as_double()==applied.bandwidth_hz &&
         header.at("applied_capture").at("master_clock_hz").as_double()==applied.master_clock_hz,"Lost applied SDR settings");
-    bool checked=false,done=false;
+    bool checked=false,done=false,checked_anchor=false;
     for(;;){char tag[4];file.read(tag,4);check(bool(file),"Missing final archive record");const auto length=read<std::uint32_t>(file);const auto bytes=read<std::uint64_t>(file);
         text.resize(length);file.read(text.data(),length);const auto info=parse(text);
-        if(std::memcmp(tag,"CHIQ",4)==0){check_channels(file,info,bytes);checked=true;
+        if(std::memcmp(tag,"UTCA",4)==0){
+            check(info.at("host_utc_ns").as_int64()==anchor.host_utc_ns && info.at("device_seconds").as_double()==anchor.device_seconds,
+                  "UTC/device correspondence lost precision");checked_anchor=true;
+        }else if(std::memcmp(tag,"CHIQ",4)==0){check_channels(file,info,bytes);checked=true;
         }else file.seekg(std::streamoff(bytes),std::ios::cur);
         if(std::memcmp(tag,"DONE",4)==0){done=true;break;}
     }
-    check(checked && done,"Archive has no waveform or completion");
+    check(checked && done && checked_anchor,"Archive has no waveform, UTC correspondence or completion");
     const auto profile_path=path.string()+".both";Remove remove_profiles{profile_path};
     FrameBatch frame;frame.channel=0;frame.segment=4;frame.first=1;frame.last=3;frame.symbols.resize(3);frame.frames.resize(1);frame.carriers.count=3;
     for(unsigned i=0;i<3;++i){auto& symbol=frame.symbols[i];symbol.channel=0;symbol.segment=4;symbol.modulo4=i;
@@ -53,13 +61,17 @@ int main(int argc,char** argv){try{
     auto view=[](auto& values){return gpu::BufferView{{},{},values.size()*sizeof(values[0]),values.data()};};
     frame.carriers.measured=view(measured);
     SpectralBatch spectra{frame,{}, {view(reference),view(flags),3},{view(response),{},3,128.375,.001},{{},{},{},{},{},3,128.375}};
-    SarBatch sar(capture,spectra,{{}});MatchedProfiles profiles;profiles.first=1;profiles.count=2;profiles.information=12.75;profiles.values.resize(4096);
+    SarBatch sar(capture,spectra,{{}});MatchedProfiles profiles;profiles.first=1;profiles.count=2;profiles.information=12.75;
+    profiles.size=matched_extended_profile_size;profiles.values.resize(2*profiles.count*profiles.size);
     for(std::size_t i=0;i<profiles.values.size();++i)profiles.values[i]={float(i)*.001F,-float(i)*.003F};
     std::vector<C> stationary(6817,C{.25F,-.125F});std::vector<float> variance(6817);
     profiles.cancellation_variance.assign(6817,1e-5);
     frame.symbols[1].source_offset_samples=.375;frame.symbols[1].source_rate_error=.04e-6;
     for(std::size_t i=0;i<variance.size();++i)variance[i]=.125F+float(i)*.01F;
     LiveArchive profile_writer(profile_path,metadata,applied,capture,"both");
+    rejected=false;try{profile_writer.profiles(sar,profiles,stationary,variance);}catch(const std::invalid_argument&){rejected=true;}
+    check(rejected,"Archived stationary-subtracted profiles under an unmodified-profile header");
+    stationary.clear();profiles.cancellation_variance.clear();
     profile_writer.channels(batch,sar.clock);profile_writer.profiles(sar,profiles,stationary,variance);profile_writer.channels(batch,sar.clock);profile_writer.finish();
     check(profile_writer.queued_bytes()==0 && profile_writer.bytes()==std::filesystem::file_size(profile_path),"Combined archive queue did not drain");
     std::ifstream profile_file(profile_path,std::ios::binary);profile_file.seekg(8);const auto header_length=read<std::uint32_t>(profile_file);
@@ -68,6 +80,8 @@ int main(int argc,char** argv){try{
     for(;;){char tag[4];profile_file.read(tag,4);check(bool(profile_file),"Truncated profile archive");const auto length=read<std::uint32_t>(profile_file);const auto bytes=read<std::uint64_t>(profile_file);
         text.resize(length);profile_file.read(text.data(),length);const auto info=parse(text);
         if(std::memcmp(tag,"PROF",4)==0){const auto& row=info.at("rows").as_array()[0].as_array();
+            check(info.at("size")==4096 && info.at("positive_context_samples")==4000 && info.at("negative_context_samples")==64,
+                "Extended archive lost its finite delay support");
             check(row[3].as_double()==frame.symbols[1].window.phase && row[4].as_double()==43.125,"Profile archive lost pilot phase or CFO");
             check(row[6].as_double()==.375 && row[7].as_double()==.04e-6,"Profile archive lost independent source timing");
             check(row[1].as_double()==sar.seconds(1) && row[2].as_double()==sar.original_adc(1),"Profile archive lost the common ADC coordinates");

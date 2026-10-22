@@ -5,14 +5,14 @@ layout(binding=1) writeonly buffer Zero {vec2 zero[];};
 layout(binding=2) writeonly buffer One {vec2 one[];};
 layout(binding=7) readonly buffer Means {vec2 means[];};
 layout(binding=9) readonly buffer Weights {float weights[];};
-layout(push_constant) uniform Parameters {uint rows,size,frequencies,first,count,ranges;int offset_bin;uint remove_dc;float interval,rf;} p;
+layout(push_constant) uniform Parameters {uint rows,size,frequencies,first,count,ranges;int offset_bin;uint remove_dc;float interval,rf;uint profile_size;} p;
 shared vec2 tile0[64],tile1[64];
 void main(){
     uint group=gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x,lane=gl_LocalInvocationID.x;
-    uint first_k=(group%128)*8,first_n=(group/128)*8;
+    uint first_k=(group%(p.profile_size/8))*8,first_n=(group/(p.profile_size/8))*8;
     uint k=first_k+lane%8,n=first_n+lane/8;
-    tile0[(lane%8)*8+lane/8]=n<p.rows ? weights[n]*(profiles[n*1024+k]-means[k]) : vec2(0);
-    tile1[(lane%8)*8+lane/8]=n<p.rows ? weights[n]*(profiles[(p.rows+n)*1024+k]-means[1024+k]) : vec2(0);
+    tile0[(lane%8)*8+lane/8]=n<p.rows ? weights[n]*(profiles[n*p.profile_size+k]-means[k]) : vec2(0);
+    tile1[(lane%8)*8+lane/8]=n<p.rows ? weights[n]*(profiles[(p.rows+n)*p.profile_size+k]-means[p.profile_size+k]) : vec2(0);
     barrier();
     k=first_k+lane/8;n=first_n+lane%8;
     if(n<p.size){zero[k*p.size+n]=tile0[lane];one[k*p.size+n]=tile1[lane];}

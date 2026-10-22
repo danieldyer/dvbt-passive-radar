@@ -48,8 +48,22 @@ RecordingMetadata RecordingMetadata::read(const std::filesystem::path& path) {
         real("bandwidth_hz",s.bandwidth_hz);real("buffer_seconds",s.buffer_seconds);
         if(const auto* v=c.if_contains("channel"))s.channel=integer(*v,63);
         if(s.sample_rate_hz<8e6 || s.sample_rate_hz>128e6 || s.centre_hz<=0 ||
-           s.bandwidth_hz<=0 || s.buffer_seconds<.1 || s.buffer_seconds>4 || s.device_args.empty())
+           s.bandwidth_hz<=0 || s.buffer_seconds<.1 || s.buffer_seconds>8 || s.device_args.empty())
             throw std::invalid_argument("Invalid SDR capture settings");
+        if(const auto* clock=c.if_contains("clock_model")){
+            const auto& model=clock->as_object();
+            auto real=[&](const char* key,double& out){if(const auto* v=model.if_contains(key))out=number(*v);};
+            real("receiver_white_fm",s.clock.receiver.white_fm);real("receiver_random_walk_fm",s.clock.receiver.random_walk_fm);
+            real("receiver_drift_diffusion",s.clock.receiver.drift_diffusion);
+            real("transmitter_white_fm",s.clock.transmitter.white_fm);real("transmitter_random_walk_fm",s.clock.transmitter.random_walk_fm);
+            real("settling_seconds",s.clock.settling_seconds);real("innovation_huber_sigma",s.clock.innovation_huber_sigma);
+            real("unknown_sigma_samples",s.clock.unknown_sigma_samples);
+        }
+        const auto& q=s.clock;
+        for(double value:{q.receiver.white_fm,q.receiver.random_walk_fm,q.receiver.drift_diffusion,q.transmitter.white_fm,q.transmitter.random_walk_fm})
+            if(value<0)throw std::invalid_argument("Negative clock process noise");
+        if(q.settling_seconds<.02 || q.settling_seconds>10 || q.innovation_huber_sigma<4 || q.innovation_huber_sigma>20 || q.unknown_sigma_samples<=0)
+            throw std::invalid_argument("Invalid clock control parameters");
         result.capture=std::move(s);
     }
     std::set<std::string> sites,ids;

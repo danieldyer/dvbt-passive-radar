@@ -17,7 +17,7 @@ public:
     struct Result {DopplerMap map;gpu::BufferView values;};
     explicit GpuFocus(std::shared_ptr<gpu::Context>);
     ~GpuFocus();
-    void prepare(std::size_t rows);
+    void prepare(std::size_t rows,unsigned profile_size=matched_profile_size);
     // Positive information weights undo per-batch amplitude normalization.
     // An empty span gives equal weights; no temporal taper is imposed.
     DopplerMap calculate(std::span<const C> moments,std::size_t rows,double interval,

@@ -1,5 +1,6 @@
 #pragma once
 #include "gpu_frontend.hpp"
+#include "rf_health.hpp"
 #include <atomic>
 #include <condition_variable>
 #include <deque>
@@ -60,6 +61,7 @@ public:
     GpuLiveInput(std::shared_ptr<gpu::Context>,std::size_t ring_samples,std::size_t input_samples);
     ~GpuLiveInput();
     std::span<Iq16> storage() const;
-    gpu::BufferView gather(std::uint64_t ring_first,std::size_t count,ComputeTimings* =nullptr);
+    gpu::BufferView gather(std::uint64_t ring_first,std::size_t count,ComputeTimings* =nullptr,std::size_t statistics_skip=0);
+    RfHealth health() const; // Last gather, excluding padding and statistics_skip.
 };
 }

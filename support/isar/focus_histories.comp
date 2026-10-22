@@ -1,0 +1,11 @@
+#version 450
+#extension GL_GOOGLE_include_directive : require
+layout(local_size_x=64) in;
+#include "focus_sample.glsl"
+layout(set=0,binding=5,std430) writeonly buffer Histories {vec2 history[];};
+void main(){
+    uint at=gl_GlobalInvocationID.x,row=gl_WorkGroupID.y;
+    if(at>=p.pixels)return;
+    vec2 value[9];sample_row(row,pixel[at].xyz,value);
+    history[row*p.pixels+at]=value[0];
+}

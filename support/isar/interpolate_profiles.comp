@@ -1,0 +1,23 @@
+#version 450
+layout(local_size_x=64) in;
+layout(set=0,binding=1,std430) readonly buffer Profiles {vec2 profile[];};
+layout(set=0,binding=3,std430) readonly buffer Interpolation {float coefficient[];};
+layout(set=0,binding=6,std430) writeonly buffer DenseProfiles {vec4 dense[];};
+layout(push_constant) uniform Parameters {
+    uint rows; uint ranges; uint pixels; uint phases;
+    uint block_rows; uint blocks; float k; float symbol_duration;
+    uint oversample;
+} p;
+void main(){
+    uint j=gl_GlobalInvocationID.x,row=gl_WorkGroupID.y;
+    uint count=(p.ranges-63)*p.oversample;
+    if(j>=count)return;
+    uint base=j/p.oversample,phase=(j%p.oversample)*(p.phases/p.oversample);
+    vec2 zero=vec2(0),one=vec2(0);
+    for(uint tap=0;tap<64;++tap){
+        float w=coefficient[phase*64+tap];
+        uint index=row*p.ranges+base+tap;
+        zero+=w*profile[index];one+=w*profile[p.rows*p.ranges+index];
+    }
+    dense[row*count+j]=vec4(zero,one);
+}

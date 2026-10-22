@@ -1,2 +1,0 @@
-model,receiver,qam,rate,esn0_db,blocks,packets,rejected,wrong_accepted,corrected_bytes,edge_packets,edge_rejected,payload_bit_errors,payload_bits,coded_bits,coded_errors,trellis_bits,trellis_errors,beyond_radius,radius_violation
-echo,gpu_pilots,64,2,100,2,6782,6782,0,0,64,64,2851522,10200128,14805504,931876,11104128,3107972,6782,0

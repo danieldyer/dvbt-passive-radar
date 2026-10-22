@@ -69,20 +69,30 @@ constexpr std::uint32_t code[]=
 }
 struct GpuLiveInput::Impl {
     gpu::Kernel kernel;
-    std::size_t ring_size,input_size;
+    std::size_t ring_size,input_size,health_samples=0;
     Impl(std::shared_ptr<gpu::Context> context,std::size_t ring,std::size_t input):
-        kernel(code,16,{},std::move(context)),ring_size(ring),input_size(input) {
+        kernel(code,20,{},std::move(context)),ring_size(ring),input_size(input) {
         if(!std::has_single_bit(ring) || ring>UINT32_MAX || input>UINT32_MAX || input>ring)
             throw std::invalid_argument("Invalid live GPU buffer sizes");
         kernel.storage(0,ring*sizeof(Iq16));kernel.storage(1,input*sizeof(C));
+        kernel.storage(2,((input+63)/64)*16);
     }
 };
 GpuLiveInput::GpuLiveInput(std::shared_ptr<gpu::Context> context,std::size_t ring,std::size_t input):impl_(std::make_unique<Impl>(std::move(context),ring,input)){}
 GpuLiveInput::~GpuLiveInput()=default;
 std::span<Iq16> GpuLiveInput::storage() const {return {static_cast<Iq16*>(impl_->kernel.view(0).mapped),impl_->ring_size};}
-gpu::BufferView GpuLiveInput::gather(std::uint64_t first,std::size_t count,ComputeTimings* timing) {
+gpu::BufferView GpuLiveInput::gather(std::uint64_t first,std::size_t count,ComputeTimings* timing,std::size_t skip) {
     auto& p=*impl_;if(count>p.input_size)throw std::invalid_argument("Live input exceeds FFT capacity");
-    p.kernel.run(std::array{std::uint32_t(first%p.ring_size),std::uint32_t(count),std::uint32_t(p.input_size),std::uint32_t(p.ring_size-1)},p.input_size,timing);
+    if(skip>count)throw std::invalid_argument("Invalid RF statistics interval");
+    p.health_samples=count-skip;
+    p.kernel.run(std::array{std::uint32_t(first%p.ring_size),std::uint32_t(count),std::uint32_t(p.input_size),std::uint32_t(p.ring_size-1),std::uint32_t(skip)},p.input_size,timing);
     return p.kernel.view(1);
+}
+RfHealth GpuLiveInput::health() const {
+    struct Group {float power,peak;std::uint32_t rail,near;};static_assert(sizeof(Group)==16);
+    const auto& p=*impl_;const auto* groups=static_cast<const Group*>(p.kernel.view(2).mapped);RfHealth out;out.samples=p.health_samples;
+    for(std::size_t i=0;i<(p.input_size+63)/64;++i){const auto& g=groups[i];out.power_sum+=g.power;
+        out.peak_component=std::max(out.peak_component,double(g.peak));out.rail_samples+=g.rail;out.near_rail_samples+=g.near;}
+    return out;
 }
 }

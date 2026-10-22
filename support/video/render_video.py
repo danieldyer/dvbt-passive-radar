@@ -217,8 +217,8 @@ def arguments(argv=None):
     if not .5<=args.integration<=3600 or not 0<args.range_km<=300 or not 0<args.doppler_hz<=400 or not .1<=args.fps<=60:
         p.error('Invalid integration, range, Doppler or frame rate')
     if args.start<0 or args.seconds<0 or args.db_min>=args.db_max:p.error('Invalid time interval or colour scale')
-    if args.backend=='matched' and (args.compute!='vulkan' or args.integration>10 or args.range_km>30 or args.range_km<1 or args.doppler_hz>200 or args.doppler_hz<4/args.integration):
-        p.error('Matched detection requires Vulkan, CPI <=10 s, range 1..30 km and Doppler 4/CPI..200 Hz')
+    if args.backend=='matched' and (args.compute!='vulkan' or args.integration>10 or args.range_km>100 or args.range_km<1 or args.doppler_hz>200 or args.doppler_hz<4/args.integration):
+        p.error('Matched detection requires Vulkan, CPI <=10 s, range 1..100 km and Doppler 4/CPI..200 Hz')
     if args.processor is None:args.processor=ROOT/'build/release'/('dvbt_detect' if args.backend=='matched' else 'dvbt_reconstruct')
     extension,_=ENCODINGS[args.encoding]
     if args.output.suffix.lower()!=extension:p.error(f'--encoding {args.encoding} requires a {extension} output')

@@ -1,0 +1,45 @@
+#version 450
+layout(local_size_x=64) in;
+layout(push_constant) uniform Parameters { uint pixels; } p;
+layout(std430,binding=0) readonly buffer Input { vec2 amplitude[]; };
+layout(std430,binding=1) writeonly buffer Output { vec2 statistic[]; };
+const float pi=3.14159265358979323846;
+const float circle=2.0*pi;
+
+float score(vec2 z[5],float theta){
+    vec2 direction=vec2(cos(theta),sin(theta));float value=0.0;
+    for(uint c=0;c<5;c++){float a=max(dot(z[c],direction),0.0);value+=a*a;}
+    return value;
+}
+void update(vec2 z[5],float theta,inout float best,inout float phase){
+    float value=score(z,theta);if(value>best){best=value;phase=theta;}
+}
+void main(){
+    uint pixel=gl_GlobalInvocationID.x+gl_GlobalInvocationID.y*gl_NumWorkGroups.x*gl_WorkGroupSize.x;
+    if(pixel>=p.pixels)return;
+    vec2 z[5];float boundary[10];
+    for(uint c=0;c<5;c++){
+        z[c]=amplitude[c*p.pixels+pixel];
+        float angle=dot(z[c],z[c])>0.0 ? atan(z[c].y,z[c].x) : 0.0;
+        boundary[c]=mod(angle+pi/2.0,circle);boundary[c+5]=mod(boundary[c]+pi,circle);
+    }
+    for(uint i=1;i<10;i++){
+        float value=boundary[i];uint j=i;
+        while(j>0 && boundary[j-1]>value){boundary[j]=boundary[j-1];j--;}
+        boundary[j]=value;
+    }
+    float best=0.0,phase=0.0;
+    for(uint i=0;i<10;i++){
+        float first=boundary[i],last=i==9 ? boundary[0]+circle : boundary[i+1];
+        float mid=(first+last)/2.0;vec2 direction=vec2(cos(mid),sin(mid));
+        float xx=0.0,yy=0.0,xy=0.0;
+        for(uint c=0;c<5;c++)if(dot(z[c],direction)>0.0){xx+=z[c].x*z[c].x;yy+=z[c].y*z[c].y;xy+=z[c].x*z[c].y;}
+        float eigen=(xx!=yy || xy!=0.0) ? 0.5*atan(2.0*xy,xx-yy) : 0.0;
+        update(z,first,best,phase);
+        for(uint j=0;j<2;j++){
+            float theta=first+mod(eigen+float(j)*pi-first,circle);
+            if(theta<=last+1e-5)update(z,theta,best,phase);
+        }
+    }
+    statistic[pixel]=vec2(best,mod(phase+pi,circle)-pi);
+}

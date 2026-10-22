@@ -1,0 +1,93 @@
+#version 450
+// Conditional Gaussian template energy before/after a constant-profile nuisance.
+// Known waveform, covariance and physical geometry only; no observed data enter.
+layout(local_size_x=64) in;
+layout(set=0,binding=0,std430) readonly buffer Geometry {vec4 geometry[];};
+layout(set=0,binding=1,std430) readonly buffer Pulse {vec2 pulse[];};
+layout(set=0,binding=2,std430) readonly buffer Norm {float norm_coefficient[];};
+layout(set=0,binding=3,std430) readonly buffer Whitening {vec2 whitening[];};
+layout(set=0,binding=4,std430) readonly buffer Pixels {vec4 pixel[];};
+layout(set=0,binding=5,std430) readonly buffer Offsets {int range_offset[];};
+layout(set=0,binding=6,std430) writeonly buffer Output {vec4 information[];};
+layout(set=0,binding=7,std430) buffer Status {uint unsupported;};
+layout(set=0,binding=8,std430) readonly buffer BinMoments {float bin_moment[];};
+layout(set=0,binding=9,std430) readonly buffer Observed {vec2 observed_coefficient[];};
+layout(set=0,binding=10,std430) readonly buffer PointControl {vec2 point_coefficient[];};
+layout(set=0,binding=11,std430) writeonly buffer Scores {vec4 score[];};
+layout(push_constant) uniform Parameters {
+    uint stride,bands,ranges,cells,degree,pixels,radius;int first_cell;
+    float symbol_duration;
+} p;
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+void add_complex(inout vec2 sum,inout vec2 compensation,vec2 value){
+    vec2 corrected=value-compensation,next=sum+corrected;
+    compensation=(next-sum)-corrected;sum=next;
+}
+float norm_at(uint row,uint cell,float x){
+    uint first=(row*p.cells+cell)*(2*p.degree+1);
+    float a=0,b=0;
+    for(int j=int(2*p.degree);j>0;--j){float next=norm_coefficient[first+uint(j)]+2*x*a-b;b=a;a=next;}
+    return norm_coefficient[first]+x*a-b;
+}
+vec2 data_at(uint row,uint cell,float x,bool point_control){
+    uint first=(row*p.cells+cell)*(p.degree+1);vec2 a=vec2(0),b=a;
+    for(int j=int(p.degree);j>0;--j){
+        vec2 c=point_control ? point_coefficient[first+uint(j)] : observed_coefficient[first+uint(j)];
+        vec2 next=c+2*x*a-b;b=a;a=next;
+    }
+    vec2 c=point_control ? point_coefficient[first] : observed_coefficient[first];return c+x*a-b;
+}
+vec2 pulse_at(uint row,int cell,float x){
+    uint first=(row*(2*p.radius)+uint(cell+int(p.radius)))*(p.degree+1);
+    vec2 a=vec2(0),b=a;
+    for(int j=int(p.degree);j>0;--j){vec2 next=pulse[first+uint(j)]+2*x*a-b;b=a;a=next;}
+    return pulse[first]+x*a-b;
+}
+void main(){
+    uint at=gl_GlobalInvocationID.x,band=gl_WorkGroupID.y;if(at>=p.pixels)return;
+    vec3 point=pixel[at].xyz;
+    vec2 sum[33],compensation[33];for(uint r=0;r<p.ranges;++r){sum[r]=vec2(0);compensation[r]=vec2(0);}
+    float raw=0,raw_compensation=0,total_weight=0;
+    vec2 observed=vec2(0),point_value=vec2(0),observed_compensation=vec2(0),point_compensation=vec2(0);
+    for(uint n=0;n<p.stride;++n){
+        uint row=band*p.stride+n,base=10*row;vec4 g=geometry[base+9];if(g.w<=0)continue;
+        float weight=geometry[base+8].w;
+        total_weight+=weight;
+        vec3 d=geometry[base+2].xyz*point.x+geometry[base+3].xyz*point.y+geometry[base+4].xyz*point.z;
+        vec4 tx=geometry[base],rx=geometry[base+1];vec3 t=tx.xyz+d,r=rx.xyz+d;
+        float a=length(t),b=length(r),dd=dot(d,d);
+        float delta=(2*dot(tx.xyz,d)+dd)/(a+tx.w)+(2*dot(rx.xyz,d)+dd)/(b+rx.w);
+        float coordinate=g.x+delta*(8000000./299792458.);int cell=int(floor(coordinate));
+        int index=cell-p.first_cell;
+        if(index<0 || index>=int(p.cells)){atomicAdd(unsupported,1);information[band*p.pixels+at]=vec4(0);return;}
+        float x=2*fract(coordinate)-1,k=geometry[base+5].w;
+        vec3 v=geometry[base+5].xyz+geometry[base+6].xyz*point.x+geometry[base+7].xyz*point.y+geometry[base+8].xyz*point.z;
+        float omega=-k*p.symbol_duration*dot(t/a+r/b,v),m0;
+        if(abs(omega)<.01){float z=omega*omega;m0=1-z/24+z*z/1920;}
+        else m0=sin(omega/2)/(omega/2);
+        float frequency=omega/p.symbol_duration;
+        vec2 factor=vec2(bin_moment[7*row+6],0);
+        for(int j=5;j>=0;--j)factor=multiply(factor,vec2(0,frequency))+vec2(bin_moment[7*row+uint(j)],0);
+        factor*=m0;
+        float value=weight*dot(factor,factor)*norm_at(row,uint(index),x)-raw_compensation,next=raw+value;
+        raw_compensation=(next-raw)-value;raw=next;
+        float angle=-k*delta;vec2 phase=multiply(vec2(g.y,-g.z),vec2(cos(angle),sin(angle)));
+        vec2 matched_phase=vec2(phase.x,-phase.y),matched_factor=vec2(factor.x,-factor.y);
+        add_complex(observed,observed_compensation,multiply(multiply(matched_phase,matched_factor),data_at(row,uint(index),x,false)));
+        add_complex(point_value,point_compensation,multiply(multiply(matched_phase,matched_factor),data_at(row,uint(index),x,true)));
+        for(uint j=0;j<p.ranges;++j){
+            int pulse_cell=range_offset[j]-cell-1;
+            vec2 h=multiply(multiply(pulse_at(row,pulse_cell,-x),phase),factor)*weight;
+            add_complex(sum[j],compensation[j],h);
+        }
+    }
+    float removed=0;
+    for(uint r=0;r<p.ranges;++r){
+        vec2 value=vec2(0);
+        for(uint j=0;j<p.ranges;++j)value+=multiply(whitening[(band*p.ranges+r)*p.ranges+j],sum[j]);
+        removed+=dot(value,value);
+    }
+    removed/=total_weight;
+    information[band*p.pixels+at]=vec4(raw,raw-removed,removed,total_weight);
+    score[band*p.pixels+at]=vec4(observed,point_value);
+}

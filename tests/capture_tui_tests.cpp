@@ -36,6 +36,7 @@ int main(int argc,char** argv){try{
     s.simulation=true;s.looping=true;s.applied=true;s.elapsed=42;s.processed_seconds=40;
     s.message="SIMULATED VALIDATION DATA";s.headroom=3.25;s.queue_ms=12;s.capacity_ms=524;
     s.phase_budget=3;s.archive="profiles";s.display="Native ImPlot";
+    s.rf={1000,2,3,10,.99};s.recent_headroom=3.1;s.clock_sigma_ns=.005;
     s.settings.rate_hz=61'440'000.048;s.settings.centre_hz=202e6;s.settings.serial="SIM";
     const std::array names{"Seven","SBS","Nine","Ten","ABC"};
     for(std::size_t i=0;i<names.size();++i){CaptureChannelStatus c;c.name=names[i];c.id=c.name;
@@ -51,6 +52,7 @@ int main(int argc,char** argv){try{
     auto save=[&](const char* file){return output.empty() ? output : output/file;};
     auto text=render(component,120,36,save("overview.ansi"));
     check(text.find("Capture integrity")!=text.npos && text.find("Seven")!=text.npos && text.find("ABC")!=text.npos,"Overview missing capture/channel state");
+    check(text.find("RF health")!=text.npos && text.find("near rail")!=text.npos,"RF health is not visible in the overview");
     component->OnEvent(Event::Character('5'));component->OnEvent(Event::Character('v'));
     check(backend.opened==std::vector<std::size_t>{4} && !backend.stop_requested(),"Map key selected wrong channel or stopped capture");
     component->OnEvent(Event::Character('t'));text=render(component,120,44,save("timing.ansi"));

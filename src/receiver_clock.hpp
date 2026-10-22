@@ -13,7 +13,8 @@ inline void observe_timing(SampleClock& clock,std::span<const TimingObservation>
         switch(observation.kind) {
         case TimingObservation::Kind::reset:clock.reset_observer(observation.channel);break;
         case TimingObservation::Kind::rate:clock.observe_rate(observation.channel,n,observation.value);break;
-        case TimingObservation::Kind::offset:clock.observe_offset(observation.channel,n,observation.value*decimation);break;
+        case TimingObservation::Kind::offset:clock.observe_offset(observation.channel,n,observation.value*decimation,
+            observation.variance*decimation*decimation);break;
         }
     }
 }

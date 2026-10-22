@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+#include <cstdlib>
+#include <iomanip>
 #include <iostream>
 #include <numbers>
 #include <random>
@@ -145,6 +147,7 @@ int main(int argc,char** argv) {
         if(streaming) {
             const std::array centres{nco_offset};
             clock=std::make_shared<SampleClock>(fs,centres,3);
+            if(std::getenv("RADAR_CLOCK_TRACE"))clock->enable_diagnostics();
             GpuChannelBank channel(wave,centres,0,double(wave.info.samples)/fs);channel.set_clock(clock);origin=channel.origin;
             const std::array guards{16U};
             if(pipeline_test) {
@@ -180,6 +183,10 @@ int main(int argc,char** argv) {
                     const auto output=receiver.process(input);observe_timing(*clock,output.timing,origin,1);auto symbols=receiver.download(output);
                     for(unsigned j=0;j<symbols.size();++j)if(output.symbols[j].ready)verify(std::move(symbols[j]));
                 }
+            }
+            if(const auto* path=std::getenv("RADAR_CLOCK_TRACE")){
+                std::ofstream trace(path);trace<<std::setprecision(17)<<"kind,channel,sample,value,variance,feedback_removed,applied_offset,applied_rate,innovation,innovation_variance,nis,gaussian_inlier,late,robust_weight\n";
+                for(const auto& o:clock->take_observations())trace<<int(o.kind)<<','<<o.channel<<','<<o.sample<<','<<o.value<<','<<o.variance<<','<<o.feedback_removed<<','<<o.applied_offset<<','<<o.applied_rate<<','<<o.innovation.value<<','<<o.innovation.variance<<','<<o.innovation.normalized_square<<','<<o.innovation.gaussian_inlier<<','<<o.late<<','<<o.innovation.robust_weight<<'\n';
             }
             if(clock_errors.size()<100)throw std::runtime_error("Insufficient settled clock observations");
             double mean=0,error=0;

@@ -33,7 +33,7 @@ def archive_layout(path):
             if source.tell()+size>total:raise ValueError('Truncated live payload')
             if tag==b'PROF':
                 c=meta['channel'];rows=meta['rows']
-                if not rows or len(rows)!=meta['count'] or meta['size']!=1024 or meta['moments']!=2:
+                if not rows or len(rows)!=meta['count'] or meta['size'] not in (1024,4096) or meta['moments']!=2:
                     raise ValueError('Invalid profile dimensions')
                 interval=(8192+8192/header['applied_channels'][c]['guard'])/8e6
                 duration=max(duration,rows[-1][1]+interval);profiles+=1

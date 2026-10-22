@@ -9,10 +9,10 @@ import render_capture as capture
 
 class CaptureVideoTest(unittest.TestCase):
     @staticmethod
-    def fixture(path, mode='profiles', done=True):
+    def fixture(path, mode='profiles', done=True, size=1024):
         header=json.dumps(dict(archive_mode=mode,applied_channels=[dict(guard=16)])).encode()
-        meta=json.dumps(dict(channel=0,count=2,size=1024,moments=2,rows=[[123,4.0,123,0,0,True],[124,4.001088,124,0,0,False]])).encode()
-        payload=bytes(4*1024*8)
+        meta=json.dumps(dict(channel=0,count=2,size=size,moments=2,rows=[[123,4.0,123,0,0,True],[124,4.001088,124,0,0,False]])).encode()
+        payload=bytes(4*size*8)
         body=b'DVBTLIV1'+struct.pack('<I',len(header))+header
         channel=json.dumps(dict(first=0,count=3,channels=1,order='channel,sample')).encode()
         iq=struct.pack('<4sIQ',b'CHIQ',len(channel),24)+channel+bytes(24)
@@ -36,6 +36,12 @@ class CaptureVideoTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path=Path(directory)/'capture.dvblive';self.fixture(path,mode='channels')
             with self.assertRaisesRegex(ValueError,'profiles archive'):capture.archive_layout(path)
+
+    def test_extended_range_archive(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/'capture.dvblive';self.fixture(path,size=4096)
+            _,duration=capture.archive_layout(path)
+            self.assertAlmostEqual(duration,4.002176,places=12)
 
     def test_rejects_incomplete_or_trailing_archive(self):
         with tempfile.TemporaryDirectory() as directory:

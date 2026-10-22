@@ -81,8 +81,19 @@ void gpu_test(){
     }
     const auto expected=bank.process_clocked(reference,support.first,first,count);
     const auto input=live.gather(ring_first,valid);
+    const auto health=live.health();double expected_power=0,expected_peak=0;
+    for(const auto z:reference){expected_power+=std::norm(z);expected_peak=std::max({expected_peak,double(std::abs(z.real())),double(std::abs(z.imag()))});}
+    check(health.samples==valid && health.rail_samples==0 && health.near_rail_samples==0,"RF health counted padding or invented clipping");
+    check(std::abs(health.power_sum-expected_power)<1e-5*std::max(1.,expected_power) && health.peak_component==expected_peak,
+          "GPU RF health differs from CPU reference across a circular-buffer wrap");
     const auto* unpacked=static_cast<const C*>(input.mapped);
     for(std::size_t n=0;n<valid;++n)check(unpacked[n]==reference[n],"sc16 GPU conversion is not exact");
+    const std::array<Iq16,5> rail_test{{{32752,0},{0,-32768},{32113,0},{100,100},{-32768,0}}};
+    for(std::size_t n=0;n<rail_test.size();++n)live.storage()[(ring_first+n)%live.storage().size()]=rail_test[n];
+    live.gather(ring_first,rail_test.size(),nullptr,1);const auto rails=live.health();
+    check(rails.samples==4 && rails.rail_samples==2 && rails.near_rail_samples==3,"RF rails/near-rails or halo exclusion are incorrect");
+    for(std::size_t n=0;n<rail_test.size();++n){const auto z=reference[n];live.storage()[(ring_first+n)%live.storage().size()]={std::int16_t(z.real()*32768),std::int16_t(z.imag()*32768)};}
+    live.gather(ring_first,valid);
     for(std::size_t n=valid;n<bank.input_capacity();++n)check(unpacked[n]==C{},"FFT padding retained stale input");
     const auto output=bank.process_clocked_device(input,valid,support.first,first,count);
     const auto* actual=static_cast<const C*>(output.samples.mapped);double phase_error=0;

@@ -27,6 +27,12 @@ int main(){try{
         total+=read.count;
     }
     check(restarts==9 && counters.missing_samples==0 && counters.unknown_gaps==0 && counters.timestamp_gaps==0,"Replay seam falsely reported sample drops");
+    source=make_replay_source(path,settings,false,0,0,true,true);source->start();total=0;unsigned loops=0;
+    CaptureTimeline continuous;CaptureCounters continuous_counts;
+    while(total<70){const auto read=source->receive(out);check(!read.restart,"Verified cyclic source reset the demodulator at a file seam");
+        check(read.tick==std::int64_t(total),"Cyclic replay changed the hardware epoch");loops+=read.looped;
+        continuous.receive(read.tick,read.count,continuous_counts);total+=read.count;}
+    check(loops==9 && continuous_counts.segments==1 && continuous_counts.missing_samples==0,"Cyclic source invented a capture gap");
     source=make_replay_source(path,settings,false,0,0,false);source->start();total=0;
     for(;;){auto read=source->receive(out);if(read.end)break;check(!read.restart,"Single-pass replay looped");total+=read.count;}
     check(total==samples.size(),"Single-pass replay truncated data");

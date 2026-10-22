@@ -45,7 +45,7 @@ class CaptureScreen final:public ComponentBase {
     }
     Element channel_table(const CaptureStatus& s,bool wide) const{
         Elements rows;
-        Elements heading{cell("CHANNEL",12),cell("LOCK",8),cell("CFO Hz",11),cell("DRIFT ppm",12),cell("RMS ns",10),cell("RS %",8)};
+        Elements heading{cell("CHANNEL",12),cell("LOCK",8),cell("CFO Hz",11),cell("RAW RATE ppm",12),cell("OFFSET RMS",10),cell("RS %",8)};
         if(wide){heading.push_back(cell("PILOT dB",10));heading.push_back(cell("ROWS",12));heading.push_back(cell("RESETS",8));}
         rows.push_back(hbox(std::move(heading))|bold);rows.push_back(separator());
         for(std::size_t i=0;i<s.channels.size();++i){const auto& c=s.channels[i];const auto& r=c.receiver;
@@ -67,7 +67,7 @@ class CaptureScreen final:public ComponentBase {
         Elements capture{value("Received samples",count(s.received)),value("Missing / discarded",count(s.missing)+" / "+count(s.host_discarded),s.missing || s.host_discarded ? bad : good),
             value("Unquantified / overflows",count(s.unknown_gaps)+" / "+count(s.overflows),s.unknown_gaps || s.overflows ? bad : good),
             value("Sequence errors / timeouts",count(s.sequence_errors)+" / "+count(s.timeouts))};
-        Elements processing{value("DSP headroom",s.processed_seconds ? fixed(s.headroom)+"x realtime" : "warming"),
+        Elements processing{value("DSP headroom",s.processed_seconds ? fixed(s.headroom)+"x; recent "+fixed(s.recent_headroom)+"x" : "warming"),
             value("Ring backlog / capacity",fixed(s.queue_ms,1)+" / "+fixed(s.capacity_ms,1)+" ms",s.queue_ms>.8*s.capacity_ms && s.capacity_ms ? warning : good),
             value("Shared ADC clock",fixed(s.clock_ppm,4)+" ppm"),
             value("Phase budget / segments",fixed(s.phase_budget,1)+" deg / "+count(s.clock_segments))};
@@ -80,6 +80,9 @@ class CaptureScreen final:public ComponentBase {
             value("GPU timestamps",s.profile ? fixed(s.gpu_ms_per_second,1)+" ms/input-s" : "off; enable with --profile"),
             value("Scientific archive",s.archive=="none" ? "disabled" : s.archive+"; complex data"),
             value("Live map",s.display.empty() ? "disabled in this build" : "ImPlot; selected channel [v]")}));
+        if(!compact)content.push_back(panel("RF health (processed ADC samples)",{
+            value("Complex RMS / component peak",s.rf.samples ? fixed(s.rf.rms_dbfs(),1)+" / "+fixed(s.rf.peak_dbfs(),1)+" dBFS" : "--"),
+            value("Digital rail / near rail",count(s.rf.rail_samples)+" / "+count(s.rf.near_rail_samples),s.rf.near_rail_samples ? warning : good)}));
         return vbox(std::move(content));
     }
     Element trace(const std::deque<TimingPoint>& history,double TimingPoint::* member,std::string name,std::string unit,double floor,int rows) const{
@@ -102,17 +105,21 @@ class CaptureScreen final:public ComponentBase {
         Elements metrics{
             pair(panel("Pilot timing and phase",{
                 value("CFO",tracked(r.locked,r.frequency_hz)+" Hz"),
-                value("Residual drift",tracked(r.ready,r.residual_rate_ppm,5)+" ppm"),
+                value("Raw pilot rate",tracked(r.ready,r.residual_rate_ppm,5)+" ppm"),
                 value("Timing offset / RMS",tracked(r.ready,r.timing_samples*125)+" / "+tracked(r.ready,r.timing_rms_samples*125)+" ns"),
+                value("Pilot timing sigma",tracked(r.ready && std::isfinite(r.timing_sigma_samples),r.timing_sigma_samples*125,3)+" ns (conditional)"),
                 value("Phase RMS",tracked(r.ready,r.phase_rms_degrees)+" deg",r.phase_rms_degrees>s.phase_budget ? bad : good),
                 value("Pilot quality / SNR",tracked(r.ready,r.pilot_quality)+" / "+tracked(r.ready,r.pilot_snr_db,1)+" dB")}),
                 panel("Shared-clock observer",{
-                    value("ADC drift estimate",tracked(o.anchored,o.estimated_ppm,5)+" ppm"),
-                    value("Clock-fit RMS",tracked(o.anchored,c.clock_fit_ns)+" ns"),
+                    value("Applied common rate",fixed(s.clock_ppm,5)+" ppm"),
+                    value("Acquisition rate estimate",tracked(o.anchored,o.estimated_ppm,5)+" ppm"),
+                    value("Innovation RMS / NIS",tracked(o.anchored,c.clock_fit_ns)+" ns / "+tracked(o.anchored,o.normalized_innovation)),
+                    value("Predicted clock sigma",fixed(s.clock_sigma_ns,3)+" ns (model conditional)"),
+                    value("Bounded / late observations",count(o.downweighted)+" / "+count(o.late),o.downweighted || o.late ? warning : good),
                     value("Observations / span",count(o.observations)+" / "+fixed(o.span_seconds,2)+" s"),
-                    value("Ensemble contributor",o.active ? "YES" : "NO",o.active ? good : warning),
+                    value("Recent timing update",o.active ? "YES" : "NO",o.active ? good : warning),
                     value("Lock segment / resets",count(r.segment)+" / "+count(r.reacquisitions))})),
-            pair(trace(h,&TimingPoint::drift_ppm,"Residual clock drift","ppm",.001,plot_rows),
+            pair(trace(h,&TimingPoint::drift_ppm,"Raw differential pilot rate","ppm",.001,plot_rows),
                 trace(h,&TimingPoint::timing_ns,"Pilot timing offset","ns",.01,plot_rows)),
             pair(trace(h,&TimingPoint::phase_degrees,"Pilot phase RMS","deg",.01,plot_rows),
                 trace(h,&TimingPoint::cfo_hz,"Receiver frequency correction","Hz",.01,plot_rows)),
@@ -145,9 +152,17 @@ class CaptureScreen final:public ComponentBase {
             value("Master clock",s.applied ? fixed(a.master_clock_hz/1e6,9)+" MHz" : "--")}),
             panel("Processing configuration",{
                 value("CPI / update",fixed(s.integration_seconds,2)+" / "+fixed(s.update_seconds,2)+" s"),
-                value("Map extent","0-30 km / +/- "+fixed(s.doppler_hz,0)+" Hz"),
-                value("Stationary suppression",s.remove_dc ? "enabled" : "disabled"),
+                value("Map extent","0-"+fixed(s.range_metres/1000,0)+" km / +/- "+fixed(s.doppler_hz,0)+" Hz"),
+                value("Stationary suppression",s.remove_dc ? "display only; archive preserved" : "disabled"),
                 value("Archive / simulation",s.archive+" / "+(s.looping ? "loops until stopped" : s.simulation ? "single pass" : "UHD continuous"))}),
+            panel("Capture health",{
+                value("Minimum recent headroom",fixed(s.minimum_recent_headroom)+"x"),
+                value("Longest processing block",fixed(s.maximum_block_ms,1)+" ms"),
+                value("Peak ring backlog",fixed(s.peak_queue_ms,1)+" ms"),
+                value("Map admissions skipped for backlog",count(s.display_pressure_skips)),
+                value("RF complex RMS / component peak",s.rf.samples ? fixed(s.rf.rms_dbfs(),1)+" / "+fixed(s.rf.peak_dbfs(),1)+" dBFS" : "--"),
+                value("Digital rail / >=0.98 FS",count(s.rf.rail_samples)+" / "+count(s.rf.near_rail_samples)),
+                value("Diagnostic history","diagnostics.jsonl; continuous")}),
             panel("Paths",{tint(text("Metadata"),muted),paragraph(s.metadata),tint(text("Source"),muted),paragraph(s.source),
                 tint(text("Output"),muted),paragraph(s.output)}),
             tint(text("RF and processing configuration comes from metadata/CLI; stop before starting a new configuration."),muted)});

@@ -9,7 +9,7 @@
 
 namespace radar {
 struct MatchedDetector::Impl {
-    struct Row {std::array<C,2048> values;double time,information;};
+    struct Row {std::vector<C> values;double time,information;};
     struct Completed {DopplerMap map;ComputeTimings focus;};
     struct Channel {
         bool publish_maps=true;
@@ -31,15 +31,15 @@ struct MatchedDetector::Impl {
         }
         consumer(completed.map.channel,std::move(completed.map));
     }
-    DetectionOptions options;GpuMatchedProfiles profiles;Projector projector;ProfileConsumer profile_consumer;
+    DetectionOptions options;unsigned profile_size;GpuMatchedProfiles profiles;Projector projector;ProfileConsumer profile_consumer;
     std::vector<std::unique_ptr<Channel>> channels;
     Impl(std::shared_ptr<gpu::Context> context,std::size_t count,DetectionOptions opts,Projector project,ProfileConsumer consume)
-        :options(opts),profiles(context),projector(std::move(project)),profile_consumer(std::move(consume)){
+        :options(opts),profile_size(matched_size_for_range(opts.focus.range_metres)),profiles(context,profile_size),projector(std::move(project)),profile_consumer(std::move(consume)){
         if(!count || !std::isfinite(opts.integration_seconds) || opts.integration_seconds<.5 || opts.integration_seconds>10 ||
            !std::isfinite(opts.update_seconds) || opts.update_seconds<=0 ||
-           !std::isfinite(opts.focus.range_metres) || opts.focus.range_metres<1000 || opts.focus.range_metres>30000 ||
+           !std::isfinite(opts.focus.range_metres) || opts.focus.range_metres<1000 || opts.focus.range_metres>matched_max_range_metres ||
            !std::isfinite(opts.focus.doppler_hz) || opts.focus.doppler_hz<4/opts.integration_seconds || opts.focus.doppler_hz>200)
-            throw std::invalid_argument("Detection requires CPI 0.5..10 s, range 1..30 km, Doppler limit 4/CPI..200 Hz and a positive update interval");
+            throw std::invalid_argument("Detection requires CPI 0.5..10 s, range 1..100 km, Doppler limit 4/CPI..200 Hz and a positive update interval");
         for(std::size_t i=0;i<count;++i){channels.push_back(std::make_unique<Channel>(context));channels.back()->publish_maps=opts.publish_maps;}
     }
 };
@@ -53,18 +53,18 @@ void MatchedDetector::append(const SarBatch& batch,const Consumer& consume,Detec
     const unsigned guard=batch.capture.channels.at(frame.channel).guard;
     const double dt=(8192.0+8192.0/guard)/8e6;
     const auto required=std::size_t(std::ceil(p.options.integration_seconds/dt));
-    if(c.segment!=frame.segment){Impl::collect(c,consume,timing,true);c.history.clear();c.noise.reset();c.background.reset();c.segment=frame.segment;c.last_publish=-1e30;c.background_end=-1e30;c.background_start=batch.seconds(frame.first);if(p.options.publish_maps)c.focus.prepare(required);}
+    if(c.segment!=frame.segment){Impl::collect(c,consume,timing,true);c.history.clear();c.noise.reset();c.background.reset();c.segment=frame.segment;c.last_publish=-1e30;c.background_end=-1e30;c.background_start=batch.seconds(frame.first);if(p.options.publish_maps)c.focus.prepare(required,p.profile_size);}
     if(frame.last<=frame.first+2)return;
     const bool trained_noise=c.noise.ready();
     const auto variance=c.noise.estimate(batch.spectra,timing ? &timing->noise : nullptr);
-    if(p.options.focus.remove_dc && !c.background.ready()){
+    if(p.options.stationary_prediction && p.options.focus.remove_dc && !c.background.ready()){
         c.background.observe(batch.spectra,dt,c.noise.training());
         // The transfer statistics count only new rows, but H was fitted with
         // decoder context. Exclude that entire support from the first primary
         // aperture so future observations cannot leak into frozen training.
         c.background_end=batch.seconds(frame.symbols.size()-1);return;
     }
-    if(!trained_noise)return;
+    if(p.options.stationary_prediction && !trained_noise)return;
     auto profiles=p.profiles.calculate(batch.spectra,variance,guard,timing ? &timing->profiles : nullptr,true,c.background.response());
     profiles.cancellation_variance.assign(c.background.variance().begin(),c.background.variance().end());
     if(p.profile_consumer)p.profile_consumer(batch,profiles,c.background.response(),{static_cast<const float*>(variance.mapped),6817});
@@ -80,21 +80,22 @@ void MatchedDetector::append(const SarBatch& batch,const Consumer& consume,Detec
         // not a clock discontinuity. Keep its place in the aperture with zero
         // information; only a real time/segment discontinuity clears history.
         auto& stored=c.history.emplace_back();stored.time=time;stored.information=known ? profiles.information : 0;
-        if(!known)stored.values.fill(C{});
+        stored.values.resize(2*p.profile_size);
+        if(!known)std::ranges::fill(stored.values,C{});
         else for(unsigned moment=0;moment<2;++moment)
-            std::copy_n(profiles.values.data()+(moment*profiles.count+n)*1024,1024,stored.values.data()+moment*1024);
+            std::copy_n(profiles.values.data()+(moment*profiles.count+n)*p.profile_size,p.profile_size,stored.values.data()+moment*p.profile_size);
         if(c.history.size()>required)c.history.pop_front();
         if(!c.publish_maps || c.history.size()!=required || time-c.last_publish+dt*1e-8<p.options.update_seconds)continue;
         // Keep every scientific profile, but do not stall live capture for an
         // optional display refresh. A later map still uses the full fixed CPI.
         if(p.options.best_effort_maps && c.pending.valid() &&
            c.pending.wait_for(std::chrono::seconds(0))!=std::future_status::ready)continue;
-        std::vector<C> input(2*required*1024);
+        std::vector<C> input(2*required*p.profile_size);
         std::vector<double> information(required);
         for(std::size_t r=0;r<required;++r)information[r]=c.history[r].information;
         if(std::ranges::none_of(information,[](double value){return value>0;}))continue;
         for(std::size_t r=0;r<required;++r)for(unsigned moment=0;moment<2;++moment)
-            std::copy_n(c.history[r].values.data()+moment*1024,1024,input.data()+(moment*required+r)*1024);
+            std::copy_n(c.history[r].values.data()+moment*p.profile_size,p.profile_size,input.data()+(moment*required+r)*p.profile_size);
         // One outstanding job per channel bounds both memory and scheduling.
         // The job owns all numerical inputs; it cannot retain receiver buffers,
         // consumers, timing pointers or the shared clock's mutable history.

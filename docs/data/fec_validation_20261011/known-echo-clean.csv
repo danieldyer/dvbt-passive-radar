@@ -1,2 +1,0 @@
-model,receiver,qam,rate,esn0_db,blocks,packets,rejected,wrong_accepted,corrected_bytes,edge_packets,edge_rejected,payload_bit_errors,payload_bits,coded_bits,coded_errors,trellis_bits,trellis_errors,beyond_radius,radius_violation
-echo,known_channel,64,2,100,16,54256,0,0,0,512,0,0,81601024,118444032,0,88833024,0,0,0

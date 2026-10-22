@@ -29,5 +29,13 @@ int main(){try{
     for(unsigned r:{0U,3U})for(unsigned k=0;k<1024;++k)
         check(moments[r*1024+k]==C{} && moments[(4+r)*1024+k]==C{},"Erased observations retained unknown phase");
     for(unsigned n=0;n<4;++n)check(masked.append(50+n*.125,2,true,0,zero,one)==(n==3),"Erasure policy bridged a sample-clock gap");
+    video::ProfileHistory extended(.5,.125,.25,true);
+    std::vector<C> wide_zero(4096),wide_one(4096);
+    wide_zero[2668]={.2F,.3F};wide_one[2668]={-.1F,.4F};
+    for(unsigned n=0;n<4;++n)extended.append(n*.125,1,n!=1,0,wide_zero,wide_one);
+    extended.snapshot(moments,information);
+    check(moments.size()==2*4*4096 && moments[2668]==wide_zero[2668] && moments[4*4096+2668]==wide_one[2668],
+        "Replay truncated or changed a 100 km echo");
+    check(moments[4096+2668]==C{} && moments[5*4096+2668]==C{},"Extended replay retained an erased echo");
     std::cout<<"Fixed CPI, archived complex phase/moments/weights, cadence, invalid rows, gaps and segments: PASS\n";
 }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}

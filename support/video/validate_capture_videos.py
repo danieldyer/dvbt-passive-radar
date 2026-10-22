@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Check exported live-profile maps, MOV framing and AVFoundation exact seeks."""
 import argparse
+from collections import deque
 from fractions import Fraction
 import json
 import math
@@ -11,14 +12,42 @@ import subprocess
 import numpy as np
 
 
-def admitted_ends(rows, interval, required, update):
-    count=0;last=-math.inf
+def admitted_ends(rows, interval, required, update, erasures=False):
+    history=deque();valid_count=0;last=-math.inf
     for j,row in enumerate(rows):
-        if j and (row[6]!=rows[j-1,6] or abs(row[1]-rows[j-1,1]-interval)>interval*.01):count=0
-        if not row[5]:count=0;continue
-        count+=1
-        if count>=required and row[1]-last+interval*1e-8>=update:
-            yield row[1];last=row[1]
+        new_segment=j and row[6]!=rows[j-1,6]
+        if new_segment:last=-math.inf
+        if new_segment or (j and abs(row[1]-rows[j-1,1]-interval)>interval*.01) or (not row[5] and not erasures):
+            history.clear();valid_count=0
+        if not row[5] and not erasures:continue
+        valid=bool(row[5]);history.append(valid);valid_count+=valid
+        if len(history)>required:valid_count-=history.popleft()
+        if len(history)==required and valid_count and row[1]-last+interval*1e-8>=update:
+            # GpuFocus uses the first archived epoch and the declared uniform
+            # slow-time interval. Individual archived epochs can differ by a
+            # corrected-IQ sample at clock-segment boundaries.
+            yield rows[j-required+1,1]+(required-1)*interval
+            last=row[1]
+
+
+def archive_rows(path):
+    """Read timing metadata only, skipping all complex/IQ payloads."""
+    channels={}
+    with path.open('rb') as source:
+        if source.read(8)!=b'DVBTLIV1':raise ValueError('Invalid archive magic')
+        size,=struct.unpack('<I',source.read(4))
+        if not 0<size<=1024*1024:raise ValueError('Invalid header length')
+        header=json.loads(source.read(size))
+        while True:
+            tag,size,payload=struct.unpack('<4sIQ',source.read(16))
+            if not 0<size<=1024*1024 or payload>64*1024*1024:raise ValueError('Invalid archive framing')
+            meta=json.loads(source.read(size))
+            if tag==b'PROF':
+                channels.setdefault(meta['channel'],[]).extend([*r[:6],meta['segment']] for r in meta['rows'])
+            source.seek(payload,1)
+            if tag==b'DONE':break
+    arrays={header['signals'][ch]['id']+'_rows':np.asarray(rows) for ch,rows in channels.items()}
+    return arrays,header.get('profile_row_policy')=='fixed_grid_zero_information_erasures'
 
 
 def mov_atoms(path):
@@ -37,16 +66,25 @@ def mov_atoms(path):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('videos',type=Path)
-    p.add_argument('--arrays',type=Path,required=True);p.add_argument('--quicktime-check',type=Path,required=True)
+    source=p.add_mutually_exclusive_group(required=True)
+    source.add_argument('--arrays',type=Path);source.add_argument('--archive',type=Path)
+    p.add_argument('--quicktime-check',type=Path,required=True)
+    p.add_argument('--channels',nargs='+',help='Validate selected completed channel ids')
     p.add_argument('--output',type=Path,required=True);args=p.parse_args()
-    arrays=np.load(args.arrays);manifest=json.loads((args.videos/'processing/manifest.json').read_text())
+    if args.archive:
+        arrays,erasures=archive_rows(args.archive)
+    else:
+        arrays=np.load(args.arrays)
+        erasures=bool(arrays['fixed_grid_erasures']) if 'fixed_grid_erasures' in arrays else False
+    manifest=json.loads((args.videos/'processing/manifest.json').read_text())
     results=[]
     for c,signal in enumerate(manifest['signals']):
+        if args.channels and signal['id'] not in args.channels:continue
         path=args.videos/(signal['id']+'.mov');report=json.loads(path.with_suffix('.json').read_text())
         maps=report['maps'];rows=arrays[signal['id']+'_rows']
         dt=round(float(np.median(np.diff(rows[:,1])))*8e6)/8e6
         required=math.ceil(manifest['integration_s']/dt)
-        expected=np.array(list(admitted_ends(rows,dt,required,1/manifest['fps'])))
+        expected=np.array(list(admitted_ends(rows,dt,required,1/manifest['fps'],erasures)))
         expected=expected[(expected>=manifest['recording_start_s']) & (expected<=manifest['recording_start_s']+manifest['recording_duration_s'])]
         np.testing.assert_allclose([m['time_end_s'] for m in maps],expected,rtol=0,atol=1e-10)
         for m in maps:

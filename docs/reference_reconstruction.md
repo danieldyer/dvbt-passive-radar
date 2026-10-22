@@ -30,24 +30,53 @@ that band flat. The implementation supports integer input/output rate ratios.
 
 ## Common clock correction and phase bookkeeping
 
-The receiver uses CP acquisition followed by continual-pilot tracking. A common
-Kaiser-windowed sinc interpolator, with 2048 phase intervals and interpolation
-between phases, corrects sample-clock drift before channelization. Its support
-depends on the occupied ADC-band span (32 taps for the supplied 56 MS/s
-recording, 64 for the wider benchmark banks).
-Fractional coordinates and carrier phase are maintained in double precision;
-GPU coordinates use small local integer/fractional parts. Both measurement and
-decoder see the same resampled samples and oscillator corrections.
+The receiver uses CP acquisition followed by continual-pilot tracking. One
+published ADC time map drives every channel; there is no per-channel receive
+resampler. Affine clock segments are folded into spectral channel synthesis,
+using the shared forward FFT and twice-oversampled channel inverse FFTs. Windows
+crossing clock-segment boundaries use common full-band sinc interpolation before
+the FFT. Fractional coordinates and NCO anchors are maintained in double
+precision; GPU coordinates use small local integer/fractional parts. Both
+measurement and decoder see the same resampled samples.
 
 Clock acquisition initially compares identical continual carriers across adjacent
 symbols. After settling, their averaged channel becomes a fixed phase anchor for
 a carrier PLL and a common clock-offset fit across participating channels.
 This avoids accumulating small biases from differences of noisy phase estimates.
-This is a **dominant stationary
-reference-path assumption**, not an independent measurement of the SDR oscillator;
-changes in the direct path can also affect the recovered clock. Only common phase
-and linear phase slope drive the clock loop. The frequency-dependent channel is
-not equalized on the measurement branch.
+This is a **dominant stationary reference-path assumption**, not an independent
+measurement of the SDR oscillator; changes in the direct path can also affect
+the recovered clock. The pilot likelihood profiles the carrier-phase intercept
+separately from the phase slope across carriers. Only timing slopes feed the
+sample-clock controller. Carrier phase and CFO drive the demodulator, with their
+applied corrections exported in each `OfdmWindow`. The frequency-dependent
+channel is not equalized on the measurement branch.
+
+Independent transmitter timing remains explicit: integer FFT-window steering
+changes the exported window sample, while `source_offset_samples` aligns the
+regenerated source waveform through a phase ramp about the channel centre.
+Neither operation independently retimes the measured receive stream.
+
+### Raw band phase and direct-path-referenced phase
+
+Channelised I/Q is archived before per-channel carrier tracking. Its sample
+coordinates and shared clock segments preserve the common wideband phase
+reference. A common time-coordinate change still changes phase in proportion to
+frequency; consumers must use the saved map and NCO convention rather than
+compare inconsistent sample epochs.
+
+Radar profiles use each channel's direct-path response as their phase reference.
+A rotation multiplying the entire band multiplies both the received echo and
+the direct-path response; it cancels in that ratio. A phase change affecting an
+echo alone remains observable. This is why stable stationary **profiles** do not
+by themselves prove untouched raw interband carrier phase. Live profile records
+retain the fitted response and row phase/frequency coordinates as well.
+
+The [retiming phase audit](data/clock_audit_20261018/phase-preservation/index.html)
+tests pilot-phase/timing separation, preservation of independent phase histories
+through the GPU channeliser, echo phase through FEC and finite range compression,
+and recovery of whole-band carrier phase from the exported coordinates and
+response. It is a numerical bookkeeping test, not a proof of oscillator-estimator
+optimality or a successful ship-motion fit.
 
 The useful FFT window begins 128 output samples before the CP-derived origin.
 This accommodates the channelizer and interpolation support in the tested

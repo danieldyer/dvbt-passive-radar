@@ -29,6 +29,12 @@ public:
     }
     ~UhdSource() override {try{stop();}catch(...){}}
     AppliedCapture applied() const override{return applied_;}
+    std::optional<DeviceTimeAnchor> time_anchor() override {
+        auto best=measure_device_time([&]{return device_->get_time_now().get_real_secs();});
+        for(unsigned i=1;i<8;++i){const auto next=measure_device_time([&]{return device_->get_time_now().get_real_secs();});
+            if(next.query_uncertainty_ns<best.query_uncertainty_ns)best=next;}
+        return best;
+    }
     void start() override {
         uhd::stream_cmd_t cmd(uhd::stream_cmd_t::STREAM_MODE_START_CONTINUOUS);
         cmd.stream_now=false;cmd.time_spec=device_->get_time_now()+uhd::time_spec_t(.1);

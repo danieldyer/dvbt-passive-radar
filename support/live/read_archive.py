@@ -25,7 +25,7 @@ def read_header(source):
 def records(source):
     """Yield (tag, metadata, payload) with owned little-endian payload bytes.
 
-    PROF: complex64[2, count, 1024], then stationary complex64[6817]
+    PROF: complex64[2, count, metadata['size']], then stationary complex64[6817]
           when stationary_carriers is nonzero, response complex64[6817], and
           physical carrier-noise float32[6817]. Row validity stays explicit.
     CHIQ: complex64[channels, count]. CLCK gives immutable [start, offset, rate].
@@ -57,11 +57,15 @@ def records(source):
 def summarize(path):
     with open(path, 'rb') as source:
         header = read_header(source)
-        summary = {'mode': header['archive_mode'], 'records': {}, 'profiles': {}, 'gaps': [], 'clock_segments': 0}
+        summary = {'mode': header['archive_mode'], 'records': {}, 'profiles': {}, 'gaps': [], 'clock_segments': 0, 'utc_anchors': [],
+                   'profile_stationary_subtraction': header.get('profile_stationary_subtraction'),
+                   'profile_training_rows_retained': header.get('profile_training_rows_retained')}
         for tag, metadata, payload in records(source):
             summary['records'][tag] = summary['records'].get(tag, 0) + 1
             if tag == 'GAPS':
                 summary['gaps'].append(metadata)
+            elif tag == 'UTCA':
+                summary['utc_anchors'].append(metadata)
             elif tag == 'CLCK':
                 summary['clock_segments'] += len(metadata['segments'])
             elif tag == 'PROF':

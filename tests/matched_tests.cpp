@@ -50,8 +50,8 @@ void noise(std::shared_ptr<gpu::Context> context,float scale=1,unsigned bits=2,b
     check(measured[5840]>8*scale*scale*relative*relative && measured[5840]<24*scale*scale*relative*relative,"Coherent narrowband interference was lost by noise differencing");
     std::cout<<"Noise: median="<<ordered[bins/2]<<" coherent carrier="<<measured[5840]<<" fixed_pilot="<<fixed_pilot<<'\n';
 }
-void finite(std::shared_ptr<gpu::Context> context,unsigned guard=16,bool pilots=false,bool drifting=false,unsigned rows=259) {
-    constexpr unsigned delay=700;const unsigned cp=8192/guard;constexpr double origin=128.375,frequency=200;
+void finite(std::shared_ptr<gpu::Context> context,unsigned guard=16,bool pilots=false,bool drifting=false,unsigned rows=259,unsigned profile_size=1024) {
+    const unsigned delay=profile_size==1024 ? 700 : 2668;const unsigned cp=8192/guard;constexpr double origin=128.375,frequency=200;
     const C channel{.8F,.3F},amplitude=std::polar(.02F,.73F);
     std::mt19937 rng(63214);const auto points=qam_constellation(2);
     std::vector<C> s(rows*bins),aligned(s.size()),y(s.size()),h(bins,channel),stationary(bins),useful(rows*nfft),previous(rows*nfft);
@@ -93,7 +93,7 @@ void finite(std::shared_ptr<gpu::Context> context,unsigned guard=16,bool pilots=
     FrameBatch frame;frame.first=1;frame.last=rows;frame.carriers.measured=yp.view;
     SpectralBatch batch{frame,{}, {sp.view,vp.view,rows},{hp.view,{},rows,origin,0,op.view},
         {xp.view,{},{},hp.view,vp.view,rows,origin}};
-    GpuMatchedProfiles processor(context);ComputeTimings timing;
+    GpuMatchedProfiles processor(context,profile_size);ComputeTimings timing;
     const auto result=processor.calculate(batch,dp.view,guard,&timing,true,stationary);
     const double gain=std::norm(channel)*bins/nfft;
     double worst=0,phase=0;
@@ -101,13 +101,15 @@ void finite(std::shared_ptr<gpu::Context> context,unsigned guard=16,bool pilots=
         std::fill(work.begin(),work.end(),C{});
         for(unsigned k=0;k<bins;++k)work[(k+nfft-3408)%nfft]=(y[r*bins+k]-channel*(C{1,0}+stationary[k])*aligned[r*bins+k])*std::conj(channel);
         fft.transform(work,true);
-        for(int lag:{-64,-32,0,16,128,384,600,700,800,928})for(unsigned moment=0;moment<2;++moment) {
+        std::vector<int> lags{-64,-32,0,16,128,384,600,700,800,928};
+        if(profile_size>1024)lags.insert(lags.end(),{1024,2000,2668,2669,3000,4000});
+        for(int lag:lags)for(unsigned moment=0;moment<2;++moment) {
             std::complex<double> expected{};
             for(unsigned j=0;j<nfft;++j)expected+=std::complex<double>(work[j])*std::conj(std::complex<double>(source(r,int(j)-int(std::floor(local[r]))-lag)))*
                 (moment ? (double(j)-4095.5)/nfft : 1);
             expected/=gain;
-            const auto index=lag<0 ? matched_profile_size+lag : lag;
-            const auto actual=result.values[(moment*result.count+r-1)*matched_profile_size+index];
+            const auto index=lag<0 ? profile_size+lag : lag;
+            const auto actual=result.values[(moment*result.count+r-1)*profile_size+index];
             worst=std::max(worst,std::abs(std::complex<double>(actual)-expected));
             if(lag==delay && moment==0)phase=std::max(phase,std::abs(std::arg(std::complex<double>(actual)/expected))*180/std::numbers::pi);
             check(worst<(drifting ? 2e-5 : 2e-6),"Finite correlation, fractional reference phase or Doppler moment wrong");
@@ -174,9 +176,9 @@ void cancellation(std::shared_ptr<gpu::Context> context){
     check(std::abs(normalized-1)<.06,"Cancellation covariance disagrees with independent carrier trials");
     std::cout<<"Unique training with contaminated context and 20 dB noise steps: error power / predicted variance="<<normalized<<'\n';
 }
-void focus(std::shared_ptr<gpu::Context> context,double rf=557625000,bool full_cpi=false,bool remove_dc=false,bool weighted=false,bool erasures=false) {
+void focus(std::shared_ptr<gpu::Context> context,double rf=557625000,bool full_cpi=false,bool remove_dc=false,bool weighted=false,bool erasures=false,unsigned profile_size=1024) {
     const unsigned rows=full_cpi ? 2758 : 512,size=full_cpi ? 11520 : 2048,tone=full_cpi ? 2305 : 401;
-    constexpr double dt=.001088,delay=167.375;
+    constexpr double dt=.001088;const double delay=profile_size==1024 ? 167.375 : 2667.375;
     const double fd=tone/(size*dt),mid=(rows-1)*dt*.5,x=fd*.001024;
     const double sinc=std::sin(std::numbers::pi*x)/(std::numbers::pi*x);
     const double derivative=(std::numbers::pi*x*std::cos(std::numbers::pi*x)-std::sin(std::numbers::pi*x))/(std::numbers::pi*x*x);
@@ -186,42 +188,45 @@ void focus(std::shared_ptr<gpu::Context> context,double rf=557625000,bool full_c
     if(erasures)for(unsigned n=0;n<rows;++n)if(n%43==0 || (n>=rows/2 && n<rows/2+16))information[n]=0;
     for(double value:information)total+=value;
     std::vector<double> weights(rows);for(unsigned n=0;n<rows;++n)weights[n]=information[n]/total*rows;
-    std::vector<C> moments(2*rows*1024),work(1024);Fft fft(1024);
+    const int band=profile_size==1024 ? 400 : 1600;const unsigned carriers=2*band+1;
+    std::vector<C> moments(2*rows*profile_size),work(profile_size);Fft fft(profile_size);
     for(unsigned r=0;r<rows;++r){
         const double t=r*dt-mid,d=delay-fd*8e6/rf*t;
         std::fill(work.begin(),work.end(),C{});
-        for(int k=-400;k<=400;++k)work[(k+1024)%1024]=amplitude*static_cast<C>(std::polar(1024.0/801,tau*fd*t-tau*k*d/1024));
+        for(int k=-band;k<=band;++k)work[(k+int(profile_size))%int(profile_size)]=amplitude*static_cast<C>(std::polar(double(profile_size)/carriers,tau*fd*t-tau*k*d/profile_size));
         fft.transform(work,true);
-        for(unsigned k=0;k<1024;++k){
-            moments[r*1024+k]=work[k]*float(sinc);
-            moments[(rows+r)*1024+k]=work[k]*C{0,float(-derivative/tau)};
+        for(unsigned k=0;k<profile_size;++k){
+            moments[r*profile_size+k]=work[k]*float(sinc);
+            moments[(rows+r)*profile_size+k]=work[k]*C{0,float(-derivative/tau)};
             if(remove_dc){
                 const float static_shape=std::exp(-std::pow((float(k)-20)/10,2));
-                moments[r*1024+k]+=C{2,-3}*static_shape;
-                moments[(rows+r)*1024+k]+=C{.2F,.3F}*static_shape;
+                moments[r*profile_size+k]+=C{2,-3}*static_shape;
+                moments[(rows+r)*profile_size+k]+=C{.2F,.3F}*static_shape;
             }
         }
     }
     GpuFocus processor(context);ComputeTimings timing;
-    auto result=processor.calculate(moments,rows,dt,rf,5,{8000,200,remove_dc},&timing,information);
+    auto result=processor.calculate(moments,rows,dt,rf,5,{profile_size==1024 ? 8000.0 : 100000.0,200,remove_dc},&timing,information);
+    check(result.ranges==std::size_t((profile_size==1024 ? 8000.0 : 100000.0)/result.range_step)+1,"Wrong map range extent");
     const int half=int((result.frequencies-1)/2);
     double worst=0;
-    for(int bin:{-400,-37,int(tone),int(tone+29)})for(unsigned range:{660,669,670,679}){
+    const unsigned range_offset=profile_size==1024 ? 0 : 10000;
+    for(int bin:{-400,-37,int(tone),int(tone+29)})for(unsigned range:{660+range_offset,669+range_offset,670+range_offset,674+range_offset}){
         std::complex<double> expected{};const double f=bin/(size*dt),rr=range*.25;
-        for(int k=-400;k<=400;++k){
+        for(int k=-band;k<=band;++k){
             std::complex<double> temporal{},source_mean{},template_sum{};
             for(unsigned n=0;n<rows;++n){
                 const double t=n*dt-mid;
-                temporal+=weights[n]*std::polar(1.0,tau*((fd-f)+k*8e6/(1024*rf)*(fd-f))*t);
+                temporal+=weights[n]*std::polar(1.0,tau*((fd-f)+k*8e6/(profile_size*rf)*(fd-f))*t);
                 if(remove_dc){
-                    const double scale=1+k*8e6/(1024*rf);
+                    const double scale=1+k*8e6/(profile_size*rf);
                     source_mean+=weights[n]*std::polar(1.0,tau*fd*scale*t);template_sum+=weights[n]*std::polar(1.0,-tau*f*scale*t);
                 }
             }
             if(remove_dc)temporal-=source_mean*template_sum/double(rows);
-            expected+=temporal*std::polar(1.0,tau*k*(rr-delay)/1024);
+            expected+=temporal*std::polar(1.0,tau*k*(rr-delay)/profile_size);
         }
-        expected*=std::complex<double>(amplitude)/double(rows*801);
+        expected*=std::complex<double>(amplitude)/double(rows*carriers);
         const double fx=f*.001024,a=std::numbers::pi*fx;
         const double gain=std::abs(a)<1e-8 ? 1 : (2*std::sin(a)-a*std::cos(a))/a;
         expected*=(sinc-f*.001024*derivative)/gain;
@@ -327,6 +332,25 @@ void owned_focus(std::shared_ptr<gpu::Context> context){
         fill(channel);target.append(SarBatch(capture,batch,{{0,0,1}}),sink,t);
         fill(channel);target.append(SarBatch(capture,batch,{{0,0,1}}),sink,t);poison();
     };
+    // Live scientific profiles precede stationary suppression, from the very
+    // first decoded batch. Display DC settings must not alter their samples,
+    // phase, weights, or admission times (including stationary target energy).
+    std::vector<C> preserved;double preserved_information=0;unsigned preserved_count=0;
+    for(bool remove_dc:{false,true}){
+        DetectionOptions live_options=options;live_options.stationary_prediction=false;
+        live_options.publish_maps=false;live_options.focus.remove_dc=remove_dc;
+        unsigned calls=0;
+        MatchedDetector scientific(context,2,live_options,{},[&](const auto&,const auto& profiles,auto background,auto){
+            ++calls;check(background.empty() && profiles.cancellation_variance.empty(),"Live archive already contains stationary subtraction");
+            check(profiles.count==rows-1,"First-batch scientific profile rows were omitted");
+            if(!remove_dc){preserved=profiles.values;preserved_information=profiles.information;preserved_count=profiles.count;}
+            else check(profiles.values==preserved && profiles.information==preserved_information && profiles.count==preserved_count,
+                       "Display clutter suppression changed archived complex profiles");
+            check(std::abs(profiles.values[delay])>.01,"Stationary target was removed before archival");
+        });
+        fill(0);scientific.append(SarBatch(capture,batch,{{0,0,1}}),[](auto,auto&&){});
+        check(calls==1,"Live archive discarded the first noise-training batch");
+    }
     for(unsigned channel=0;channel<2;++channel)append(detector,channel,consume,&timing);
     detector.finish(consume,&timing);detector.finish(consume,&timing);
     check(count==2 && timing.focus.batches==2,"Async finish lost, duplicated or mistimed a map");
@@ -363,16 +387,18 @@ void owned_focus(std::shared_ptr<gpu::Context> context){
     // The watchdog releases it even on failure so this regression cannot hang.
     std::fill(valid.begin(),valid.end(),1U);++frame.segment;
     options.best_effort_maps=true;options.update_seconds=.001;
+    options.focus.range_metres=100000;
     std::promise<void> started,returned,release;
     auto entered=started.get_future(),completed=returned.get_future();auto resume=release.get_future().share();
     bool blocked=false;unsigned retained=0;
     MatchedDetector live(context,2,options,[&](auto&,const auto&){started.set_value();resume.wait();},
-        [&](const auto&,const auto&,auto,auto){++retained;});
+        [&](const auto&,const auto& profiles,auto,auto){check(profiles.size==4096,"Live detector truncated the saved range history");++retained;});
     std::jthread watchdog([&]{entered.wait();blocked=completed.wait_for(std::chrono::seconds(5))!=std::future_status::ready;release.set_value();});
     append(live,0,[](std::size_t,DopplerMap&&){});
     returned.set_value();watchdog.join();
     unsigned live_maps=0;
     live.finish([&](std::size_t,DopplerMap&& map){++live_maps;
+        check(map.ranges*map.range_step>=100000,"Live detector truncated its map extent");
         check(map.samples==maps[0].samples,"Busy display shortened its coherent aperture");});
     check(!blocked && retained==1 && live_maps==1,"Busy live display blocked capture, lost profiles or queued stale maps");
     std::cout<<"Owned async profiles, interchannel phase, physical units, caller-thread delivery, drain and failures: PASS\n";
@@ -390,8 +416,10 @@ int main(){try{
     finite(context,16,false,false,19);finite(context,16,false,false,34);
     finite(context,16,true);
     finite(context,16,true,true);
+    finite(context,32,true,true,19,4096);finite(context,4,false,false,19,4096);
     focus(context);focus(context,191625000);focus(context,191625000,true);focus(context,191625000,true,true);
     focus(context,191625000,true,true,true);noise_steps(context);
     focus(context,191625000,true,true,true,true);
+    focus(context,177500000,true,true,true,true,4096);
     covariance_efficiency(context);owned_focus(context);
 }catch(const std::exception& e){std::cerr<<"FAIL: "<<e.what()<<'\n';return 1;}}

@@ -1,5 +1,0 @@
-model,receiver,qam,rate,esn0_db,blocks,packets,rejected,wrong_accepted,corrected_bytes,edge_packets,edge_rejected,payload_bit_errors,payload_bits,coded_bits,coded_errors,trellis_bits,trellis_errors,beyond_radius,radius_violation
-f1,gpu_frame_pilots,64,2,20,16,54256,36789,0,116253,512,494,1414675,81601024,118444032,2816519,88833024,1960716,36789,0
-f1,gpu_frame_pilots,64,2,21,16,54256,123,0,145831,512,13,3738,81601024,118444032,1886928,88833024,506882,123,0
-f1,gpu_frame_pilots,64,2,22,16,54256,0,0,31567,512,0,0,81601024,118444032,1187066,88833024,104907,0,0
-f1,gpu_frame_pilots,64,2,26,16,54256,0,0,10,512,0,0,81601024,118444032,82030,88833024,31,0,0
