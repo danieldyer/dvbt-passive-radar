@@ -18,7 +18,7 @@ void main() {
     for(uint s=0;s<pc.count;++s) {
         uint at=s*6817+k;if(valid[at]==0)continue;
         float angle=6.283185307179586*(float(k)-3408)*offsets[s]/8192;
-        vec2 x=multiply(multiply(reference[at],rotation[k]),vec2(cos(angle),sin(angle))),y=measured[at];
+        vec2 x=multiply(multiply(reference[at],rotation[k]),normalize(vec2(cos(angle),sin(angle)))),y=measured[at];
         vec4 value=vec4(multiply(y,vec2(x.x,-x.y)),dot(x,x),dot(y,y));
         vec4 corrected=value-lost,next=sum+corrected;
         lost=(next-sum)-corrected;sum=next;

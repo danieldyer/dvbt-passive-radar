@@ -1,0 +1,23 @@
+#version 450
+layout(local_size_x=64) in;
+layout(binding=7) readonly buffer Tables {vec2 table[];};
+layout(binding=9) buffer Channel {vec2 channel[];};
+layout(push_constant) uniform Parameters {uint count,stride,bits,capacity;} pc;
+shared vec2 samples[112];
+void main(){
+    uint row=gl_WorkGroupID.y,first=64*gl_WorkGroupID.x,lane=gl_LocalInvocationID.x;
+    for(uint j=lane;j<112;j+=64){
+        uint k=uint(clamp(int(first+j)-24,0,2272));
+        samples[j]=channel[row*2273+k];
+    }
+    barrier();
+    uint k=first+lane;if(k>=2273)return;
+    vec2 h=samples[lane+24];
+    // Keep the original edge estimate; do not invent unmeasured carriers.
+    if(k>=24 && k+24<2273){
+        uint coefficients=3*6817+192;
+        h*=table[coefficients+24].x;
+        for(uint j=0;j<24;++j)h+=table[coefficients+j].x*(samples[lane+j]+samples[lane+48-j]);
+    }
+    channel[pc.count*(2273+2)+128+row*2273+k]=h;
+}

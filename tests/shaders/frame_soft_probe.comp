@@ -1,0 +1,10 @@
+#version 450
+#extension GL_GOOGLE_include_directive : require
+#include "../../shaders/soft_qam.glsl"
+layout(local_size_x=64) in;
+layout(constant_id=0) const uint bits=6;
+layout(constant_id=1) const uint minimax=0;
+layout(binding=0) readonly buffer Input {vec4 data[];};
+layout(binding=1) writeonly buffer Output {uvec2 result[];};
+layout(push_constant) uniform Parameters {uint count;} pc;
+void main(){uint i=gl_GlobalInvocationID.x;if(i<pc.count)result[i]=uvec2(soft_qam(data[i].xy,data[i].z,bits,minimax!=0),minimax!=0 ? minimax_likelihood(data[i].w) : quantized_likelihood(data[i].w));}

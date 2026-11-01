@@ -1,0 +1,37 @@
+#version 450
+// Leave-one-observation-out prediction error at scattered pilots. Compare
+// identical interior samples for all windows; no assumed noise level is used.
+layout(local_size_x=64) in;
+layout(constant_id=0) const uint maximum_radius=32;
+layout(binding=2) readonly buffer Pilots {vec2 pilots[];};
+layout(binding=6) readonly buffer Rows {uint rows[];};
+layout(binding=7) readonly buffer Tables {vec2 table[];};
+layout(binding=9) buffer Channel {vec2 channel[];};
+layout(push_constant) uniform Parameters {uint count,stride,bits,capacity;} pc;
+shared vec4 partial[64];
+shared float wide[64];
+void main(){
+    if(pc.count<=64)return;
+    uint j=gl_WorkGroupID.x,lane=gl_LocalInvocationID.x;
+    vec4 error=vec4(0);float error64=0;
+    uint margin=maximum_radius>=64 && pc.count>128 ? 64 : 32;
+    if(pc.count>64 && table[2*6817+192+3*j].x==0){
+        uint mod=floatBitsToUint(pilots[rows[margin]*pc.stride].x);
+        uint first=margin+(j%4+4-mod)%4,base=pc.count*(2*2273+2)+128;
+        for(uint s=first+4*lane;s+margin<pc.count;s+=4*64){
+            vec2 y=channel[base+s*2273+j],sum=vec2(0);
+            for(uint d=1;d<=margin/4;++d){
+                sum+=channel[base+(s-4*d)*2273+j]+channel[base+(s+4*d)*2273+j];
+                vec2 residual=y-sum/float(2*d);
+                if(d==1)error.x+=dot(residual,residual);
+                if(d==2)error.y+=dot(residual,residual);
+                if(d==4)error.z+=dot(residual,residual);
+                if(d==8)error.w+=dot(residual,residual);
+                if(d==16)error64+=dot(residual,residual);
+            }
+        }
+    }
+    partial[lane]=error;if(maximum_radius>=64)wide[lane]=error64;barrier();
+    for(uint n=32;n>0;n/=2){if(lane<n){partial[lane]+=partial[lane+n];if(maximum_radius>=64)wide[lane]+=wide[lane+n];}barrier();}
+    if(lane==0){channel[j]=partial[0].xy;channel[2273+j]=partial[0].zw;if(maximum_radius>=64 && pc.count>128)channel[2*2273+j]=vec2(wide[0],0);}
+}

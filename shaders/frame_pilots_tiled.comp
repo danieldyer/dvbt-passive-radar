@@ -1,0 +1,36 @@
+#version 450
+#extension GL_GOOGLE_include_directive : require
+layout(local_size_x=16,local_size_y=16) in;
+layout(constant_id=0) const uint radius=8;
+layout(constant_id=1) const uint adaptive=0;
+layout(constant_id=2) const uint continual_mode=0;
+layout(binding=2) readonly buffer SourcePilots {vec2 source_pilots[];};
+layout(binding=6) readonly buffer Rows {uint rows[];};
+layout(binding=7) readonly buffer Tables {vec2 table[];};
+layout(binding=9) buffer Channel {vec2 channel[];};
+layout(push_constant) uniform Parameters {uint count,stride,bits,capacity;} pc;
+// A wider configured radius specialises its halo; ordinary plans retain the
+// existing 32-symbol maximum support and shared-memory layout.
+shared vec2 samples[(16+2*(radius>32 ? radius : 32))*16];
+int sample_origin;
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+uint support(){return adaptive!=0 ? uint(channel[pc.count*(3*2273+2)+128].x) : radius;}
+vec2 pilot_observation(int r,uint j){
+    return samples[uint(r-sample_origin)*16+gl_LocalInvocationID.x];
+}
+#include "pilot_fit.glsl"
+void main(){
+    uint index=gl_WorkGroupID.x*16+gl_LocalInvocationID.x,s=gl_WorkGroupID.y*16+gl_LocalInvocationID.y;
+    uint j=continual_mode!=0 ? (index<177 ? floatBitsToUint(table[3*6817+192+49+index].x)/3 : 2273) : index;
+    uint window=support(),base=pc.count*(2*2273+2)+128;
+    sample_origin=int(gl_WorkGroupID.y*16)-int(window);
+    for(uint r=gl_LocalInvocationID.y;r<16+2*window;r+=16){
+        int row=sample_origin+int(r);
+        samples[r*16+gl_LocalInvocationID.x]=j<2273 && row>=0 && row<int(pc.count) ? channel[base+uint(row)*2273+j] : vec2(0);
+    }
+    barrier();
+    if(s>=pc.count || j>=2273)return;
+    if(continual_mode==0 && table[2*6817+192+3*j].x!=0)return;
+    vec2 phase=channel[pc.count*2273+2*s];
+    channel[s*2273+j]=multiply(multiply(pilot_fit(s,j,window,continual_mode!=0),phase),table[3*j]);
+}

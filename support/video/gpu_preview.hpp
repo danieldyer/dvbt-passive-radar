@@ -5,11 +5,12 @@
 namespace radar::video {
 class GpuPreview {
     gpu::Kernel kernel_;
-public:
-    unsigned width{},height{};
+
+  public:
+    unsigned width{}, height{};
     std::vector<float> power;
     ComputeTimings timing;
     explicit GpuPreview(std::shared_ptr<gpu::Context>);
-    void calculate(const DopplerMap&,const gpu::BufferView&,bool normalize);
+    void calculate(const DopplerMap &, const gpu::BufferView &);
 };
-}
+} // namespace radar::video

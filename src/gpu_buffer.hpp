@@ -1,7 +1,7 @@
 #pragma once
-#include <vulkan/vulkan_core.h>
 #include <cstddef>
 #include <memory>
+#include <vulkan/vulkan_core.h>
 
 namespace radar::gpu {
 struct Context;
@@ -11,6 +11,6 @@ struct BufferView {
     std::shared_ptr<Context> context;
     VkBuffer buffer{};
     std::size_t bytes{};
-    void* mapped{};
+    void *mapped{};
 };
-}
+} // namespace radar::gpu

@@ -1,0 +1,28 @@
+// Proposed MCAP payload. Integer acquisition coordinates remain authoritative;
+// MCAP timestamps are only indexes, never substitutes for the sample clock.
+namespace pl64.radar.fb;
+struct Complex32 { real:float; imag:float; }
+struct ProfileRow {
+  sample:ulong;
+  seconds:double;
+  original_adc:double;
+  phase:double;
+  frequency_hz:double;
+  source_offset_samples:double;
+  source_rate_error:double;
+  valid:bool;
+}
+table ProfileBatch {
+  channel:uint;
+  segment:ulong;
+  profile_size:uint;
+  information:double;
+  reference_origin:double;
+  rows:[ProfileRow];
+  // Two moments in moment,row,range order; IEEE binary32 components.
+  moments:[Complex32];
+  response:[Complex32];
+  noise_variance:[float];
+}
+root_type ProfileBatch;
+file_identifier "DVRP";

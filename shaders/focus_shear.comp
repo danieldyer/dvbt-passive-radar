@@ -13,7 +13,7 @@ void main(){
     uint first_k=(group%(p.profile_size/8))*8,first_row=(group/(p.profile_size/8))*8;
     // The 4,096-lag dispatch can span two workgroup dimensions. Ignore
     // surplus groups introduced by rounding that rectangular dispatch.
-    if(first_row>=1024)return;
+    if(first_row>=((p.count+7)/8)*8)return;
     uint row=first_row+lane%8,k=first_k+lane/8;
     int bin=int(p.first+row)-p.offset_bin,frequency_k=k<(p.profile_size/2) ? int(k) : int(k)-int(p.profile_size);
     float coordinate=.5*float(bin)*(1+float(frequency_k)*(8000000.0/(p.profile_size*p.rf)));

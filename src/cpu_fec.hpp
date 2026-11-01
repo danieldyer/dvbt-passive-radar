@@ -1,46 +1,38 @@
 #pragma once
 #include "fec.hpp"
-#include <complex>
-#include <cmath>
+#include "fec_feedback.hpp"
+#include "fec_rescue.hpp"
 namespace radar {
-// Label bit 0 is the first transmitted QAM bit (I sign), then Q sign,
-// then alternating Gray-coded I/Q magnitude bits. 255 denotes an erasure.
-template<unsigned Bits>
-std::uint8_t hard_qam(std::complex<float> z) {
-    static_assert(Bits==2 || Bits==4 || Bits==6);
-    if(!std::isfinite(z.real()) || !std::isfinite(z.imag()))return 255;
-    constexpr unsigned axis=Bits/2,half=1U<<(axis-1);
-    const float scale=std::sqrt(Bits==2 ? 2.F : Bits==4 ? 10.F : 42.F);
-    unsigned label=0;
-    for(unsigned a=0;a<2;++a) {
-        const float x=a ? z.imag() : z.real();
-        const auto rank=static_cast<unsigned>(std::clamp(float(half)-std::abs(x)*scale*.5F,0.F,float(half-1)));
-        const auto gray=rank^(rank>>1);
-        label|=unsigned(x<0)<<a;
-        for(unsigned j=0;j<axis-1;++j)label|=((gray>>(axis-2-j))&1U)<<(2+2*j+a);
-    }
-    return static_cast<std::uint8_t>(label);
-}
-struct Symbol;struct Tps;struct OfdmBatch;class Modem;
-// Elapsed seconds in CPU-only work; no GPU submission or wait is included.
-struct FecTimings {double demap{},viterbi{},reed_solomon{};};
+// Thread CPU seconds, summed across workers; excludes scheduling/wait time.
+struct FecTimings {
+    double prepare{}, viterbi{}, reed_solomon{};
+    double initial_viterbi{}; // Subset of viterbi; the remainder is constrained feedback.
+};
 struct FecBatch {
     // Borrowed until the next decode; corrected RS words retain their coordinates.
     std::span<const fec::RsResult> packets;
-    std::size_t count{},trellis_bits{};
+    std::size_t count{}, trellis_bits{}, reused_trellis_bits{};
+    unsigned passes{}, rescue_rounds{}, rescued_words{};
 };
+inline constexpr unsigned maximum_fec_passes = 32;
+inline constexpr unsigned default_fec_workers = 5;
+inline constexpr std::size_t maximum_coded_bits = 1020U * 6048 * 6;
 class CpuFec {
     fec::Viterbi viterbi_;
-    std::vector<std::uint8_t> bits_;
-    std::vector<std::uint32_t> indices_;
+    fec::ConstrainedViterbi constrained_;
+    fec::RsRescue rescue_;
+    std::vector<std::int16_t> known_;
+    std::vector<unsigned> unresolved_;
+    static constexpr unsigned passes_ = maximum_fec_passes;
+    unsigned passes_used_{}, rescue_rounds_{}, rescued_words_{};
     std::vector<fec::RsResult> packets_;
-    int constellation_=-1;
-    void configure(std::size_t count,const Tps&,const Modem&);
-    void demap(std::span<const std::complex<float>>,unsigned modulo4,unsigned bits,std::size_t symbol);
-    FecBatch finish(std::span<const std::uint8_t>,const Tps&,FecTimings*);
-public:
-    FecBatch decode(std::span<const Symbol>,const Tps&,const Modem&,FecTimings* =nullptr);
-    // OFDM submissions must have completed and the buffers must be host coherent.
-    FecBatch decode(const OfdmBatch&,const Tps&,const Modem&,FecTimings* =nullptr);
+    void pin(std::size_t);
+    unsigned refine(FecTimings *);
+    bool rescue(std::span<const std::uint8_t>, unsigned, FecTimings *);
+
+  public:
+    // Fixed minimax half-LLR codebook, full traceback and bounded RS feedback.
+    // The caller owns these immutable CPU bytes through this synchronous call.
+    FecBatch decode(std::span<const std::uint8_t>, unsigned rate, FecTimings * = nullptr);
 };
-}
+} // namespace radar

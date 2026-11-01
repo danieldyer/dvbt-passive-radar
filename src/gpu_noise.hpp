@@ -2,9 +2,6 @@
 #include "gpu_pipeline.hpp"
 
 namespace radar {
-// One complex transfer fitted to unique rows only. Variance is the innovation
-// variance, not the variance of the fitted transfer (which is variance/energy).
-struct CarrierTraining {C transfer;float energy,variance;};
 // Source-conditioned diagonal residual covariance with one unknown, stationary
 // complex transfer per carrier. Weighted least-squares residuals with the exact
 // one-complex-mean degrees-of-freedom correction; primary weights lag one batch.
@@ -15,12 +12,12 @@ struct CarrierTraining {C transfer;float energy,variance;};
 class GpuNoise {
     struct Impl;
     std::unique_ptr<Impl> impl_;
-public:
+
+  public:
     explicit GpuNoise(std::shared_ptr<gpu::Context>);
     ~GpuNoise();
-    gpu::BufferView estimate(const SpectralBatch&,ComputeTimings* =nullptr);
-    std::span<const CarrierTraining> training() const;
+    gpu::BufferView estimate(const SpectralBatch &, ComputeTimings * = nullptr);
     void reset();
     bool ready() const;
 };
-}
+} // namespace radar

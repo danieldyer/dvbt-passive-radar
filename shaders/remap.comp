@@ -1,5 +1,6 @@
 #version 450
 layout(local_size_x=64) in;
+layout(constant_id=0) const uint m=6;
 layout(set=0,binding=1,std430) readonly buffer Mapping {uint mapping[];};
 layout(set=0,binding=2,std430) readonly buffer Codes {uint codes[];};
 layout(set=0,binding=3,std430) writeonly buffer Carriers {vec2 carriers[];};
@@ -10,7 +11,7 @@ layout(push_constant) uniform Parameters {uint bits;uint count;uint packets;uint
 void main() {
     uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
     if(i>=pc.count*6817)return;
-    uint s=i/6817,k=i%6817,m=uint(table[64+6817].x),base=((s%4)*6817+k)*m;
+    uint s=i/6817,k=i%6817,base=((s%4)*6817+k)*m;
     if(mapping[base]==0xffffffffU) {
         vec2 pilot=table[64+k];
         carriers[i]=vec2(pilot.y==0 ? pilot.x : pilot.x*.75*tps_sign[s],0);

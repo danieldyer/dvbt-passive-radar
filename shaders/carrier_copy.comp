@@ -1,5 +1,7 @@
 #version 450
 layout(local_size_x=64) in;
+layout(constant_id=0) const uint source_stride=6817;
+layout(binding=1) readonly buffer SourcePhases {vec2 phases[];};
 layout(set=0,binding=0,std430) readonly buffer SourceRaw {vec2 source_raw[];};
 layout(set=0,binding=2,std430) readonly buffer SourcePilots {vec2 source_pilots[];};
 layout(set=0,binding=3,std430) writeonly buffer Raw {vec2 raw[];};
@@ -10,6 +12,14 @@ void main() {
     uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
     if(i>=pc.count*6817)return;
     uint s=i/6817,k=i%6817,source=rows[s],destination=(pc.destination+s)%pc.capacity;
-    raw[destination*6817+k]=source_raw[source*6817+k];
-    if(k<pc.stride)pilots[destination*pc.stride+k]=source_pilots[source*pc.stride+k];
+    vec2 rotation=source_stride==8192 ? phases[source] : vec2(1,0);
+    uint bin=source_stride==8192 ? (k+8192-3408)%8192 : k;
+    vec2 value=source_raw[source*source_stride+bin];
+    raw[destination*6817+k]=vec2(value.x*rotation.x-value.y*rotation.y,value.x*rotation.y+value.y*rotation.x);
+    if(k<pc.stride){
+        value=source_pilots[source*pc.stride+k];
+        if(source_stride==8192 && k>=2 && k+1<pc.stride)
+            value=vec2(value.x*rotation.x-value.y*rotation.y,value.x*rotation.y+value.y*rotation.x);
+        pilots[destination*pc.stride+k]=value;
+    }
 }

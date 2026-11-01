@@ -12,6 +12,8 @@ void main() {
     if(w>=pc.count){data[i]=vec2(0);return;}
     vec2 header=anchors[w*129];
     float angle=header.y*float(j%64);
-    vec2 phase=multiply(anchors[w*129+1+j/64],vec2(cos(angle),sin(angle)));
+    // Native trig can have a small radial error. This is an analytic unit
+    // phasor; do not let its approximation introduce amplitude modulation.
+    vec2 phase=multiply(anchors[w*129+1+j/64],normalize(vec2(cos(angle),sin(angle))));
     data[i]=multiply(samples[floatBitsToUint(header.x)+j],phase);
 }

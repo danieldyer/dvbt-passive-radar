@@ -3,7 +3,7 @@ layout(local_size_x=64) in;
 layout(set=0,binding=2,std430) readonly buffer Fourier {vec2 spectrum[];};
 layout(set=0,binding=5,std430) buffer Statistics {vec2 stats[];};
 layout(set=0,binding=6,std430) readonly buffer Tables {vec2 table[];};
-layout(push_constant) uniform Parameters {uint count;uint capacity;uint pilots;uint unused;} pc;
+layout(push_constant) uniform Parameters {uint count;uint capacity;uint pilots;uint tps;} pc;
 shared vec4 reduction[64];
 shared uint selected;
 vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
@@ -14,6 +14,13 @@ void reduce(vec4 v) {
     for(uint step=32;step>0;step/=2) {
         if(lane<step)reduction[lane]+=reduction[lane+step];barrier();
     }
+}
+vec2 tps_channel(uint w,uint k,uint start){
+    uint left=start+(k>start ? (k-start)/12*12 : 0),right=min(left+12,6816);
+    if(left==6816){left-=12;right=6816;}
+    vec2 a=channel(w,left),b=channel(w,right);
+    float mu=(float(k)-float(left))/float(right-left);
+    return multiply(a+(b-a)*mu,table[6817+k]);
 }
 void main() {
     uint w=gl_WorkGroupID.x,lane=gl_LocalInvocationID.x,base=w*(pc.pilots+3);
@@ -44,4 +51,14 @@ void main() {
         stats[base+1]=vec2(max(variance,signal*1e-6),signal);
     }
     for(uint j=lane;j<pc.pilots;j+=64)stats[base+2+j]=value(w,floatBitsToUint(table[2*6817+j].x));
+    vec2 sum=vec2(0);float weight=0;
+    for(uint j=lane;j<pc.tps;j+=64) {
+        vec2 descriptor=table[2*6817+pc.pilots+j];uint k=floatBitsToUint(descriptor.x);
+        vec2 h=tps_channel(w,k,3*selected),y=value(w,k);
+        float gain=dot(h,h);
+        if(any(isnan(h)) || any(isinf(h)) || any(isnan(y)) || any(isinf(y)))continue;
+        sum+=multiply(y,vec2(h.x,-h.y))*descriptor.y;weight+=gain;
+    }
+    reduce(vec4(sum,weight,0));
+    if(lane==0)stats[base+pc.pilots+2]=reduction[0].xy/max(reduction[0].z,1e-30);
 }

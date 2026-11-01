@@ -1,0 +1,31 @@
+#version 450
+layout(local_size_x=64) in;
+layout(binding=0) readonly buffer Source {vec2 raw[];};
+layout(binding=2) readonly buffer Pilots {vec2 pilots[];};
+layout(binding=6) readonly buffer Rows {uint rows[];};
+layout(binding=7) readonly buffer Tables {vec2 table[];};
+layout(binding=8) readonly buffer Offsets {float offsets[];};
+layout(binding=9) buffer Channel {vec2 channel[];};
+layout(push_constant) uniform Parameters {uint count,stride,bits,capacity;} pc;
+shared vec4 reduction[64];
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+vec2 rotation(uint k,float offset){float a=6.283185307179586*(float(k)-3408)*offset/8192;return normalize(vec2(cos(a),sin(a)));}
+vec2 cross_value(uint s,uint previous,uint k){
+    vec2 a=raw[rows[s]*6817+k],b=raw[rows[previous]*6817+k];
+    return multiply(multiply(a,vec2(b.x,-b.y)),rotation(k,offsets[previous]-offsets[s]));
+}
+vec2 unit(vec2 x){float n=length(x);return n>1e-30 ? x/n : vec2(1,0);}
+void main(){
+    uint s=gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x,lane=gl_LocalInvocationID.x;
+    if(s>=pc.count)return;
+    vec2 adjacent=vec2(0),repeated=vec2(0);
+    if(s>0)for(uint i=lane;i<177;i+=64){
+        uint k=floatBitsToUint(table[3*6817+192+49+i].x);
+        adjacent+=cross_value(s,s-1,k);
+    }
+    uint mod=floatBitsToUint(pilots[rows[s]*pc.stride].x);
+    if(s>=4)for(uint k=3*mod+12*lane;k<6817;k+=12*64)repeated+=cross_value(s,s-4,k);
+    reduction[lane]=vec4(adjacent,repeated);barrier();
+    for(uint step=32;step>0;step/=2){if(lane<step)reduction[lane]+=reduction[lane+step];barrier();}
+    if(lane==0){uint base=pc.count*2273+2*s;channel[base]=unit(reduction[0].xy);channel[base+1]=unit(reduction[0].zw);}
+}

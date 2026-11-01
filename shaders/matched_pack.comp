@@ -6,31 +6,30 @@ layout(set=0,binding=2,std430) readonly buffer Valid {uint valid[];};
 layout(set=0,binding=3,std430) readonly buffer Response {vec2 h[];};
 layout(set=0,binding=4,std430) readonly buffer Noise {float variance[];};
 layout(set=0,binding=5,std430) writeonly buffer Samples {vec2 samples[];};
+layout(set=0,binding=6,std430) writeonly buffer Correlation {vec2 correlation[];};
 layout(set=0,binding=8,std430) readonly buffer Rotations {vec2 rotations[];};
-layout(set=0,binding=9,std430) readonly buffer Stationary {vec2 stationary[];};
 layout(set=0,binding=10,std430) readonly buffer SourceClock {vec4 coordinate[];};
-layout(push_constant) uniform Parameters {uint start;uint count;uint total;uint capacity;uint guard;int origin;float fraction;float gain;uint cancel_direct;} pc;
+layout(push_constant) uniform Parameters {uint start;uint count;uint total;uint capacity;uint guard;int origin;float fraction;float gain;uint reserved;} pc;
 vec2 mul(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
-vec2 rotation(float angle){return vec2(cos(angle),sin(angle));}
+vec2 rotation(float angle){return normalize(vec2(cos(angle),sin(angle)));}
 void main() {
     uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
-    uint stride=(pc.capacity+1)*8192;if(i>=2*stride)return;
-    uint plane=i/stride,row=(i%stride)/8192,bin=i%8192;
+    uint stride=(pc.capacity+1)*8192;if(i>=stride)return;
+    uint row=i/8192,bin=i%8192;
     int k=bin<4096 ? int(bin) : int(bin)-8192;
-    uint source=pc.start-1+row;vec2 value=vec2(0);
+    uint source=pc.start-1+row;
+    vec2 reference=vec2(0),weighted=vec2(0),zero=vec2(0);
     if(abs(k)<=3408 && row<=pc.count && source<pc.total) {
         uint carrier=uint(k+3408),at=source*6817+carrier;
         if(valid[at]!=0) {
-            if(plane==0) {
-                value=mul(x[at],rotation(-6.283185307179586*float(k)*coordinate[source].y/8192));
-            } else {
-                vec2 aligned=mul(mul(x[at],rotations[6817+carrier]),rotation(6.283185307179586*float(k)*coordinate[source].z/8192));
-                vec2 direct=mul(h[carrier],aligned);
-                direct=mul(vec2(1,0)+stationary[carrier],direct);
-                vec2 error=y[at]-((pc.cancel_direct&1)!=0 ? direct : vec2(0));
-                value=mul(error,vec2(h[carrier].x,-h[carrier].y))/max(variance[carrier],1e-30);
-            }
+            reference=mul(x[at],rotation(-6.283185307179586*float(k)*coordinate[source].y/8192));
+            vec2 aligned=mul(mul(x[at],rotations[6817+carrier]),rotation(6.283185307179586*float(k)*coordinate[source].z/8192));
+            vec2 direct=mul(h[carrier],aligned);
+            vec2 error=y[at]-direct;
+            weighted=mul(error,vec2(h[carrier].x,-h[carrier].y))/max(variance[carrier],1e-30);
+            zero=mul(weighted,vec2(aligned.x,-aligned.y));
         }
     }
-    samples[i]=value;
+    samples[i]=reference;samples[stride+i]=weighted;
+    if(row>0) correlation[(row-1)*8192+bin]=zero;
 }

@@ -1,0 +1,23 @@
+#version 450
+// Apply known timing and common phase once per observed pilot, shared by every
+// overlapping temporal fit. Scientific measured carriers remain untouched.
+layout(local_size_x=64) in;
+layout(binding=0) readonly buffer Raw {vec2 raw[];};
+layout(binding=2) readonly buffer Pilots {vec2 pilots[];};
+layout(binding=6) readonly buffer Rows {uint rows[];};
+layout(binding=7) readonly buffer Tables {vec2 table[];};
+layout(binding=8) readonly buffer Offsets {float offsets[];};
+layout(binding=9) buffer Channel {vec2 channel[];};
+layout(push_constant) uniform Parameters {uint count,stride,bits,capacity;} pc;
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+void main(){
+    uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
+    if(i>=pc.count*2273)return;
+    uint s=i/2273,k=3*(i%2273),source=rows[s],base=pc.count*(2*2273+2)+128;
+    uint mod=floatBitsToUint(pilots[source*pc.stride].x);
+    if(table[2*6817+192+k].x==0 && mod!=(k/3)%4){channel[base+i]=vec2(0);return;}
+    vec2 phase=channel[pc.count*2273+2*s];
+    float angle=-6.283185307179586*(float(k)-3408)*offsets[s]/8192;
+    vec2 correction=multiply(normalize(vec2(cos(angle),sin(angle))),vec2(phase.x,-phase.y));
+    channel[base+i]=multiply(raw[source*6817+k],correction);
+}

@@ -8,20 +8,21 @@ struct GpuPipelineConfig {
     std::vector<unsigned> guards;
     std::size_t max_samples{};
     std::uint64_t origin{};
-    unsigned decimation=1,response_order=8;
-    double reference_delay=0;
-    bool automatic_origin=true;
-    unsigned fec_workers=0; // Zero: one per channel, capped by hardware concurrency.
-    unsigned frame_slots=0; // Zero: workers + two; bounded backpressure, no dropped frames.
-    unsigned frames_per_batch=15; // Includes one TPS frame of context on each side.
-    bool residual_spectra=true; // Finite-waveform profile consumers need only the aligned reference.
+    unsigned decimation = 1, response_order = 8;
+    double reference_delay = 0;
+    bool automatic_origin = true;
+    unsigned fec_workers = default_fec_workers; // Zero: one per channel, capped by hardware concurrency.
+    unsigned frame_slots = 0; // Zero: workers + two; bounded backpressure, no dropped frames.
+    static constexpr unsigned frames_per_batch =
+        DecoderPolicy::frames_per_batch; // Includes half a TPS frame of context on each side.
+    bool residual_spectra = true;        // Finite-waveform profile consumers need only the aligned reference.
 };
 struct GpuPipelineTimings {
-    ComputeTimings receiver,frames,reconstruction,response;
+    ComputeTimings receiver, frames, reconstruction, response;
     FecTimings fec;
 };
 struct SpectralBatch {
-    const FrameBatch& frame;
+    const FrameBatch &frame;
     FecBatch packets;
     ReferenceBatch transmitted;
     ResponseEstimate estimate;
@@ -37,16 +38,18 @@ struct SpectralBatch {
 class GpuPipeline {
     struct Impl;
     std::unique_ptr<Impl> impl_;
-public:
-    using Consume=std::function<void(const SpectralBatch&)>;
-    GpuPipeline(const GpuPipelineConfig& config,std::shared_ptr<gpu::Context> context,std::shared_ptr<SampleClock> clock);
+
+  public:
+    using Consume = std::function<void(const SpectralBatch &)>;
+    GpuPipeline(const GpuPipelineConfig &config, std::shared_ptr<gpu::Context> context,
+                std::shared_ptr<SampleClock> clock);
     ~GpuPipeline();
-    void process(const ChannelBatch& input,const Consume& consume,GpuPipelineTimings* timings=nullptr);
-    void finish(const Consume& consume,GpuPipelineTimings* timings=nullptr);
+    void process(const ChannelBatch &input, const Consume &consume, GpuPipelineTimings *timings = nullptr);
+    void finish(const Consume &consume, GpuPipelineTimings *timings = nullptr);
     // Complete queued batches without finalizing partial TPS frames.
-    void drain(const Consume& consume,GpuPipelineTimings* timings=nullptr);
+    void drain(const Consume &consume, GpuPipelineTimings *timings = nullptr);
     std::vector<ReceiverStatus> status() const;
     // Reuse compiled plans after a drained calibration/warmup stream.
     void reset();
 };
-}
+} // namespace radar

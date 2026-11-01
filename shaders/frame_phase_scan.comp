@@ -1,0 +1,22 @@
+#version 450
+// Common-phase prefix; temporal filters use q[s] * conj(q[r]). This replaces
+// repeated products in every pilot window without changing their phase model.
+layout(local_size_x=128) in;
+layout(binding=9) buffer Channel {vec2 channel[];};
+layout(push_constant) uniform Parameters {uint count,stride,bits,capacity;} pc;
+shared vec2 prefix[1024];
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+void main(){
+    uint lane=gl_LocalInvocationID.x,base=pc.count*2273;
+    for(uint j=0;j<8;++j){uint s=lane+128*j;prefix[s]=s<pc.count ? channel[base+2*s] : vec2(1,0);}
+    barrier();
+    for(uint distance=1;distance<1024;distance*=2){
+        vec2 next[8];
+        for(uint j=0;j<8;++j){uint s=lane+128*j;next[j]=s>=distance ? multiply(prefix[s],prefix[s-distance]) : prefix[s];}
+        barrier();
+        for(uint j=0;j<8;++j)prefix[lane+128*j]=next[j];
+        barrier();
+    }
+    for(uint j=0;j<8;++j){uint s=lane+128*j;
+        if(s<pc.count){vec2 q=prefix[s];channel[base+2*s]=q*inversesqrt(max(dot(q,q),1e-30));}}
+}

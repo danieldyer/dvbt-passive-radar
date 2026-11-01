@@ -1,0 +1,4 @@
+# Validation tools only; the production capture executable is native C++.
+pillow==12.1.0
+pyte==0.8.2
+wcwidth==0.9.4

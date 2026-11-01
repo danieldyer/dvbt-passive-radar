@@ -5,7 +5,6 @@ layout(set=0,binding=1,std430) readonly buffer Reference {vec2 x[];};
 layout(set=0,binding=2,std430) readonly buffer Valid {uint valid[];};
 layout(set=0,binding=5,std430) writeonly buffer Applied {float applied[];};
 layout(set=0,binding=6,std430) buffer History {float history[];};
-layout(set=0,binding=7,std430) writeonly buffer Training {vec4 training[];};
 layout(push_constant) uniform Parameters {uint first;uint last;uint ready;uint unused;} pc;
 vec2 mul(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
 void main() {
@@ -26,5 +25,4 @@ void main() {
     // silently projected away while still present in the primary observations.
     float estimate=count>1 ? max(scatter/(count-1),1e-30) : prior;
     applied[k]=pc.ready!=0 ? prior : estimate;history[k]=estimate;
-    training[k]=vec4(mean,count>1 ? power : 0,estimate);
 }

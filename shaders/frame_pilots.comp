@@ -1,18 +1,28 @@
 #version 450
+#extension GL_GOOGLE_include_directive : require
 layout(local_size_x=64) in;
+layout(constant_id=0) const uint radius=0;
+layout(constant_id=1) const uint adaptive=0;
 layout(set=0,binding=0,std430) readonly buffer SourceRaw {vec2 source_raw[];};
 layout(set=0,binding=2,std430) readonly buffer SourcePilots {vec2 source_pilots[];};
 layout(set=0,binding=6,std430) readonly buffer Rows {uint rows[];};
 layout(set=0,binding=7,std430) readonly buffer Tables {vec2 table[];};
 layout(set=0,binding=8,std430) readonly buffer SourceOffsets {float offsets[];};
-layout(set=0,binding=9,std430) writeonly buffer Channel {vec2 channel[];};
+layout(set=0,binding=9,std430) buffer Channel {vec2 channel[];};
 layout(push_constant) uniform Parameters {uint count;uint stride;uint destination;uint capacity;} pc;
 vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
-vec2 rotation(uint k,float offset){float angle=6.283185307179586*(float(k)-3408)*offset/8192;return vec2(cos(angle),sin(angle));}
+vec2 rotation(uint k,float offset){float angle=6.283185307179586*(float(k)-3408)*offset/8192;return normalize(vec2(cos(angle),sin(angle)));}
+vec2 pilot_observation(int r,uint j){return channel[pc.count*(2*2273+2)+128+uint(r)*2273+j];}
+#include "pilot_fit.glsl"
 void main(){
     uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
     if(i>=pc.count*2273)return;
     uint s=i/2273,k=3*(i%2273);
+    if(radius>0){
+        uint support=adaptive!=0 ? uint(channel[pc.count*(3*2273+2)+128].x) : radius;
+        vec2 centre=channel[pc.count*2273+2*s];
+        channel[i]=multiply(multiply(pilot_fit(s,k/3,support,table[2*6817+192+k].x!=0),centre),table[k]);return;
+    }
     uint mod=floatBitsToUint(source_pilots[rows[s]*pc.stride].x);
     // Four scattered-pilot phases sample every third carrier. Interpolate
     // between bracketing symbols on a common source-time coordinate.

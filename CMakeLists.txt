@@ -32,46 +32,5 @@ target_link_libraries(vkfft_headers INTERFACE
     Vulkan::Vulkan glslang::glslang glslang::SPIRV
 )
 
-# Compile and embed SPIR-V: the executable does not depend on its working directory.
-set(shader_header "${CMAKE_CURRENT_BINARY_DIR}/generated/$<CONFIG>/cross_spectrum.inc")
-add_custom_command(OUTPUT "${shader_header}"
-    COMMAND "${CMAKE_COMMAND}" -E make_directory
-        "${CMAKE_CURRENT_BINARY_DIR}/generated/$<CONFIG>"
-    COMMAND Vulkan::glslc --target-env=vulkan1.2 -Werror -mfmt=c
-        "$<IF:$<CONFIG:Debug>,-g,-O>"
-        "${CMAKE_CURRENT_SOURCE_DIR}/shaders/cross_spectrum.comp"
-        -o "${shader_header}"
-    DEPENDS shaders/cross_spectrum.comp
-    COMMENT "Compiling cross_spectrum.comp"
-    VERBATIM
-)
-
-add_executable(dvbt_passive_radar src/main.cpp "${shader_header}")
-target_compile_features(dvbt_passive_radar PRIVATE cxx_std_23)
-set_target_properties(dvbt_passive_radar PROPERTIES CXX_EXTENSIONS OFF)
-target_include_directories(dvbt_passive_radar PRIVATE
-    "${CMAKE_CURRENT_BINARY_DIR}/generated/$<CONFIG>"
-)
-target_link_libraries(dvbt_passive_radar PRIVATE vkfft_headers)
-if(MSVC)
-    target_compile_options(dvbt_passive_radar PRIVATE /W4 /permissive- /Zc:__cplusplus)
-else()
-    target_compile_options(dvbt_passive_radar PRIVATE
-        -Wall -Wextra -Wpedantic -Wconversion -Wshadow
-    )
-endif()
-
 include(CTest)
-option(RADAR_BUILD_PIPELINE "Build recorded-IQ DVB-T reconstruction pipeline" ON)
-if(RADAR_BUILD_PIPELINE)
-    include(cmake/dvbt.cmake)
-endif()
-
-if(BUILD_TESTING)
-    add_test(NAME cross_spectrum_8k COMMAND dvbt_passive_radar 8192)
-    add_test(NAME cross_spectrum_partial_workgroup COMMAND dvbt_passive_radar 320)
-    set_tests_properties(cross_spectrum_8k cross_spectrum_partial_workgroup
-        PROPERTIES LABELS gpu TIMEOUT 60
-        FAIL_REGULAR_EXPRESSION "Validation Error;SYNC-HAZARD"
-    )
-endif()
+include(cmake/dvbt.cmake)

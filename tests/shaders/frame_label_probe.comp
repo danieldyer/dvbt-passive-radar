@@ -1,0 +1,12 @@
+#version 450
+#extension GL_GOOGLE_include_directive : require
+#include "../../shaders/hard_qam.glsl"
+layout(local_size_x=64) in;
+layout(constant_id=0) const uint qam_bits=6;
+layout(binding=4) readonly buffer Equalized {vec2 equalized[];};
+layout(binding=1) writeonly buffer Labels {uint labels[];};
+layout(push_constant) uniform Parameters {uint count,stride,bits,capacity;} pc;
+void main(){
+    uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
+    if(i<pc.count*6817)labels[i]=hard_qam(equalized[i],qam_bits);
+}

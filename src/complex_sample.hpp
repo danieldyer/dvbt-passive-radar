@@ -2,5 +2,5 @@
 #include <complex>
 
 namespace radar {
-using C=std::complex<float>;
+using C = std::complex<float>;
 }

@@ -16,7 +16,7 @@ void main() {
     if(i>=pc.count*6817)return;
     if(valid[i]==0){aligned[i]=vec2(0);if(pc.residual_spectra!=0){cross_spectrum[i]=vec2(0);normalized[i]=vec2(0);}return;}
     uint k=i%6817;float angle=6.283185307179586*(float(k)-3408)*offsets[i/6817]/8192;
-    vec2 x=multiply(multiply(reference[i],rotation[k]),vec2(cos(angle),sin(angle)));
+    vec2 x=multiply(multiply(reference[i],rotation[k]),normalize(vec2(cos(angle),sin(angle))));
     aligned[i]=x;
     if(pc.residual_spectra==0)return;
     vec2 h=response[k],predicted=multiply(h,x),error=measured[i]-predicted;

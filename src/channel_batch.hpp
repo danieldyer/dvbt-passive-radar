@@ -8,6 +8,6 @@ namespace radar {
 struct ChannelBatch {
     gpu::BufferView samples;
     std::uint64_t first{}; // Corrected channel sample, relative to capture origin.
-    std::size_t count{},channels{},stride{};
+    std::size_t count{}, channels{}, stride{};
 };
-}
+} // namespace radar

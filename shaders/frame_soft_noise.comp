@@ -1,0 +1,30 @@
+#version 450
+layout(local_size_x=64) in;
+layout(binding=0) readonly buffer Source {vec2 raw[];};
+layout(binding=2) readonly buffer Pilots {vec2 pilots[];};
+layout(binding=6) readonly buffer Rows {uint rows[];};
+layout(binding=8) readonly buffer Offsets {float offsets[];};
+layout(binding=9) buffer Channel {vec2 channel[];};
+layout(push_constant) uniform Parameters {uint count,stride,bits,capacity;} pc;
+shared vec4 reduction[64];
+vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
+vec2 rotation(uint k,float offset){float a=6.283185307179586*(float(k)-3408)*offset/8192;return normalize(vec2(cos(a),sin(a)));}
+void main(){
+    uint bin=gl_WorkGroupID.x,lane=gl_LocalInvocationID.x;
+    uint first=bin*6817/128,last=(bin+1)*6817/128,base=pc.count*2273;
+    float error=0,power=0,n=0;
+    for(uint s=4+lane;s<pc.count;s+=64){
+        uint mod=floatBitsToUint(pilots[rows[s]*pc.stride].x);
+        uint start=first+(3*mod+12-first%12)%12;
+        float pilots=float((6816-3*mod)/12+1);
+        vec2 phase=channel[base+2*s+1];
+        for(uint k=start;k<last;k+=12){
+            vec2 a=raw[rows[s]*6817+k],b=raw[rows[s-4]*6817+k];
+            vec2 e=a-multiply(b,multiply(phase,rotation(k,offsets[s]-offsets[s-4])));
+            error+=dot(e,e)/(2-1/pilots);power+=.5*(dot(a,a)+dot(b,b));n+=1;
+        }
+    }
+    reduction[lane]=vec4(error,power,n,0);barrier();
+    for(uint step=32;step>0;step/=2){if(lane<step)reduction[lane]+=reduction[lane+step];barrier();}
+    if(lane==0){vec4 sum=reduction[0];channel[base+2*pc.count+bin]=vec2(max(sum.x/max(sum.z,1),max(sum.y/max(sum.z,1)*1e-10,1e-30)),sum.z);}
+}

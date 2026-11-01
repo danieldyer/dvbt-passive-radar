@@ -3,7 +3,7 @@ layout(local_size_x=64) in;
 layout(binding=5) readonly buffer Samples {vec2 samples[];};
 layout(binding=10) readonly buffer SourceClock {vec4 coordinate[];};
 layout(binding=11) writeonly buffer Prefix {vec2 prefix[];};
-layout(push_constant) uniform Parameters {uint start,count,total,capacity,guard;int origin;float fraction,gain;uint cancel_direct,output_count,output_first,size,profile_size,positive_context;} p;
+layout(push_constant) uniform Parameters {uint start,count,total,capacity,guard;int origin;float fraction,gain;uint reserved,output_count,output_first,size,profile_size,positive_context;} p;
 void main(){
     uint i=(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x)*64+gl_LocalInvocationID.x;
     uint stride=p.capacity*p.size;if(i>=3*stride)return;

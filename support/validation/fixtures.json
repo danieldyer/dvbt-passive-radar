@@ -1,0 +1,66 @@
+{
+  "description": "Private repeatable RF qualification fixtures; paths are relative to the repository. Payloads remain ignored, outside version control.",
+  "fixtures": [
+    {
+      "path": "captures/pilot-soft-20261029/pilot-soft-20261029-lower/capture.dvblive",
+      "size_bytes": 1535852196,
+      "sha256": "3bd30e816d738457e0f1f7b87171c8eaa455838a93ffa25a3a91a954f1287a7e",
+      "mode": "channels",
+      "signals": [
+        {
+          "id": "seven",
+          "frequency_hz": 177500000,
+          "guard_denominator": 16
+        },
+        {
+          "id": "sbs",
+          "frequency_hz": 184500000,
+          "guard_denominator": 16
+        },
+        {
+          "id": "nine",
+          "frequency_hz": 191625000,
+          "guard_denominator": 16
+        }
+      ]
+    },
+    {
+      "path": "captures/pilot-soft-20261029/pilot-soft-20261029-upper/capture.dvblive",
+      "size_bytes": 1023918123,
+      "sha256": "c996df518ca8e2b5c910813652982f314ada02482f1230d986b0c7961fcc4728",
+      "mode": "channels",
+      "signals": [
+        {
+          "id": "ten",
+          "frequency_hz": 219500000,
+          "guard_denominator": 16
+        },
+        {
+          "id": "abc",
+          "frequency_hz": 226500000,
+          "guard_denominator": 16
+        }
+      ]
+    }
+  ],
+  "lower_three_eight_second_gate": {
+    "repetitions": 4,
+    "rs_good": [
+      475896,
+      475896,
+      471300
+    ],
+    "rs_bad": [
+      0,
+      0,
+      60
+    ],
+    "packet_checksums": [
+      16801237187899840744,
+      13935657061658512264,
+      15733819744908333488
+    ],
+    "accuracy_note": "The normal per-replay Nine acceptance is 117825/117840. A few words of independent upstream numerical variation also occurred in the old PL64 baseline; exact decoder comparisons require identical likelihood inputs."
+  },
+  "upper_fixture_note": "Optional low-SNR/filter-transition diagnostic, not the three-channel throughput acceptance workload."
+}

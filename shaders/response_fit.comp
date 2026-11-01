@@ -15,18 +15,24 @@ shared float gain,update;
 shared uint usable;
 vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
 vec2 reduce(vec2 value) {
+    uint lane=gl_LocalInvocationID.x;
 #ifdef RADAR_SUBGROUPS
     vec2 part=subgroupAdd(value);
     if(gl_SubgroupInvocationID==0)reduction[gl_SubgroupID]=part;
-    barrier();
-    vec2 result=vec2(0);
-    for(uint i=gl_SubgroupInvocationID;i<gl_NumSubgroups;i+=gl_SubgroupSize)result+=reduction[i];
-    result=subgroupAdd(result);barrier();return result;
+    uint remaining=gl_NumSubgroups;
 #else
-    uint lane=gl_LocalInvocationID.x;reduction[lane]=value;barrier();
-    for(uint step=lanes/2;step>0;step/=2){if(lane<step)reduction[lane]+=reduction[lane+step];barrier();}
-    vec2 result=reduction[0];barrier();return result;
+    reduction[lane]=value;
+    uint remaining=lanes;
 #endif
+    barrier();
+    // Finish in shared memory and broadcast one workgroup-uniform sum. A
+    // second subgroup reduction produced inconsistent totals on Intel Vulkan.
+    for(;remaining>1;remaining=(remaining+1)/2){
+        uint left_count=(remaining+1)/2;
+        if(lane<remaining/2)reduction[lane]+=reduction[lane+left_count];
+        barrier();
+    }
+    vec2 result=reduction[0];barrier();return result;
 }
 void main() {
     uint lane=gl_LocalInvocationID.x,dimensions=2*model_order+1;
@@ -97,7 +103,9 @@ void main() {
     for(uint j=0;j<elements;++j) {
         uint k=lane+lanes*j;if(k>=6817)break;float angle=0;
         for(uint d=0;d<dimensions;++d)angle+=coefficient[d]*basis[d*6817+k].y;
-        vec2 h=amplitude[j]*vec2(cos(angle),sin(angle));response[k]=h;
+        // Native trig may have radial error even when its phase is accurate.
+        // This is a unit phasor; only the fitted amplitude may set its modulus.
+        vec2 h=amplitude[j]*normalize(vec2(cos(angle),sin(angle)));response[k]=h;
         phase+=multiply(stats[k].xy,vec2(h.x,-h.y));
     }
     phase=reduce(phase);phase=length(phase)>0 ? phase/length(phase) : vec2(1,0);

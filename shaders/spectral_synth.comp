@@ -1,40 +1,41 @@
 #version 450
-layout(local_size_x=128) in;
+layout(local_size_x_id=6) in;
 layout(constant_id=0) const uint fft_size=3584;
 layout(constant_id=1) const float d1=.79893657;
 layout(constant_id=2) const float d2=-.19395204;
 layout(constant_id=3) const float d3=.03025722;
 layout(constant_id=4) const uint block_count=800;
+layout(constant_id=5) const uint inverse_size=1024;
 layout(set=0,binding=1,std430) readonly buffer Transform {vec2 work[];};
 layout(set=0,binding=2,std430) readonly buffer Response {float response[];};
 layout(set=0,binding=4,std430) writeonly buffer Output {vec2 result[];};
 layout(set=0,binding=5,std430) readonly buffer Blocks {vec4 blocks[];};
 layout(set=0,binding=6,std430) readonly buffer Coefficients {float coefficients[];};
 layout(push_constant) uniform Parameters {uint fft_size;uint hop;uint decimation;uint count;uint channels;uint stride;uint input_count;uint guard;} p;
-shared vec2 tile[1024];
+shared vec2 tile[inverse_size];
 vec2 multiply(vec2 a,vec2 b){return vec2(a.x*b.x-a.y*b.y,a.x*b.y+a.y*b.x);}
 vec2 twiddle(uint k){return vec2(response[32769+2*k],response[32769+2*k+1]);}
 uint reverse_digits(uint k) {
-    uint bits=bitfieldReverse(k)>>22;
-    return ((bits&0x155)<<1)|((bits&0x2aa)>>1);
+    uint bits=bitfieldReverse(k)>>(32-findMSB(inverse_size));
+    return ((bits&0x55555555u)<<1)|((bits&0xaaaaaaaau)>>1);
 }
 void main() {
     uint block=gl_WorkGroupID.x,channel=gl_WorkGroupID.y,lane=gl_LocalInvocationID.x;
     if(block*p.hop>=p.count)return;
     vec4 b=blocks[block],c=blocks[block_count+channel];
     vec4 phase=blocks[block_count+p.channels+channel*block_count+block];
-    // Select and translate the filtered spectrum. The 1024-point inverse FFT
-    // synthesizes a 16 MS/s grid, without a separate upsampling transform.
+    // Select and translate the filtered spectrum. The twice-oversampled inverse
+    // FFT synthesizes a 16 MS/s grid, without a separate upsampling transform.
     // A spectral phase ramp removes the entire block-centre fractional delay.
     // Only the small within-block rate error remains after synthesis. Eight
     // local phase products have a bounded error; there is no stream recurrence.
-    float first_angle=6.283185307179586*b.y*(float(lane)-512.0)/1024.0;
-    float step_angle=6.283185307179586*b.y/8.0;
-    vec2 shift=vec2(cos(first_angle),sin(first_angle));
-    vec2 advance=vec2(cos(step_angle),sin(step_angle));
-    for(uint ordinal=0;ordinal<8;++ordinal) {
-        int frequency=int(lane)+128*int(ordinal)-512;
-        uint k=uint(frequency<0 ? frequency+1024 : frequency);
+    float first_angle=6.283185307179586*b.y*(float(lane)-float(inverse_size/2))/float(inverse_size);
+    float step_angle=6.283185307179586*b.y*float(gl_WorkGroupSize.x)/float(inverse_size);
+    vec2 shift=normalize(vec2(cos(first_angle),sin(first_angle)));
+    vec2 advance=normalize(vec2(cos(step_angle),sin(step_angle)));
+    for(uint ordinal=0;ordinal<inverse_size/gl_WorkGroupSize.x;++ordinal) {
+        int frequency=int(lane)+int(gl_WorkGroupSize.x*ordinal)-int(inverse_size/2);
+        uint k=uint(frequency<0 ? frequency+int(inverse_size) : frequency);
         bool prewarped=floatBitsToUint(b.w)!=0xffffffffu;
         int raw_bin=floatBitsToInt(prewarped ? c.z : c.x)+frequency;
         vec2 value=vec2(0);
@@ -52,12 +53,12 @@ void main() {
         shift=multiply(shift,advance);
     }
     barrier();
-    // Five deterministic radix-4 stages. The result stays in shared memory
+    // Deterministic radix-4 stages. The result stays in shared memory
     // until interpolation, avoiding an intermediate global write/read.
-    for(uint length=4;length<=1024;length*=4) {
+    for(uint length=4;length<=inverse_size;length*=4) {
         uint quarter=length/4;
-        for(uint k=lane;k<256;k+=128) {
-            uint offset=k%quarter,a=(k/quarter)*length+offset,w=offset*(1024/length);
+        for(uint k=lane;k<inverse_size/4;k+=gl_WorkGroupSize.x) {
+            uint offset=k%quarter,a=(k/quarter)*length+offset,w=offset*(inverse_size/length);
             vec2 x0=tile[a],x1=multiply(tile[a+quarter],twiddle(w));
             vec2 x2=multiply(tile[a+2*quarter],twiddle(2*w));
             vec2 x3=multiply(tile[a+3*quarter],twiddle(3*w));
@@ -69,7 +70,7 @@ void main() {
     }
     // Integer positions and small fractional offsets are kept separate. Each
     // channel evaluates the same ADC time map and retains its own RF phase.
-    for(uint j=lane;j<p.hop;j+=128) {
+    for(uint j=lane;j<p.hop;j+=gl_WorkGroupSize.x) {
         uint m=block*p.hop+j;
         if(m>=p.count)continue;
         float offset=2.0*(float(j)-phase.w)*b.z;
@@ -90,6 +91,6 @@ void main() {
                 value+=tile[integer-7+int(k)]*mix(coefficients[index*16+k],coefficients[(index+1)*16+k],alpha);
         }
         float angle=phase.z*float(j);
-        result[channel*p.stride+m]=multiply(value,multiply(phase.xy,vec2(cos(angle),sin(angle))));
+        result[channel*p.stride+m]=multiply(value,multiply(phase.xy,normalize(vec2(cos(angle),sin(angle)))));
     }
 }

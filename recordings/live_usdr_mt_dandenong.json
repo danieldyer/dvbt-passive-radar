@@ -1,0 +1,202 @@
+{
+  "version": 1,
+  "receiver": {
+    "location": {
+      "latitude_deg": -37.81040454194318,
+      "longitude_deg": 144.98744506389454
+    },
+    "antenna_agl_m": 10.0,
+    "position_reference": "Nominal roof-antenna phase centre supplied by the user on 2026-10-16; WGS84 coordinates.",
+    "height_reference": "Approximately 10 m above local ground; add terrain elevation and geoid undulation when converting to ECEF."
+  },
+  "recording": {
+    "centre_hz": 184625000,
+    "sample_rate_hz": 32000000,
+    "sample_format": "ci16_le",
+    "iq_order": "I,Q",
+    "time_reference": "One shared SDR sample clock; not calibrated UTC"
+  },
+  "transmitters": [
+    {
+      "id": "ornata",
+      "name": "TXA Ornata Road",
+      "address": "12 Ornata Road, Mount Dandenong",
+      "location": {
+        "latitude_deg": -37.83745859518615,
+        "longitude_deg": 145.34687782301492
+      },
+      "position_reference": "Nominal antenna phase centre supplied by the user on 2026-10-16; WGS84 coordinates.",
+      "antenna_agl_m": 190.0,
+      "acma_site_id": "12013",
+      "height_reference": "User-supplied height above local ground on 2026-10-16; add transmitter_terrain elevation and EGM96 geoid undulation for ECEF. Shared nominal height for every channel at this site."
+    },
+    {
+      "id": "eyre",
+      "name": "TXA Eyre Road",
+      "address": "8 Eyre Road, Mount Dandenong",
+      "location": {
+        "latitude_deg": -37.83540006541602,
+        "longitude_deg": 145.3477595896221
+      },
+      "position_reference": "Nominal antenna phase centre supplied by the user on 2026-10-16; WGS84 coordinates.",
+      "antenna_agl_m": 130.0,
+      "acma_site_id": "12015",
+      "height_reference": "User-supplied height above local ground on 2026-10-16; add transmitter_terrain elevation and EGM96 geoid undulation for ECEF. Shared nominal height for every channel at this site."
+    },
+    {
+      "id": "ridge",
+      "name": "BAI Ridge Road",
+      "address": "116\u2013118 Ridge Road, Mount Dandenong",
+      "location": {
+        "latitude_deg": -37.834854231253686,
+        "longitude_deg": 145.34846826008254
+      },
+      "position_reference": "Nominal antenna phase centre supplied by the user on 2026-10-16; WGS84 coordinates.",
+      "antenna_agl_m": 138.0,
+      "acma_site_id": "12014",
+      "height_reference": "User-supplied height above local ground on 2026-10-16; add transmitter_terrain elevation and EGM96 geoid undulation for ECEF. Shared nominal height for every channel at this site."
+    }
+  ],
+  "signals": [
+    {
+      "id": "seven",
+      "name": "Seven",
+      "callsign": "HSV6",
+      "rf_channel": 6,
+      "frequency_hz": 177500000,
+      "bandwidth_hz": 7000000,
+      "fft_size": 8192,
+      "guard_denominator": 16,
+      "transmitter_id": "ornata",
+      "licensed_site_ids": [
+        "ornata",
+        "eyre"
+      ],
+      "transmitter_assignment": "User-selected nominal primary/backup hypothesis, 2026-10-16; actual active site remains to be determined. Search only candidate_transmitter_ids.",
+      "transmitter_site_roles": {
+        "primary": "ornata",
+        "backup": "eyre"
+      },
+      "candidate_transmitter_ids": [
+        "ornata",
+        "eyre"
+      ],
+      "licensed_station_types": {
+        "ornata": "Main",
+        "eyre": "Alternative"
+      }
+    },
+    {
+      "id": "sbs",
+      "name": "SBS",
+      "callsign": "SBS7",
+      "rf_channel": 7,
+      "frequency_hz": 184500000,
+      "bandwidth_hz": 7000000,
+      "fft_size": 8192,
+      "guard_denominator": 16,
+      "transmitter_id": "ridge",
+      "licensed_site_ids": [
+        "ridge",
+        "ornata"
+      ],
+      "transmitter_assignment": "User-selected nominal primary/backup hypothesis, 2026-10-16; actual active site remains to be determined. Search only candidate_transmitter_ids.",
+      "transmitter_site_roles": {
+        "primary": "ridge",
+        "backup": "ornata"
+      },
+      "candidate_transmitter_ids": [
+        "ridge",
+        "ornata"
+      ],
+      "licensed_station_types": {
+        "ornata": "Main",
+        "ridge": "Standby"
+      },
+      "assignment_caveat": "ACMA RRL snapshot retrieved 2026-10-13 labels Ornata Main and Ridge Standby, opposite to the configured primary/backup hypothesis. Both remain candidates."
+    },
+    {
+      "id": "nine",
+      "name": "Nine",
+      "callsign": "GTV8",
+      "rf_channel": 8,
+      "frequency_hz": 191625000,
+      "bandwidth_hz": 7000000,
+      "fft_size": 8192,
+      "guard_denominator": 16,
+      "transmitter_id": "ornata",
+      "licensed_site_ids": [
+        "eyre",
+        "ornata"
+      ],
+      "transmitter_assignment": "User-selected nominal primary/backup hypothesis, 2026-10-16; actual active site remains to be determined. Search only candidate_transmitter_ids.",
+      "transmitter_site_roles": {
+        "primary": "ornata",
+        "backup": "eyre"
+      },
+      "candidate_transmitter_ids": [
+        "ornata",
+        "eyre"
+      ],
+      "licensed_station_types": {
+        "ornata": "Main",
+        "eyre": "Alternative"
+      }
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://www.ozdigitaltv.com/transmitters/VIC/326-Mount-Dandenong",
+      "used_for": "Multiplex centre frequencies and nominal mast assignments",
+      "accessed": "2026-10-10"
+    },
+    {
+      "url": "https://www.acma.gov.au/sites/default/files/2026-07/9%20Televison%20by%20Area%20Served.pdf",
+      "used_for": "Licensed site coordinates and alternate locations; page 371",
+      "accessed": "2026-10-10"
+    },
+    {
+      "url": "https://www.acma.gov.au/radiocomms-licence-data",
+      "used_for": "Licensed station types and alternative sites, preserved separately from the user-selected candidate set and nominal roles",
+      "accessed": "2026-10-16",
+      "snapshot_retrieved": "2026-10-13"
+    }
+  ],
+  "capture": {
+    "device_args": "bus=pcie",
+    "channel": 0,
+    "sample_rate_hz": 32000000,
+    "centre_hz": 184625000,
+    "gain_db": 0,
+    "bandwidth_hz": 28000000,
+    "antenna": "EXT",
+    "clock_source": "internal",
+    "time_source": "internal",
+    "buffer_seconds": 4,
+    "clock_model": {
+      "receiver_white_fm": 1e-10,
+      "receiver_random_walk_fm": 1e-10,
+      "receiver_drift_diffusion": 1e-22,
+      "transmitter_white_fm": 1e-11,
+      "transmitter_random_walk_fm": 1e-11,
+      "settling_seconds": 0.25,
+      "innovation_huber_sigma": 6,
+      "parameter_reference": "Design priors; not measured oscillator stability. Validate against diagnostics.jsonl innovations."
+    },
+    "driver": "usdr"
+  },
+  "transmitter_terrain": {
+    "raster": "build/calibration-20261013/ga-dandenong-dem.tif",
+    "path_reference": "repository root",
+    "source": "https://services.ga.gov.au/gis/rest/services/DEM_SRTM_1Second_2024/MapServer",
+    "description": "Geoscience Australia one-arcsecond SRTM-derived DEM; existing cached raster approved by the user on 2026-10-16.",
+    "vertical_datum": "EGM96",
+    "native_dted2": false,
+    "interpolation": "bilinear at WGS84 antenna latitude/longitude"
+  },
+  "processing_signal_ids": [
+    "seven",
+    "sbs",
+    "nine"
+  ]
+}
